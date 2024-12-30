@@ -45,5 +45,3 @@ class Loader {
         return false;
     }
 }
-
-Loader::load();
