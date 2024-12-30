@@ -4,4 +4,6 @@ const DB_HOST = 'localhost';
 const DB_PORT = '5432';
 const DB_USER = 'postgres';
 const DB_PASS = 'root';
-const DB_NAME = 'TASKFLOW 2';
+const DB_NAME = 'test';
+
+const SQL_DATABASE = '';
