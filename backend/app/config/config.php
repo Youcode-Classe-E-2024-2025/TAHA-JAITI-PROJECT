@@ -78,4 +78,17 @@ CREATE TABLE user_assignments (
     task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
     assigned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE VIEW project_data_view AS
+SELECT p.id as project_id,
+       p.name as project_name,
+       p.description,
+       p.is_public,
+       p.created_at,
+       p.updated_at,
+	   p.deadline,
+	   u.name as creator
+FROM projects p
+JOIN users u ON p.creator_id = u.id;
+
 ";

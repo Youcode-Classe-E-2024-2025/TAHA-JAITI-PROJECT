@@ -38,4 +38,23 @@ class ProjectController extends GenericController
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+
+    public function getAllProjects(){
+        $this->isAdmin();
+
+        try {
+
+            $projects = $this->projectModel->getAllProjects();
+
+            if ($projects){
+                $this->successResponse($projects);
+            } else {
+                $this->errResponse('Failed getting projects from the database');
+            }
+
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }

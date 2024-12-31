@@ -36,6 +36,14 @@ class Project {
         }
 
         return false;
+    }
 
+    public function getAllProjects(){
+        $sql = "SELECT * FROM project_data_view";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 }
