@@ -29,6 +29,12 @@ class ProjectController extends GenericController
 
             $result = $this->projectModel->createProject();
 
+            if (!empty($data->assignUsers) && is_array(($data->assignUsers))){
+                foreach($data->assignUsers as $userId){
+                    $this->projectModel->assignMember( intval($data->project_id),$userId);
+                }
+            }
+
             if ($result) {
                 $this->successResponse($data, 'Project created successfully');
             } else {
@@ -53,6 +59,28 @@ class ProjectController extends GenericController
             }
 
 
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function assignMember(){
+        $this->isAdmin();
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($data->project_id) || !isset($data->user_id)) {
+                $this->errResponse('Project ID and User ID are required');
+                return;
+            }
+
+            $result = $this->projectModel->assignMember($data->project_id, $data->user_id);
+
+            if ($result){
+                $this->successResponse($data, "User assigned to project");
+            } else {
+                $this->errResponse('Failed to assign the user');
+            }
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }

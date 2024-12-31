@@ -9,6 +9,7 @@ class Project {
     private $deadline;
     private $creator;
 
+
     public function __construct(){
         $this->db = Database::getConnection();
     }
@@ -32,18 +33,32 @@ class Project {
         $stmt->bindParam(':creator', $this->creator, PDO::PARAM_INT);
         
         if ($stmt->execute()){
+
             return true;
         }
 
         return false;
     }
-
-    public function getAllProjects(){
+    public function getAllProjects(): array{
         $sql = "SELECT * FROM project_data_view";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_OBJ) ?? null;
+    }
+
+    public function assignMember($projectId, $memberId){
+        $sql = "INSERT INTO project_members (project_id, user_id) VALUES (:pId, :mId);";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':pId', $projectId);
+        $stmt->bindParam(':mId', $memberId);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
     }
 }
