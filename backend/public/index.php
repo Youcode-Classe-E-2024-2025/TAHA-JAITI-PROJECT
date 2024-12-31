@@ -7,7 +7,8 @@ set_exception_handler('ErrorHandler::handleException');
 
 $router = new Router();
 
-$router->addRoute('/login', 'POST');
-$router->run($_SERVER['REQUEST_URI']);
+$router->addRoute('POST', '/users', 'UserController@create');
+
+$router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 Database::initializeDatabase();
