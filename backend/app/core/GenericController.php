@@ -14,7 +14,6 @@ class GenericController {
 
     protected function errResponse ($msg, $code = '400') {
         http_response_code($code);
-        header('Content-Type: application/json');
         echo json_encode([
             'status' => false,
             'message' => $msg
@@ -24,8 +23,31 @@ class GenericController {
 
     protected function getRequestData () {
         $data = json_decode(file_get_contents('php://input'));
-        return $data;
+        return $data ?? null;
     }
 
+    protected function startSession(object $user): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
+        $_SESSION['user_id'] = $user->id;
+        $_SESSION['role'] = $user->role;
+        setcookie('SESSION_ID', session_id(), time() + 3600, '/',true, true);
+    }
+
+    protected function isLoggedIn(): bool {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        return isset($_SESSION['user_id']) && isset($_SESSION['role']);
+    }
+
+    public function isAdmin(): void {
+        if (!$this->isLoggedIn() && $_SESSION['role'] !== 'chief') {
+            $this->errResponse('Unauthorized access', 401);
+        }    
+    }
 }

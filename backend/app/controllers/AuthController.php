@@ -3,19 +3,14 @@
 class AuthController extends GenericController
 {
 
-    public function startSession(string $id): void
-    {
-        session_start();
-        $_SESSION['user_id'] = $id;
-        setcookie('SESSION_ID', session_id(), time() + 3600, '/');
-    }
+    
 
     public function register(): void
     {
         try {
             $data = $this->getRequestData();
 
-            $errors = UserValidator::validate($data);
+            $errors = Validator::validateUser($data);
             if (!empty($errors)) {
                 $this->errResponse(implode(', ', $errors));
             }
@@ -27,11 +22,9 @@ class AuthController extends GenericController
             $user->setName(str_secure($data->name));
             $user->setPassword($hashPass);
 
-            $userId = $user->register();
+            $userData = $user->register();
 
-            if ($userId) {
-                $this->startSession($userId);
-
+            if ($userData) {
                 $this->successResponse($data, 'User registered succesfully');
             } else {
                 $this->errResponse('A user with this email already exists');
@@ -62,12 +55,34 @@ class AuthController extends GenericController
                 $this->errResponse('Invalid password or email');
             }
 
-            $this->startSession($userObject->id);
+            $this->startSession($userObject);
 
+            unset($userObject['password']);
             $this->successResponse($userObject, 'User logged in successfuly');
 
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
+    public function logout(): void {
+        try {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            $_SESSION = [];
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+            }
+
+            session_destroy();
+
+            // Respond with success
+            $this->successResponse(null, 'User logged out successfully');
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred while logging out: ' . $e->getMessage());
         }
     }
 }
