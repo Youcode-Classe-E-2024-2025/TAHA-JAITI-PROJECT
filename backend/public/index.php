@@ -12,6 +12,6 @@ Database::initializeDatabase();
 
 $router = new Router();
 
-$router->addRoute('POST', '/register', 'UserController@register');
+$router->addRoute('POST', '/register', 'AuthController@register');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

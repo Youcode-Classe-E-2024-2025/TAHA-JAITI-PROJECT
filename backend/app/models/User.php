@@ -8,8 +8,8 @@ class User implements UserInterface{
     protected string $email;
     protected string $password;
 
-    public function __construct(PDO $db, int $id = 0, string $name = '', string $email = '', string $password = '') {
-        $this->db = $db;
+    public function __construct(int $id = 0, string $name = '', string $email = '', string $password = '') {
+        $this->db = Database::getConnection();
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
@@ -29,16 +29,16 @@ class User implements UserInterface{
             return false;
         }
 
-        $hashPass = password_hash($this->password, PASSWORD_BCRYPT);
-
         $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password);';
 
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
+        $stmt->execute([
             ':name' => $this->name,
             ':email' => $this->email,
-            ':password' => $hashPass
+            ':password' => $this->password
         ]);
+
+        return $this->db->lastInsertId();
     }
 
     public function login(): bool {
