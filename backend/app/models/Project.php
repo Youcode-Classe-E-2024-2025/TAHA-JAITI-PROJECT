@@ -34,10 +34,10 @@ class Project {
         
         if ($stmt->execute()){
 
-            return true;
+            return $this->db->lastInsertId();
         }
 
-        return false;
+        return null;
     }
     public function getAllProjects(): array{
         $sql = "SELECT * FROM project_data_view";

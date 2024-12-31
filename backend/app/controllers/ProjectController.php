@@ -31,7 +31,7 @@ class ProjectController extends GenericController
 
             if (!empty($data->assignUsers) && is_array(($data->assignUsers))){
                 foreach($data->assignUsers as $userId){
-                    $this->projectModel->assignMember( intval($data->project_id),$userId);
+                    $this->projectModel->assignMember( intval($result),$userId);
                 }
             }
 
