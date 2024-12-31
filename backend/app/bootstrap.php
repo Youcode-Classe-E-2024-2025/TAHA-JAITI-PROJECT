@@ -11,7 +11,6 @@ class Loader {
         spl_autoload_register([self::class, 'autoLoad']);
     }
 
-
     public static function autoLoad($classname){
         
 
@@ -45,3 +44,5 @@ class Loader {
         return false;
     }
 }
+
+Loader::load();
