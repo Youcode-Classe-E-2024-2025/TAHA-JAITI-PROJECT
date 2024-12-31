@@ -41,9 +41,8 @@ class User implements UserInterface{
         return (int) $this->db->lastInsertId();
     }
 
-    public function login(string $email, string $password): bool {
-        $user = $this->getUserByEmail($email);
-        if (!$user || password_verify($password, $user->password)){
+    public function login(object $user, string $password): bool {
+        if (!password_verify($password, $user->password)){
             return false;
         }
 

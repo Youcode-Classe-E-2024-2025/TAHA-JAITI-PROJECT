@@ -50,16 +50,21 @@ class AuthController extends GenericController
                 $this->errResponse('Missing email or password');
                 return;
             }
-    
+            
+
             $email = $data->email;
             $password = $data->password;
 
             $user = new User();
-            if (!$user->login($email, $password)){
+            $userObject = $user->getUserByEmail($email);
+
+            if (!$user->login($userObject, $password)){
                 $this->errResponse('Invalid password or email');
             }
 
-            $this->successResponse($data, 'User logged in successfuly');
+            $this->startSession($userObject->id);
+
+            $this->successResponse($userObject, 'User logged in successfuly');
 
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
