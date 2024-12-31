@@ -49,7 +49,6 @@ class Database {
         try {
             self::$pdo = new PDO($dsn, self::$user, self::$password);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo 'connected';
         } catch (PDOException $e) {
             echo 'Connection failed: ' . $e->getMessage();
             die();

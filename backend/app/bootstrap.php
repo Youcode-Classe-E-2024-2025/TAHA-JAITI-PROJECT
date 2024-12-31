@@ -6,22 +6,19 @@ require_once __DIR__ . '/config/config.php';
 
 class Loader {
 
-
-    public static function load(){
-        spl_autoload_register([self::class, 'autoLoad']);
+    public function __construct(){
+        spl_autoload_register([$this, 'autoLoad']);
     }
 
-    public static function autoLoad($classname){
-        
-
+    public function autoLoad($classname){
         $path = str_replace('\\', DIRECTORY_SEPARATOR, $classname) . '.php';
 
-        self::scanDir(__DIR__, $path);
+        $baseDir = __DIR__;
+
+        $this->scanDir($baseDir, $path);
     }
 
-
-    public static function scanDir($dir, $path){
-
+    public function scanDir($dir, $path){
         $files = scandir($dir);
 
         foreach ($files as $file){
@@ -30,19 +27,12 @@ class Loader {
             }
 
             $fullPath = $dir . DIRECTORY_SEPARATOR . $file;
-            
+
             if (is_dir($fullPath)){
-                self::scanDir($fullPath, $path);
-            } elseif (is_file($fullPath) && basename($fullPath) === $path){
-                
+                $this->scanDir($fullPath, $path);
+            } elseif (is_file($fullPath) && pathinfo($fullPath, PATHINFO_EXTENSION) === 'php'){
                 require_once $fullPath;
-                return true;
             }
-
         }
-
-        return false;
     }
 }
-
-Loader::load();

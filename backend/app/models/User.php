@@ -21,8 +21,24 @@ class User implements UserInterface{
     public function setPassword (string $password) {$this->password = $password;}
 
     public function register (): bool {
-        echo json_encode('hello');
-        return true;
+        $sql = 'SELECT id FROM users WHERE email = :email';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $this->email]);
+
+        if ($stmt->fetchColumn()){
+            return false;
+        }
+
+        $hashPass = password_hash($this->password, PASSWORD_BCRYPT);
+
+        $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password);';
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':name' => $this->name,
+            ':email' => $this->email,
+            ':password' => $hashPass
+        ]);
     }
 
     public function login(): bool {
