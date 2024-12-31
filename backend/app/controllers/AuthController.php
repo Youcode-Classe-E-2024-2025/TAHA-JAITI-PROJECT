@@ -12,33 +12,57 @@ class AuthController extends GenericController
 
     public function register(): void
     {
-        $data = $this->getRequestData();
+        try {
+            $data = $this->getRequestData();
 
-        $errors = UserValidator::validate($data);
-        if (!empty($errors)) {
-            $this->errResponse(implode(', ', $errors));
-        }
+            $errors = UserValidator::validate($data);
+            if (!empty($errors)) {
+                $this->errResponse(implode(', ', $errors));
+            }
 
-        $hashPass = password_hash($data->password, PASSWORD_BCRYPT);
+            $hashPass = password_hash($data->password, PASSWORD_BCRYPT);
 
-        $user = new User();
-        $user->setEmail(str_secure($data->email));
-        $user->setName(str_secure($data->name));
-        $user->setPassword($hashPass);
+            $user = new User();
+            $user->setEmail(str_secure($data->email));
+            $user->setName(str_secure($data->name));
+            $user->setPassword($hashPass);
 
-        $userId = $user->register();
+            $userId = $user->register();
 
-        if ($userId) {
-            $this->startSession($userId);
+            if ($userId) {
+                $this->startSession($userId);
 
-            $this->successResponse($data, 'User registered succesfully');
-        } else {
-            $this->errResponse('Error registering user');
+                $this->successResponse($data, 'User registered succesfully');
+            } else {
+                $this->errResponse('A user with this email already exists');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexcpeted error occured');
         }
     }
 
     public function login(): void {
-        
+        try {
 
+            $data = $this->getRequestData();
+
+            if (empty($data) || !isset($data->email, $data->password)) {
+                $this->errResponse('Missing email or password');
+                return;
+            }
+    
+            $email = $data->email;
+            $password = $data->password;
+
+            $user = new User();
+            if (!$user->login($email, $password)){
+                $this->errResponse('Invalid password or email');
+            }
+
+            $this->successResponse($data, 'User logged in successfuly');
+
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e);
+        }
     }
 }

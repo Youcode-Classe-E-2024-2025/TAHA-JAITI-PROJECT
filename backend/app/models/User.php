@@ -20,7 +20,7 @@ class User implements UserInterface{
     public function setEmail (string $email) {$this->email = $email;}
     public function setPassword (string $password) {$this->password = $password;}
 
-    public function register (): bool {
+    public function register (): int {
         $sql = 'SELECT id FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $this->email]);
@@ -38,11 +38,23 @@ class User implements UserInterface{
             ':password' => $this->password
         ]);
 
-        return $this->db->lastInsertId();
+        return (int) $this->db->lastInsertId();
     }
 
-    public function login(): bool {
+    public function login(string $email, string $password): bool {
+        $user = $this->getUserByEmail($email);
+        if (!$user || password_verify($password, $user->password)){
+            return false;
+        }
+
         return true;
+    }
+
+    public function getUserByEmail($email): object | null {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email');
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
     public function getProjects(): array {

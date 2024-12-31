@@ -7,5 +7,4 @@ class UserController extends GenericController {
         $this->db = Database::getConnection();
     }
 
-    
 }

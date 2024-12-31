@@ -15,5 +15,5 @@ function dd(...$var) {
         echo '</pre>';
     }
 
-    die();
+    // die();
 }
