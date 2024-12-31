@@ -1,6 +1,6 @@
 <?php
 
-class User implements UserInterface{
+class User{
 
     protected PDO $db;
     protected int $id;
