@@ -46,8 +46,12 @@ class GenericController {
     }
 
     public function isAdmin(): void {
-        if (!$this->isLoggedIn() && $_SESSION['role'] !== 'chief') {
+        if (!$this->isLoggedIn()) {
             $this->errResponse('Unauthorized access', 401);
-        }    
+        }
+        
+        if ($_SESSION['role'] !== 'chief'){
+            $this->errResponse('Unauthorized user', 401);
+        }
     }
 }

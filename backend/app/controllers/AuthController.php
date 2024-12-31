@@ -57,7 +57,7 @@ class AuthController extends GenericController
 
             $this->startSession($userObject);
 
-            unset($userObject['password']);
+            unset($userObject->password);
             $this->successResponse($userObject, 'User logged in successfuly');
 
         } catch (Exception $e) {

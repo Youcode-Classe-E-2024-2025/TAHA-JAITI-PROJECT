@@ -12,5 +12,8 @@ $router = new Router();
 
 $router->addRoute('POST', '/register', 'AuthController@register');
 $router->addRoute('POST', '/login', 'AuthController@login');
+$router->addRoute('GET', '/logout', 'AuthController@logout');
+
+$router->addRoute('POST', '/project', 'ProjectController@createProject');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
