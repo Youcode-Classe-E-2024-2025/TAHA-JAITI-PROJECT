@@ -87,4 +87,17 @@ class Task
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
+
+    public function deleteTask($id) :bool{
+        $sql = "DELETE FROM tasks WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 }

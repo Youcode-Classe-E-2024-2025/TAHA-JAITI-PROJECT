@@ -91,8 +91,30 @@ class TaskController extends GenericController{
                 }
                 $this->successResponse($tasks);
             } else {
-                $this->errResponse('Failed getting tasks from the database');
+                $this->errResponse('No tasks found');
             }
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteTask(){
+        $this->isAdmin();
+        try {
+            $data = $this->getRequestData();
+            
+            if (empty($data) || empty($data->task_id)){
+                $this->errResponse('Empty data');
+            }
+
+            $result = $this->taskModel->deleteTask($data->task_id);
+
+            if ($result){
+                $this->successResponse($data, 'Task deleted successfully');
+            } else {
+                $this->errResponse('No task found');
+            }
+
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }

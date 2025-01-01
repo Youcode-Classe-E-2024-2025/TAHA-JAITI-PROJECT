@@ -22,6 +22,6 @@ $router->addRoute('DELETE', '/project', 'ProjectController@deleteProject');
 $router->addRoute('POST', '/task', 'TaskController@createTask');
 $router->addRoute('POST', '/task/assign', 'TaskController@assignTask');
 $router->addRoute('GET', '/task', 'TaskController@getAllTasks'); //get project tasks based on project id
-
+$router->addRoute('DELETE', '/task', 'TaskController@deleteTask');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
