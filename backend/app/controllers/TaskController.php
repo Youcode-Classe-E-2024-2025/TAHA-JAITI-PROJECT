@@ -32,6 +32,12 @@ class TaskController extends GenericController{
 
             $result = $this->taskModel->createTask();
 
+            if (!empty($data->assignUsers) && is_array(($data->assignUsers))){
+                foreach($data->assignUsers as $userId){
+                    $this->taskModel->assignTask( intval($result),$userId);
+                }
+            }
+
             if ($result){
                 $this->successResponse((int) $result ,'Task created succesfuly');
             }
@@ -39,6 +45,29 @@ class TaskController extends GenericController{
             $this->errResponse('Failed to create task');
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
+    public function assignTask(){
+        $this->isAdmin();
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($data->task_id) || !isset($data->user_id)) {
+                $this->errResponse('Project ID and User ID are required');
+                return;
+            }
+
+            $result = $this->taskModel->assignTask((int) $data->task_id, (int) $data->user_id);
+
+            if ($result){
+                $this->successResponse($data, 'User assigned to task');
+            } else {
+                $this->errResponse('Failed to assign user');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexcpected error occurred:' . $e->getMessage());
         }
     }
 

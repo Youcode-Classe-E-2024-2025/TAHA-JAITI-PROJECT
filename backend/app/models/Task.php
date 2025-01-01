@@ -41,4 +41,17 @@ class Task {
         return null;
     }
 
+    public function assignTask($taskId, $userId){
+        $sql = "INSERT INTO user_assignments (user_id, task_id) VALUES (:uId, :tId);";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':uId', $userId);
+        $stmt->bindParam(':tId', $taskId);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 }
