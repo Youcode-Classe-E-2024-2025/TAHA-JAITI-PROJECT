@@ -91,4 +91,26 @@ SELECT p.id as project_id,
 FROM projects p
 JOIN users u ON p.creator_id = u.id;
 
+CREATE VIEW task_data AS
+SELECT 
+    t.*,
+    ARRAY_AGG(DISTINCT u.name) AS assignee_names,
+    ARRAY_AGG(DISTINCT tg.name) AS tag_names,
+    c.name AS category_name
+FROM 
+    tasks t
+LEFT JOIN 
+    user_assignments ua ON t.id = ua.task_id
+LEFT JOIN 
+    users u ON ua.user_id = u.id
+LEFT JOIN 
+    task_tags tt ON tt.task_id = t.id
+LEFT JOIN 
+    tags tg ON tt.tag_id = tg.id
+LEFT JOIN 
+    categories c ON t.category_id = c.id
+GROUP BY 
+    t.id, c.name
+ORDER BY 
+    t.id ASC;
 ";

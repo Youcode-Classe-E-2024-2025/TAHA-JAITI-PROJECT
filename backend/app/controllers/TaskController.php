@@ -81,7 +81,7 @@ class TaskController extends GenericController{
     
             $projectId = intval($_GET['id']);
     
-            //project id for the task
+            //project id for the query
             $tasks = $this->taskModel->getAllTasks($projectId);
 
             if ($tasks) {
