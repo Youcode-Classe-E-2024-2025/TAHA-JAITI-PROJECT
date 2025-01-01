@@ -23,7 +23,18 @@ class GenericController {
 
     protected function getRequestData () {
         $data = json_decode(file_get_contents('php://input'));
-        return $data ?? null;
+
+        if (!empty($data)) {
+            $secureData = new stdClass();
+    
+            foreach ($data as $key => $value) {
+                $secureData->$key = is_string($value) ? str_secure($value) : $value;
+            }
+    
+            return $secureData;
+        }
+    
+        return null;
     }
 
     protected function startSession(object $user): void

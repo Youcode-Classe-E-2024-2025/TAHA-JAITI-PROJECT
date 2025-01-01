@@ -20,7 +20,7 @@ class Project {
     public function setDeadline($deadline){$this->deadline = $deadline;}
     public function setCreator(int $id) {$this->creator = $id;}
 
-    public function createProject(){
+    public function createProject(): string | null{
         $sql = "INSERT INTO 
                 projects(name, description, is_public, deadline, creator_id) 
                 VALUES (:name, :desc, :is_public, :deadline, :creator)";
@@ -35,9 +35,9 @@ class Project {
         if ($stmt->execute()){
 
             return $this->db->lastInsertId();
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     public function deleteProject($id){

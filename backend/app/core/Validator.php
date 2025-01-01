@@ -37,6 +37,27 @@ class Validator {
         }
 
         return $errors;
+    }
 
+    public static function validateTask($data): array {
+        $errors = [];
+
+        if (empty($data->title)){
+            $errors[] = 'Task title is required';
+        }
+
+        if (empty($data->status)){
+            $errors[] = 'Status is required';
+        }
+
+        if (empty($data->deadline)){
+            $errors[] = 'Deadline is required';
+        }
+
+        if (empty($data->project_id)){
+            $errors[] = 'Project is missing';
+        }
+
+        return $errors;
     }
 }

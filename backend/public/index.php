@@ -19,5 +19,6 @@ $router->addRoute('POST', '/project/assign', 'ProjectController@assignMember');
 $router->addRoute('GET', '/project', 'ProjectController@getAllProjects');
 $router->addRoute('DELETE', '/project', 'ProjectController@deleteProject');
 
+$router->addRoute('POST', '/task', 'TaskController@createTask');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
