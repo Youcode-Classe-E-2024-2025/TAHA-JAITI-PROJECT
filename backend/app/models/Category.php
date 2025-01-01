@@ -36,4 +36,16 @@ class Category
             return false;
         }
     }
+
+    public function getCategories(): array | null{
+        $sql = "SELECT * FROM categories";
+
+        $stmt = $this->db->prepare($sql);
+        
+        if ($stmt->execute()){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        return null;
+    }
 }

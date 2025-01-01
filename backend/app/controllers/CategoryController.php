@@ -39,6 +39,14 @@ class CategoryController extends GenericController{
 
         try {
             
+            $categories = $this->catModel->getCategories();
+
+            if ($categories){
+                $this->successResponse($categories);
+            } else {
+                $this->errResponse('Failed getting projects from the database');
+            }
+
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
