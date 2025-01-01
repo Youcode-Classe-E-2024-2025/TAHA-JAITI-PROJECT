@@ -8,7 +8,7 @@ class GenericController {
             'status' => true,
             'message' => $msg,
             'data' => $data
-        ]);
+        ], JSON_UNESCAPED_SLASHES);
         exit;
     }
 
@@ -17,7 +17,7 @@ class GenericController {
         echo json_encode([
             'status' => false,
             'message' => $msg
-        ]);
+        ], JSON_UNESCAPED_SLASHES);
         exit;
     }
 

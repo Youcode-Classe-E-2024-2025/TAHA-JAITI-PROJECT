@@ -71,4 +71,30 @@ class TaskController extends GenericController{
         }
     }
 
+    public function getAllTasks(){
+        $this->isLoggedIn();
+        try {
+            if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+                $this->errResponse('Invalid or missing project ID');
+                return;
+            }
+    
+            $projectId = intval($_GET['id']);
+    
+            //project id for the task
+            $tasks = $this->taskModel->getAllTasks($projectId);
+
+            if ($tasks) {
+                foreach ($tasks as &$task) {
+                    $task['assignee_names'] = parseStringToArray($task['assignee_names']);
+                    $task['tag_names'] = parseStringToArray($task['tag_names']);
+                }
+                $this->successResponse($tasks);
+            } else {
+                $this->errResponse('Failed getting tasks from the database');
+            }
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }

@@ -5,6 +5,7 @@
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/Helpers/Debug.php';
 require_once __DIR__ . '/Helpers/Secure.php';
+require_once __DIR__ . '/Helpers/Array.php';
 
 //AUTO LOADER
 spl_autoload_register(function ($className) {
