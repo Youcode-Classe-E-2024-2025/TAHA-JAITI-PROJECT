@@ -45,6 +45,28 @@ class ProjectController extends GenericController
         }
     }
 
+    public function deleteProject(){
+        $this->isAdmin();
+        try {
+            $data = $this->getRequestData();
+            
+            if (empty($data) || empty($data->project_id)){
+                $this->errResponse('Empty data');
+            }
+
+            $result = $this->projectModel->deleteProject($data->project_id);
+
+            if ($result){
+                $this->successResponse($data, 'Project deleted successfully');
+            } else {
+                $this->errResponse('Failed to delete the project');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
     public function getAllProjects(){
         $this->isAdmin();
 
@@ -74,7 +96,7 @@ class ProjectController extends GenericController
                 return;
             }
 
-            $result = $this->projectModel->assignMember($data->project_id, $data->user_id);
+            $result = $this->projectModel->assignMember((int) $data->project_id, (int) $data->user_id);
 
             if ($result){
                 $this->successResponse($data, "User assigned to project");

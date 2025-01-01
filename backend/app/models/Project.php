@@ -39,6 +39,20 @@ class Project {
 
         return null;
     }
+
+    public function deleteProject($id){
+        $sql = "DELETE FROM projects WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+    
     public function getAllProjects(): array{
         $sql = "SELECT * FROM project_data_view";
 

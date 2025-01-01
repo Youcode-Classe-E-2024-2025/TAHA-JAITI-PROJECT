@@ -17,6 +17,7 @@ $router->addRoute('GET', '/logout', 'AuthController@logout');
 $router->addRoute('POST', '/project', 'ProjectController@createProject');
 $router->addRoute('POST', '/project/assign', 'ProjectController@assignMember');
 $router->addRoute('GET', '/project', 'ProjectController@getAllProjects');
+$router->addRoute('DELETE', '/project', 'ProjectController@deleteProject');
 
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
