@@ -60,4 +60,14 @@ class Validator {
 
         return $errors;
     }
+
+    public static function validateName($data):array{
+        $errors = [];
+
+        if (empty($data->name)){
+            $errors[] = 'Name is required';
+        }
+
+        return $errors;
+    }
 }

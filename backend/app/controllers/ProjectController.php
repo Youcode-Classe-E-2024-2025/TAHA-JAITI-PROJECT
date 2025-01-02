@@ -77,7 +77,7 @@ class ProjectController extends GenericController
             if ($projects){
                 $this->successResponse($projects);
             } else {
-                $this->errResponse('Failed getting projects from the database');
+                $this->errResponse('No projects found');
             }
 
 

@@ -9,7 +9,8 @@ class Tag{
     private $color;
 
     public function __construct()
-    {
+    {   
+        $this->color = '#000000';
         $this->db = Database::getConnection();
     }
 
