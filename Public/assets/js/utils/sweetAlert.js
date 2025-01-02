@@ -1,7 +1,13 @@
 export const sweetAlert = (msg) => {
+    const deja = document.querySelector('#alertMsg')
+    if (deja){
+        deja.remove();
+    }
+
     const message = msg ? msg : 'none';
 
     const element = document.createElement('div')
+    element.id = 'alertMsg'
     element.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50'
     element.innerHTML = `<div class="bg-purple-950 w-full h-fit p-2 flex items-center rounded-sm">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -10,6 +16,9 @@ export const sweetAlert = (msg) => {
                             <p>${message}</p>
                         </div>`
 
-    const root = document.getElementById('root')
-    root.appendChild(element);
+    document.body.appendChild(element);
+
+    setTimeout(() => {
+        element.remove();
+    }, 2500)
 };

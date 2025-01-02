@@ -17,14 +17,14 @@ export const loginForm = () => {
                         <label for="email" class="block text-sm font-medium text-gray-300">
                             <i class="fa-regular fa-envelope mr-2 text-purple-400"></i>Email
                         </label>
-                        <input type="email" id="email" name="email" required class="input" placeholder="Enter your email" />
+                        <input type="email" id="email" name="email" class="input" placeholder="Enter your email" />
                     </div>
         
                     <div class="space-y-1">
                         <label for="password" class="block text-sm font-medium text-gray-300">
                             <i class="fa-regular fa-lock mr-2 text-purple-400"></i>Password
                         </label>
-                        <input type="password" id="password" name="password" required class="input"
+                        <input type="password" id="password" name="password" class="input"
                             placeholder="Enter your password" />
                     </div>
         
@@ -64,5 +64,9 @@ const handleLogin = async (data) => {
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
+    if (!emailRegex.test(email)){
+        sweetAlert('Enter a valid email');
+        return;
+    }
     
 }
