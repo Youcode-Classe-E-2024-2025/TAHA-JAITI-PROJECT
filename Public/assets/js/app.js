@@ -2,6 +2,7 @@ import page from "page";
 import { loginForm } from "./pages/login.js";
 import { registerForm } from "./pages/register.js";
 import { homePage } from "./pages/home.js";
+import { projectsContainer } from "./pages/projects.js";
 
 import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
@@ -43,9 +44,16 @@ function renderHome(){
     root.appendChild(homePage());
 }
 
+function renderProjects(){
+    clearRoot();
+    root.appendChild(projectsContainer());
+}
+
 page('/', renderHome);
 page('/login', renderLogin);
 page('/signup', renderRegister);
+
+page('/projects', renderProjects);
 
 page('/404', renderBad);
 page('*', renderErr);
