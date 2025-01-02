@@ -2,7 +2,7 @@
 
 //DIR: C:\laragon\www\ADVANCED-TASKFLOW\backend\app
 
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/Config/config.php';
 require_once __DIR__ . '/Helpers/Debug.php';
 require_once __DIR__ . '/Helpers/Secure.php';
 require_once __DIR__ . '/Helpers/Array.php';
@@ -12,7 +12,6 @@ spl_autoload_register(function ($className) {
     $directories = [
         __DIR__ . '/Controllers',
         __DIR__ . '/Core',
-        __DIR__ . '/Interfaces',
         __DIR__ . '/Models',
     ];
 
