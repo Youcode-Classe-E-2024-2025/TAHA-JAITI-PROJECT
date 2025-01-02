@@ -58,6 +58,21 @@ class TagController extends GenericController {
         try {
             $data = $this->getRequestData();
 
+            if (!isset($data->task_id) || !isset($data->tag_id)) {
+                $this->errResponse('Task ID and Tag ID are required');
+                return;
+            }
+
+            $this->tagModel->setId((int) $data->tag_id);
+            $this->tagModel->setTask((int) $data->task_id);
+
+            $result = $this->tagModel->assignTag();
+
+            if ($result){
+                $this->successResponse($data, "Tag assigned to tasl");
+            } else {
+                $this->errResponse('Failed to assign tag');
+            }
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured'. $e->getMessage());
