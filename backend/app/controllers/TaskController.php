@@ -54,7 +54,7 @@ class TaskController extends GenericController{
             $data = $this->getRequestData();
 
             if (!isset($data->task_id) || !isset($data->user_id)) {
-                $this->errResponse('Project ID and User ID are required');
+                $this->errResponse('Task ID and User ID are required');
                 return;
             }
 

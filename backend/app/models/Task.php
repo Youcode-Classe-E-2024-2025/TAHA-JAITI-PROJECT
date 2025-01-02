@@ -62,7 +62,7 @@ class Task
         return null;
     }
 
-    public function assignTask($taskId, $userId)
+    public function assignTask($taskId, $userId): bool
     {
         $sql = "INSERT INTO user_assignments (user_id, task_id) VALUES (:uId, :tId);";
 

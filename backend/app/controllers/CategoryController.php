@@ -51,4 +51,30 @@ class CategoryController extends GenericController{
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+
+    public function assignCat(){
+        $this->isAdmin();
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($data->task_id) || !isset($data->cat_id)) {
+                $this->errResponse('Task ID and Category ID are required');
+                return;
+            }
+
+            $this->catModel->setId((int) $data->cat_id);
+            $this->catModel->setTask((int) $data->task_id);
+
+            $result = $this->catModel->assignCat();
+
+            if ($result){
+                $this->successResponse($data, 'Category assigned to task');
+            } else {
+                $this->errResponse('Failed to assign category');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }

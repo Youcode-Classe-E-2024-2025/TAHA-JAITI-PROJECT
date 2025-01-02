@@ -7,6 +7,7 @@ class Category
 
     private $name;
     private $id;
+    private $taskId;
 
     public function __construct()
     {
@@ -21,6 +22,11 @@ class Category
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function setTask($id)
+    {
+        $this->taskId = $id;
     }
 
     public function createCategory(): bool | int {
@@ -47,5 +53,19 @@ class Category
         }
         
         return null;
+    }
+
+    public function assignCat(): bool{
+        $sql = 'UPDATE tasks SET category_id = :c_id WHERE id = :t_id';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':c_id', $this->id);
+        $stmt->bindParam(':t_id', $this->taskId);
+
+        if ($stmt->execute()){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

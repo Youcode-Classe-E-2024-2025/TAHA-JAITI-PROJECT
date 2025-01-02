@@ -26,5 +26,6 @@ $router->addRoute('DELETE', '/task', 'TaskController@deleteTask');
 
 $router->addRoute('POST', '/category', 'CategoryController@createCat');
 $router->addRoute('GET', '/category', 'CategoryController@getAllCategories');
+$router->addRoute('POST', '/category/assign', 'CategoryController@assignCat');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
