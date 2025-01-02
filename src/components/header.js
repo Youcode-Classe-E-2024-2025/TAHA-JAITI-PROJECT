@@ -17,9 +17,9 @@ export const header = () => {
 
                 <!-- Auth Buttons -->
                 <div class="flex items-center space-x-3">
-                    <button class="btn_primary bg-transparent">
+                    <a href="/login" data-ajax class="btn_primary bg-transparent">
                         Login
-                    </button>
+                    </a>
                     <button class="btn_primary">
                         Sign up
                     </button>

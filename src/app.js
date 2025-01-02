@@ -1,15 +1,36 @@
 import { header } from "./components/header.js";
+import { loginForm } from "./components/login.js";
 
 const root = document.getElementById("root");
 
-if (!root){
+if (!root) {
     throw new Error('Root not found');
 }
 
-
-function clearRoot(){
+function clearRoot() {
     root.innerHTML = "";
     root.innerHTML += header();
 }
 
-// document.addEventListener('DOMContentLoaded', clearRoot);
+function renderLogin() {
+    clearRoot();
+    root.appendChild(loginForm());
+}
+
+page('/', () => {
+    clearRoot();
+})
+
+page('/login', renderLogin);
+
+page.start();
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-ajax]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const route = e.target.getAttribute('href');
+            page(route);
+        });
+    });
+});
