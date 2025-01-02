@@ -1,12 +1,16 @@
 import page from 'page';
-import { getUserId } from '../utils/userUtil.js';
 import axios from 'axios';
+import { getUserId, getUserRole } from '../utils/userUtil.js';
 import { sweetAlert } from '../utils/sweetAlert.js';
 import { loading } from '../utils/loading.js';
 
 export const header = () => {
     const logged = getUserId();
-    const isUserLoggedIn = logged !== null;
+    const isAdmin = getUserRole();
+
+    const isUserLoggedIn = logged !== null ? 'flex' : 'hidden';
+    const isUserLoggedOut = logged === null ? 'flex' : 'hidden';
+    const isAdminLogged = isAdmin === 'chief' ? 'flex' : 'hidden';
 
     const element = document.createElement('header');
     element.classList = 'bg-gradient-to-r from-gray-800 to-black';
@@ -22,19 +26,19 @@ export const header = () => {
                 <!-- Main Navigation -->
                 <div class="hidden md:flex items-center text-lg space-x-6">
                     <a href="/" data-ajax class="hover:text-white">Home</a>
-                    <a href="/dashboard" data-ajax class="hover:text-white">Dashboard</a>
+                    <a href="/dashboard" data-ajax class="${isAdminLogged} hover:text-white">Dashboard</a>
                     <a href="/projects" data-ajax class="hover:text-white">Projects</a>
                 </div>
 
                 <!-- Auth Buttons -->
                 <div class="flex items-center space-x-3">
-                    <a href="/login" data-ajax class="${!isUserLoggedIn ? 'flex' : 'hidden'} btn_primary bg-transparent">
+                    <a href="/login" data-ajax class="${isUserLoggedOut} btn_primary bg-transparent">
                         Login
                     </a>
-                    <a href="/signup" data-ajax class="${!isUserLoggedIn ? 'flex' : 'hidden'} btn_primary">
+                    <a href="/signup" data-ajax class="${isUserLoggedOut} btn_primary">
                         Sign up
                     </a>
-                    <button id="logoutBtn" class="${isUserLoggedIn ? 'flex' : 'hidden'} btn_primary">
+                    <button id="logoutBtn" class="${isUserLoggedIn} btn_primary">
                         Log out
                     </button>
                 </div>
@@ -52,11 +56,14 @@ export const header = () => {
 
             const load = new loading();
 
-            load.start();
-
-            await handleLogout();
-
-            load.stop();
+            try {
+                load.start();
+                await handleLogout();
+                load.stop();
+            } catch (error) {
+                load.stop();
+                console.error('Logout failed:', error);
+            }
         });
     }
 
@@ -68,13 +75,13 @@ const handleLogout = async () => {
 
         const response = await axios.get('http://localhost/api/logout');
 
-        if (response.status === 200){
+        if (response.status === 200) {
             sessionStorage.clear();
             page('/');
         } else {
             sweetAlert('An error occured while logging out' + response.data.message)
         }
-    } catch (err){
+    } catch (err) {
         page('/404');
         throw err;
     }
