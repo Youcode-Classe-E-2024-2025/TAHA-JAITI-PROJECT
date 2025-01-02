@@ -1,5 +1,8 @@
 import page from 'page';
 import { getUserId } from '../utils/userUtil.js';
+import axios from 'axios';
+import { sweetAlert } from '../utils/sweetAlert.js';
+import { loading } from '../utils/loading.js';
 
 export const header = () => {
     const logged = getUserId();
@@ -44,16 +47,35 @@ export const header = () => {
 
     const logoutBtn = element.querySelector('#logoutBtn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
+        logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            handleLogout();
+
+            const load = new loading();
+
+            load.start();
+
+            await handleLogout();
+
+            load.stop();
         });
     }
 
     return element;
 };
 
-const handleLogout = () => {
-    sessionStorage.clear();
-    page('/');
+const handleLogout = async () => {
+    try {
+
+        const response = await axios.get('http://localhost/api/logout');
+
+        if (response.status === 200){
+            sessionStorage.clear();
+            page('/');
+        } else {
+            sweetAlert('An error occured while logging out' + response.data.message)
+        }
+    } catch (err){
+        page('/404');
+        throw err;
+    }
 };
