@@ -38,15 +38,19 @@ class GenericController {
     }
 
     protected function startSession(object $user): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['role'] = $user->role;
-        setcookie('SESSION_ID', session_id(), time() + 3600, '/',true, true);
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start([
+            'cookie_lifetime' => 3600,
+            'cookie_secure' => true,
+            'cookie_httponly' => true,
+            'cookie_samesite' => 'Strict',
+        ]);
     }
+
+    $_SESSION['user_id'] = $user->id;
+    $_SESSION['role'] = $user->role;
+}
 
     protected function isLoggedIn(): bool {
         if (session_status() === PHP_SESSION_NONE) {
