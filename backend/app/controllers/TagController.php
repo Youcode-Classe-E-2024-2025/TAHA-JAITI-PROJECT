@@ -27,6 +27,15 @@ class TagController extends GenericController {
 
             $result = $this->tagModel->createTag();
 
+            if (!empty($data->assign_tasks) && is_array(($data->assign_tasks))){
+                foreach($data->assign_tasks as $taskId){
+                    $this->tagModel->setId((int) $result);
+                    $this->tagModel->setTask((int) $taskId);
+            
+                    $this->tagModel->assignTag();
+                }
+            }
+
             if ($result) {
                 $this->successResponse($data, 'Tag created successfully');
             } else {

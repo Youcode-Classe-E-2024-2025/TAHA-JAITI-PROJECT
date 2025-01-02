@@ -34,5 +34,7 @@ $router->addRoute('POST', '/category/assign', 'CategoryController@assignCat');
 
 //tag routes
 $router->addRoute('POST', '/tag', 'TagController@createTag');
+$router->addRoute('GET', '/tag', 'TagController@getTags');
+$router->addRoute('POST', '/tag/assign', 'TagController@assignTag');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
