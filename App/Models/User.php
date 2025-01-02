@@ -1,14 +1,17 @@
 <?php
 
-class User{
+class User
+{
 
     protected PDO $db;
     protected int $id;
     protected string $name;
     protected string $email;
     protected string $password;
+    protected string $role;
 
-    public function __construct(int $id = 0, string $name = '', string $email = '', string $password = '') {
+    public function __construct(int $id = 0, string $name = '', string $email = '', string $password = '')
+    {
         $this->db = Database::getConnection();
         $this->id = $id;
         $this->name = $name;
@@ -16,55 +19,75 @@ class User{
         $this->password = $password;
     }
 
-    public function setName (string $name) {$this->name = $name;}
-    public function setEmail (string $email) {$this->email = $email;}
-    public function setPassword (string $password) {$this->password = $password;}
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+    public function setRole(string $role)
+    {
+        $this->role = $role;
+    }
 
-    public function register (): int {
+    public function register(): int
+    {
         $sql = 'SELECT id FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $this->email]);
 
-        if ($stmt->fetchColumn()){
+        if ($stmt->fetchColumn()) {
             return false;
         }
 
-        $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password);';
+        $sql = 'INSERT INTO users (name, email, password, role) 
+        VALUES (:name, :email, :password:role);';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':name' => $this->name,
             ':email' => $this->email,
-            ':password' => $this->password
+            ':password' => $this->password,
+            ':role', $this->role,
         ]);
 
         return (int) $this->db->lastInsertId();
     }
 
-    public function login(object $user, string $password): bool {
-        if (!password_verify($password, $user->password)){
+    public function login(object $user, string $password): bool
+    {
+        if (!password_verify($password, $user->password)) {
             return false;
         }
 
         return true;
     }
 
-    public function getUserByEmail($email): object | bool {
+    public function getUserByEmail($email): object | bool
+    {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email');
         $stmt->bindParam(':email', $email);
-        
-        if ($stmt->execute()){
+
+        if ($stmt->execute()) {
             return $stmt->fetch(PDO::FETCH_OBJ);
         }
 
         return false;
     }
 
-    public function getProjects(): array {
+    public function getProjects(): array
+    {
         return [];
     }
 
-    public function getTasks(): array {
+    public function getTasks(): array
+    {
         return [];
     }
 }

@@ -20,7 +20,7 @@ export const header = () => {
                     <a href="/login" data-ajax class="btn_primary bg-transparent">
                         Login
                     </a>
-                    <a href="/register" data-ajax class="btn_primary">
+                    <a href="/signup" data-ajax class="btn_primary">
                         Sign up
                     </a>
                     <a href="/logout" data-ajax class="btn_primary">

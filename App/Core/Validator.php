@@ -18,6 +18,10 @@ class Validator {
             $errors[] = 'Password is required.';
         }
 
+        if (empty($data->role)){
+            $errors[] = 'Role is required/invalid';
+        }
+
         return $errors;
     }
 

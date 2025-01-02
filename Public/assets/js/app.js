@@ -2,6 +2,7 @@ import page from "page";
 import { header } from "./components/header.js";
 import { loginForm } from "./components/login.js";
 import { errPage, badRequest } from "./components/err.js";
+import { registerForm } from "./components/register.js";
 
 const root = document.getElementById("root");
 
@@ -18,6 +19,10 @@ function renderLogin() {
     clearRoot();
     root.appendChild(loginForm());
 }
+function renderRegister(){
+    clearRoot();
+    root.appendChild(registerForm());
+}
 
 function renderErr(){
     clearRoot();
@@ -33,6 +38,7 @@ page('/', () => {
     clearRoot();
 });
 page('/login', renderLogin);
+page('/signup', renderRegister);
 
 
 

@@ -21,6 +21,7 @@ class AuthController extends GenericController
             $user->setEmail(str_secure($data->email));
             $user->setName(str_secure($data->name));
             $user->setPassword($hashPass);
+            $user->setRole($data->role);
 
             $userData = $user->register();
 
