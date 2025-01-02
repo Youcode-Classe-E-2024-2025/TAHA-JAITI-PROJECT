@@ -9,4 +9,5 @@
   RewriteRule ^ - [L]
 
   RewriteRule ^ public/index.html [QSA,L]
+  
 </IfModule>

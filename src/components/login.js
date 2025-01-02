@@ -1,4 +1,5 @@
 import { apiRequest } from "../api.js";
+import { sweetAlert } from "../utils/sweetAlert.js";
 
 export const loginForm = () => {
     const element = document.createElement('div');
@@ -44,5 +45,24 @@ export const loginForm = () => {
                 </div>
             </div>`
 
+    const form = element.querySelector('#loginForm');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        
+        handleLogin(data);
+    })
+
     return element;
 };
+
+const handleLogin = async (data) => {
+    const email = data.get('email');
+    const password = data.get('password');
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    
+}
