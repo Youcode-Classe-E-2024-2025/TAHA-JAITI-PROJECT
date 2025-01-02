@@ -44,9 +44,10 @@ function renderHome(){
     root.appendChild(homePage());
 }
 
-function renderProjects(){
+async function renderProjects() {
     clearRoot();
-    root.appendChild(projectsContainer());
+    const projectsElement = await projectsContainer();
+    root.appendChild(projectsElement);
 }
 
 page('/', renderHome);

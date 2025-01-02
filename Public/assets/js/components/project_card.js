@@ -1,4 +1,4 @@
-export const card = () => {
+export const projectCard = (title, desc, taskCount, memberCount) => {
     const element = document.createElement('div');
     element.className = 'project_card';
     element.innerHTML = `<div class="p-5">
@@ -9,32 +9,23 @@ export const card = () => {
 
                             <!-- Title & Description -->
                             <div class="mb-4">
-                                <h3 class="text-white text-lg font-medium mb-2 group-hover:text-purple-400 transition-colors">E-commerce Platform</h3>
-                                <p class="text-gray-400 text-sm line-clamp-2">A comprehensive e-commerce solution with inventory management.</p>
+                                <h3 class="text-white text-lg font-medium mb-2 group-hover:text-purple-400 transition-colors">${title}</h3>
+                                <p class="text-gray-400 text-sm line-clamp-2">${desc}</p>
                             </div>
 
                             <!-- Stats Grid -->
                             <div class="grid grid-cols-3 gap-4 py-4 border-t border-purple-500/10">
                                 <div class="text-center">
-                                    <div class="text-purple-400 text-lg font-medium">12</div>
+                                    <div class="text-purple-400 text-lg font-medium">${taskCount}</div>
                                     <div class="text-gray-400 text-xs">Tasks</div>
                                 </div>
                                 <div class="text-center border-l border-r border-purple-500/10">
-                                    <div class="text-purple-400 text-lg font-medium">5</div>
+                                    <div class="text-purple-400 text-lg font-medium">${memberCount}</div>
                                     <div class="text-gray-400 text-xs">Members</div>
                                 </div>
                                 <div class="text-center">
                                     <div class="text-purple-400 text-lg font-medium">80%</div>
                                     <div class="text-gray-400 text-xs">Progress</div>
-                                </div>
-                            </div>
-
-                            <!-- Footer -->
-                            <div class="flex items-center justify-between pt-4 border-t border-purple-500/10">
-                                <div class="flex -space-x-2">
-                                    <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30"></div>
-                                    <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30"></div>
-                                    <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30"></div>
                                 </div>
                             </div>
                         </div>`;

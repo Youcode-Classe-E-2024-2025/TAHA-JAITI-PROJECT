@@ -68,8 +68,6 @@ class ProjectController extends GenericController
     }
 
     public function getAllProjects(){
-        $this->isAdmin();
-
         try {
 
             $projects = $this->projectModel->getAllProjects();

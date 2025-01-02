@@ -54,12 +54,12 @@ class Project {
     }
     
     public function getAllProjects(): array{
-        $sql = "SELECT * FROM project_data_view";
+        $sql = "SELECT * FROM project_data";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_OBJ) ?? null;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
     }
 
     public function assignMember($projectId, $memberId){

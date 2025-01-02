@@ -79,17 +79,28 @@ CREATE TABLE user_assignments (
     assigned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE VIEW project_data_view AS
-SELECT p.id as project_id,
-       p.name as project_name,
-       p.description,
-       p.is_public,
-       p.created_at,
-       p.updated_at,
-	   p.deadline,
-	   u.name as creator
-FROM projects p
-JOIN users u ON p.creator_id = u.id;
+CREATE VIEW project_data AS
+SELECT 
+    p.id AS project_id,
+    p.name AS project_name,
+    p.description,
+    p.is_public,
+    p.created_at,
+    p.updated_at,
+    p.deadline,
+    u.name AS creator,
+    COUNT(DISTINCT t.id) AS task_count,
+    COUNT(DISTINCT ua.user_id) AS members_count
+FROM 
+    projects p
+JOIN 
+    users u ON p.creator_id = u.id
+LEFT JOIN 
+    tasks t ON t.project_id = p.id
+LEFT JOIN 
+    user_assignments ua ON ua.task_id = t.id
+GROUP BY 
+    p.id, u.name;
 
 CREATE VIEW task_data AS
 SELECT 
