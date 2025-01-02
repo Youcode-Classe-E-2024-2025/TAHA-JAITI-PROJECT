@@ -1,6 +1,7 @@
 import page from "page";
 import axios from "axios";
 import { sweetAlert } from "../utils/sweetAlert.js";
+import { loading } from "../utils/loading.js";
 
 export const loginForm = () => {
     const element = document.createElement('div');
@@ -45,27 +46,22 @@ export const loginForm = () => {
                     </p>
                 </div>
 
-                <!-- Loading Overlay -->
-                <div id="loadingOverlay" class="absolute inset-0 bg-black/50 flex items-center justify-center hidden">
-                    <div class="spinner border-t-2 border-purple-400 rounded-full w-12 h-12 animate-spin"></div>
-                </div>
+                
             </div>`;
 
     const form = element.querySelector('#loginForm');
-    const loadingOverlay = element.querySelector('#loadingOverlay');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const data = new FormData(form);
         
-        // Show the loading overlay
-        loadingOverlay.classList.remove('hidden');
+        const load = new loading();
+        load.start();
 
         await handleLogin(data);
 
-        // Hide the loading overlay
-        loadingOverlay.classList.add('hidden');
+        load.stop();
     });
 
     return element;

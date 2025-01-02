@@ -20,12 +20,12 @@ export const header = () => {
                     <a href="/login" data-ajax class="btn_primary bg-transparent">
                         Login
                     </a>
-                    <button class="btn_primary">
+                    <a href="/register" data-ajax class="btn_primary">
                         Sign up
-                    </button>
-                    <button class="btn_primary">
+                    </a>
+                    <a href="/logout" data-ajax class="btn_primary">
                         Log out
-                    </button>
+                    </a>
                 </div>
             </div>
         </nav>
