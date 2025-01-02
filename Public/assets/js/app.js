@@ -14,7 +14,7 @@ if (!root) {
 
 function clearRoot() {
     root.innerHTML = "";
-    root.innerHTML += header();
+    root.appendChild(header());
 }
 
 function renderLogin() {
