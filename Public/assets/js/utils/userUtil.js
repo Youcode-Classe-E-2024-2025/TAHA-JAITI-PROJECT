@@ -1,7 +1,14 @@
-export const getUserRole = () => {
-    return sessionStorage.getItem('role') ?? null;
+import { atom } from "nanostores";
+
+export const userId = atom(null);
+export const userRole = atom(null);
+
+export const setUser = (id, role) => {
+    userId.set(id);
+    userRole.set(role);
 };
 
-export const getUserId = () => {
-    return sessionStorage.getItem('id') ?? null;
-}
+export const clearUser = () => {
+    userId.set(null);
+    userRole.set(null);
+};

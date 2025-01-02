@@ -2,6 +2,7 @@ import page from "page";
 import axios from "axios";
 import { sweetAlert } from "../utils/sweetAlert.js";
 import { loading } from "../utils/loading.js";
+import { setUser } from "../utils/userUtil.js";
 
 export const loginForm = () => {
     const element = document.createElement('div');
@@ -91,8 +92,7 @@ const handleLogin = async (data) => {
 
         if (response.status === 200) {
             const { role, id } = response.data.data;
-            sessionStorage.setItem('role', role);
-            sessionStorage.setItem('id', id);
+            setUser(id, role);
             page('/');
         } else {
             sweetAlert('Login failed: ' + response.data.message);

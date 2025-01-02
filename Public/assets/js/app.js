@@ -7,14 +7,16 @@ import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
 
 const root = document.getElementById("root");
+const head = document.getElementById('header');
 
-if (!root) {
+if (!root || !head) {
     throw new Error('Root not found');
 }
 
+head.appendChild(header());
+
 function clearRoot() {
     root.innerHTML = "";
-    root.appendChild(header());
 }
 
 function renderLogin() {
@@ -44,8 +46,6 @@ function renderHome(){
 page('/', renderHome);
 page('/login', renderLogin);
 page('/signup', renderRegister);
-
-
 
 page('/404', renderBad);
 page('*', renderErr);
