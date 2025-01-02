@@ -1,4 +1,4 @@
-export const apiRequest = ({url, method = 'GET',headers = {}, body = null}) => {
+export const apiRequest = async ({url, method = 'GET',headers = {}, body = null}) => {
     const defHeader = {
         'Content-Type': 'application/json',
         ...headers

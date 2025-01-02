@@ -1,6 +1,7 @@
 import page from "page";
 import { header } from "./components/header.js";
 import { loginForm } from "./components/login.js";
+import { errPage, badRequest } from "./components/err.js";
 
 const root = document.getElementById("root");
 
@@ -18,11 +19,25 @@ function renderLogin() {
     root.appendChild(loginForm());
 }
 
+function renderErr(){
+    clearRoot();
+    root.innerHTML += errPage();
+}
+
+function renderBad(){
+    clearRoot();
+    root.innerHTML += badRequest();
+}
+
 page('/', () => {
     clearRoot();
-})
-
+});
 page('/login', renderLogin);
+
+
+
+page('/404', renderBad);
+page('*', renderErr);
 
 page.start();
 

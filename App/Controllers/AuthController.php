@@ -51,7 +51,7 @@ class AuthController extends GenericController
             $user = new User();
             $userObject = $user->getUserByEmail($email);
 
-            if (!$user->login($userObject, $password)){
+            if (!$userObject || !$user->login($userObject, $password)){
                 $this->errResponse('Invalid password or email');
             }
 

@@ -49,11 +49,15 @@ class User{
         return true;
     }
 
-    public function getUserByEmail($email): object | null {
+    public function getUserByEmail($email): object | bool {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email');
         $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        
+        if ($stmt->execute()){
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        }
+
+        return false;
     }
 
     public function getProjects(): array {
