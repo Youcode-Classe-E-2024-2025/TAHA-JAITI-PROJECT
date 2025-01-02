@@ -21,7 +21,7 @@ class AuthController extends GenericController
             $user->setEmail(str_secure($data->email));
             $user->setName(str_secure($data->name));
             $user->setPassword($hashPass);
-            $user->setRole($data->role);
+            $user->setRole((string) $data->role);
 
             $userData = $user->register();
 
@@ -31,7 +31,7 @@ class AuthController extends GenericController
                 $this->errResponse('A user with this email already exists');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexcpeted error occured');
+            throw new Exception($e);
         }
     }
 

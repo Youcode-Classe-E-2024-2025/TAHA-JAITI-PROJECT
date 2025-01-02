@@ -3,12 +3,12 @@
 class User
 {
 
-    protected PDO $db;
-    protected int $id;
-    protected string $name;
-    protected string $email;
-    protected string $password;
-    protected string $role;
+    private PDO $db;
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
+    private string $role;
 
     public function __construct(int $id = 0, string $name = '', string $email = '', string $password = '')
     {
@@ -47,14 +47,14 @@ class User
         }
 
         $sql = 'INSERT INTO users (name, email, password, role) 
-        VALUES (:name, :email, :password:role);';
+        VALUES (:name, :email, :password, :role);';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':name' => $this->name,
             ':email' => $this->email,
             ':password' => $this->password,
-            ':role', $this->role,
+            ':role' => $this->role,
         ]);
 
         return (int) $this->db->lastInsertId();

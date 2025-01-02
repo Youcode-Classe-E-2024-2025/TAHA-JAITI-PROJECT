@@ -1,6 +1,7 @@
 import axios from "axios";
 import { loading } from "../utils/loading";
 import { sweetAlert } from "../utils/sweetAlert";
+import page from "page";
 
 
 export const registerForm = () => {
@@ -119,9 +120,16 @@ const handleRegister = async (data) => {
     }
 
     try {
-        const respone = await axios.post('http://localhost/api/register',
+        const response = await axios.post('http://localhost/api/register',
             {name, email, password, role}
-        )
+        );
+
+        if (response.status === 200){
+            page('/login');
+        } else {
+            sweetAlert('Register failed: ' + response.data.message);
+        }
+
     } catch (err){
         page('/404');
         throw err;
