@@ -1,8 +1,10 @@
 import page from "page";
+import { loginForm } from "./pages/login.js";
+import { registerForm } from "./pages/register.js";
+import { homePage } from "./pages/home.js";
+
 import { header } from "./components/header.js";
-import { loginForm } from "./components/login.js";
 import { errPage, badRequest } from "./components/err.js";
-import { registerForm } from "./components/register.js";
 
 const root = document.getElementById("root");
 
@@ -34,9 +36,12 @@ function renderBad(){
     root.innerHTML += badRequest();
 }
 
-page('/', () => {
+function renderHome(){
     clearRoot();
-});
+    root.appendChild(homePage());
+}
+
+page('/', renderHome);
 page('/login', renderLogin);
 page('/signup', renderRegister);
 

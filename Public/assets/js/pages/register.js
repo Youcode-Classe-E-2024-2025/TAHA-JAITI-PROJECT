@@ -125,6 +125,7 @@ const handleRegister = async (data) => {
         );
 
         if (response.status === 200){
+            sweetAlert('Account created!');
             page('/login');
         } else {
             sweetAlert('Register failed: ' + response.data.message);
