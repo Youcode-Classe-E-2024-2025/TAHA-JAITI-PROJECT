@@ -7,6 +7,8 @@ import { projectsContainer } from "./pages/projects.js";
 import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
 
+import { getTasks } from "./stores/projects.js";
+
 const root = document.getElementById("root");
 const head = document.getElementById('header');
 
@@ -24,30 +26,30 @@ function renderLogin() {
     clearRoot();
     root.appendChild(loginForm());
 }
-function renderRegister(){
+function renderRegister() {
     clearRoot();
     root.appendChild(registerForm());
 }
 
-function renderErr(){
+function renderErr() {
     clearRoot();
     root.innerHTML += errPage();
 }
 
-function renderBad(){
+function renderBad() {
     clearRoot();
     root.innerHTML += badRequest();
 }
 
-function renderHome(){
+function renderHome() {
     clearRoot();
     root.appendChild(homePage());
 }
 
-async function renderProjects() {
+function renderProjects() {
     clearRoot();
-    const projectsElement = await projectsContainer();
-    root.appendChild(projectsElement);
+    root.appendChild(projectsContainer());
+    getTasks();
 }
 
 page('/', renderHome);
