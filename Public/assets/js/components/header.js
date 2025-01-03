@@ -11,7 +11,7 @@ export const header = () => {
 
     const updateHeader = () => {
         const loggedIn = userId.get() !== null;
-        const isAdmin = userRole.get() === 'admin';
+        const isAdmin = userRole.get() === 'chief';
 
         element.innerHTML = `
             <nav class="max-w-7xl mx-auto px-4">
@@ -25,21 +25,21 @@ export const header = () => {
                     <!-- Main Navigation -->
                     <div class="hidden md:flex items-center text-lg space-x-6">
                         <a href="/" data-ajax class="hover:text-white">Home</a>
-                        <a href="/dashboard" data-ajax class="${isAdmin ? 'flex' : 'hidden'} hover:text-white">Dashboard</a>
+                        ${isAdmin ? `<a href="/dashboard" data-ajax class="hover:text-white">Dashboard</a>` : ''}
                         <a href="/projects" data-ajax class="hover:text-white">Projects</a>
                     </div>
 
                     <!-- Auth Buttons -->
                     <div class="flex items-center space-x-3">
-                        <a href="/login" data-ajax class="${loggedIn ? 'hidden' : 'flex'} btn_primary bg-transparent">
+                        ${!loggedIn ? `<a href="/login" data-ajax class=" btn_primary bg-transparent">
                             Login
-                        </a>
-                        <a href="/signup" data-ajax class="${loggedIn ? 'hidden' : 'flex'} btn_primary">
+                        </a>` : ''}
+                        ${!loggedIn ? `<a href="/signup" data-ajax class="btn_primary">
                             Sign up
-                        </a>
-                        <button id="logoutBtn" class="${loggedIn ? 'flex' : 'hidden'} btn_primary">
+                        </a>`: ''}
+                        ${loggedIn ? `<button id="logoutBtn" class=" btn_primary">
                             Log out
-                        </button>
+                        </button>`: ''}
                     </div>
                 </div>
             </nav>
