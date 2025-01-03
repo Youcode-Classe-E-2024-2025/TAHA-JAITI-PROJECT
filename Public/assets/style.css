@@ -816,6 +816,26 @@ video {
   height: 1.25rem;
 }
 
+.h-\[\] {
+  height: ;
+}
+
+.h-\[10rem\] {
+  height: 10rem;
+}
+
+.h-\[80rem\] {
+  height: 80rem;
+}
+
+.h-\[30rem\] {
+  height: 30rem;
+}
+
+.h-\[40rem\] {
+  height: 40rem;
+}
+
 .w-12 {
   width: 3rem;
 }
@@ -1016,6 +1036,10 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .rounded-full {

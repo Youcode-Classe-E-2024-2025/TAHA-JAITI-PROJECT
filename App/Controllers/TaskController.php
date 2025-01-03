@@ -91,7 +91,7 @@ class TaskController extends GenericController{
                 }
                 $this->successResponse($tasks);
             } else {
-                $this->errResponse('No tasks found');
+                $this->successResponse(null,'No tasks found');
             }
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());

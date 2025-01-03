@@ -2,7 +2,7 @@ import page from "page";
 import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
-import { getProjectTasks, taskStore } from "../stores/tasks.js";
+import { taskStore } from "../stores/tasks.js";
 
 export const projectsContainer = () => {
     const element = document.createElement('div');
@@ -39,7 +39,7 @@ export const projectsContainer = () => {
     return element;
 };
 
-export const porjectDetails = (id) => {
+export const porjectDetails = () => {
     const element = document.createElement('div');
     element.classList = 'grid grid-cols-1 md:grid-cols-3 gap-6 p-4';
 
@@ -57,7 +57,7 @@ export const porjectDetails = (id) => {
                             </div>
 
                             <!-- Tasks -->
-                            <div id="todoCont" class="space-y-3">
+                            <div id="todoCont" class="space-y-3 h-[40rem] overflow-y-auto">
                                 
 
                                 
@@ -78,7 +78,7 @@ export const porjectDetails = (id) => {
                             </div>
 
                             <!-- Tasks -->
-                            <div id="doingCont" class="space-y-3">
+                            <div id="doingCont" class="space-y-3 h-[40rem] overflow-y-auto">
                                 
 
                                 
@@ -99,7 +99,7 @@ export const porjectDetails = (id) => {
                             </div>
 
                             <!-- Tasks -->
-                            <div id="doneCont" class="space-y-3">
+                            <div id="doneCont" class="space-y-3 h-[40rem] overflow-y-auto">
                                 
 
                                 
@@ -122,7 +122,13 @@ export const porjectDetails = (id) => {
                 const card = taskCard(t.task_id, t.task_title, t.task_description,
                     t.task_deadline, t.task_created_at, t.assignee_names, t.tag_names, t.category_name)
 
-                todoCont.appendChild(card);
+                if (t.task_status === 'todo'){
+                    todoCont.appendChild(card);
+                } else if (t.task_status === 'in_progress'){
+                    doingCont.appendChild(card);
+                } else {
+                    doneCont.appendChild(card);
+                }
             })
         }
     };
