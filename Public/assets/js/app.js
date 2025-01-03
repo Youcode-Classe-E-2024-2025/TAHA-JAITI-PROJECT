@@ -8,6 +8,7 @@ import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
 
 import { getTasks } from "./stores/projects.js";
+import { getProjectTasks } from "./stores/tasks.js";
 
 const root = document.getElementById("root");
 const head = document.getElementById('header');
@@ -56,6 +57,7 @@ function renderProjectDetails(ctx) {
     const {id} = ctx.params;
     clearRoot();
     root.appendChild(porjectDetails(id));
+    getProjectTasks(id);
 }
 
 page('/', renderHome);

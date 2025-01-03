@@ -1,6 +1,7 @@
 import page from "page";
 import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
+import { taskCard } from "../components/task_card.js";
 import { getProjectTasks, taskStore } from "../stores/tasks.js";
 
 export const projectsContainer = () => {
@@ -10,7 +11,7 @@ export const projectsContainer = () => {
     const renderProjects = () => {
         element.innerHTML = '';
 
-        const projects = projectStore.get(); 
+        const projects = projectStore.get();
 
         if (projects && projects.length) {
             projects.forEach(item => {
@@ -38,11 +39,11 @@ export const projectsContainer = () => {
     return element;
 };
 
-export const porjectDetails = (id) => {    
+export const porjectDetails = (id) => {
     const element = document.createElement('div');
     element.classList = 'grid grid-cols-1 md:grid-cols-3 gap-6 p-4';
 
-    element.innerHTML = `<!-- TODO Column -->
+    element.innerHTML = `<!--  todoColumn -->
                         <div class="bg-gray-800/50 backdrop-blur-xl rounded-sm border border-purple-500/10 p-4">
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center gap-2">
@@ -104,7 +105,34 @@ export const porjectDetails = (id) => {
                                 
                             </div>
                         </div>`
-    
+
+    const todoCont = element.querySelector('#todoCont');
+    const doingCont = element.querySelector('#doingCont');
+    const doneCont = element.querySelector('#doneCont');
+
+    const renderTasks = () => {
+        todoCont.innerHTML = '';
+        doingCont.innerHTML = '';
+        doneCont.innerHTML = '';
+
+        const tasks = taskStore.get();
+
+        if (tasks && tasks.length) {
+            tasks.forEach(t => {
+                const card = taskCard(t.task_id, t.task_title, t.task_description,
+                    t.task_deadline, t.task_created_at, t.assignee_names, t.tag_names, t.category_name)
+
+                todoCont.appendChild(card);
+            })
+        }
+    };
+
+
+    const unsubscribe = taskStore.subscribe(renderTasks);
+
+    renderTasks();
+
+    element.addEventListener('DOMNodeRemoved', unsubscribe);
 
     return element;
 };
