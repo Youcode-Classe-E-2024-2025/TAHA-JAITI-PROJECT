@@ -4,6 +4,7 @@ import { userId, userRole, clearUser } from '../utils/userUtil.js';
 
 import { sweetAlert } from '../utils/sweetAlert.js';
 import { loading } from '../utils/loading.js';
+import { handleProject } from './modals.js';
 
 export const header = () => {
     const element = document.createElement('header');
@@ -31,6 +32,9 @@ export const header = () => {
 
                     <!-- Auth Buttons -->
                     <div class="flex items-center space-x-3">
+                        ${isAdmin ? `<button id="newProject" class="btn_second bg-transparent">
+                            + PROJECT
+                        </button>` : ''}
                         ${!loggedIn ? `<a href="/login" data-ajax class=" btn_primary bg-transparent">
                             Login
                         </a>` : ''}
@@ -62,6 +66,14 @@ export const header = () => {
                     load.stop();
                     console.error('Logout failed:', error);
                 }
+            });
+        }
+
+        const newBtn = element.querySelector('#newProject');
+        if (newBtn) {
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                handleProject();
             });
         }
     };

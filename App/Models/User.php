@@ -81,6 +81,17 @@ class User
         return false;
     }
 
+    public function getUsers():array {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE role = :role');
+        $stmt->execute([':role' => 'member']);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }   
+
     public function getProjects(): array
     {
         return [];

@@ -40,7 +40,7 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, c
         <!-- Category & Tags -->
         <div class="flex flex-wrap gap-2 mb-3">
             ${category ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${category}</span>` : ''}
-            ${tag ? tag.map(t => `<span class="text-xs px-2 py-1 bg-gray-500/10 text-gray-300 rounded-sm">${t}</span>`).join('') : ''}                                    
+            ${tag ? tag.map(t => `<span class="text-xs px-2 py-1 bg-gray-500/10 text-gray-300 rounded-sm">#${t}</span>`).join('') : ''}                                    
         </div>
         <!-- Description -->
         <p class="text-gray-300 text-md mb-3">${desc}</p>
