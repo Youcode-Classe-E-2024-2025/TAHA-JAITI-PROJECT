@@ -10,28 +10,30 @@ export const projectsContainer = () => {
 
     const renderProjects = () => {
         element.innerHTML = '';
-
         const projects = projectStore.get();
 
         if (projects && projects.length) {
-            projects.forEach(item => {
-                const card = projectCard(item.project_name, item.description, item.task_count, item.members_count);
+            projects.forEach(project => {
+                const card = projectCard(
+                    project.project_name,
+                    project.description,
+                    project.task_count,
+                    project.members_count
+                );
+                
+                card.addEventListener('click', () => page(`/project/${project.project_id}`));
                 element.appendChild(card);
-
-                card.addEventListener('click', () => {
-                    page(`/project/${item.project_id}`);
-                });
             });
         } else {
-            const noProjectsMessage = document.createElement('div');
-            noProjectsMessage.textContent = 'No projects available';
-            noProjectsMessage.className = 'text-white';
-            element.appendChild(noProjectsMessage);
+            element.innerHTML = `
+                <div class="col-span-full flex items-center justify-center h-40">
+                    <p class="text-gray-400">No projects available</p>
+                </div>
+            `;
         }
     };
 
     const unsubscribe = projectStore.subscribe(renderProjects);
-
     renderProjects();
 
     element.addEventListener('DOMNodeRemoved', unsubscribe);
@@ -49,7 +51,7 @@ export const porjectDetails = () => {
                                 <div class="flex items-center gap-2">
                                     <div class="h-2 w-2 bg-red-500 rounded-full"></div>
                                     <h2 class="text-white font-medium">To Do</h2>
-                                    <span class="text-gray-400 text-sm">(0)</span>
+                                    <span id="todoCount" class="text-gray-400 text-sm">(0)</span>
                                 </div>
                                 <button class="text-gray-400 hover:text-purple-400 transition-colors">
                                     <i class="fas fa-plus"></i>
@@ -70,7 +72,7 @@ export const porjectDetails = () => {
                                 <div class="flex items-center gap-2">
                                     <div class="h-2 w-2 bg-yellow-500 rounded-full"></div>
                                     <h2 class="text-white font-medium">In Progress</h2>
-                                    <span class="text-gray-400 text-sm">(0)</span>
+                                    <span id="doingCount" class="text-gray-400 text-sm">(0)</span>
                                 </div>
                                 <button class="text-gray-400 hover:text-purple-400 transition-colors">
                                     <i class="fas fa-plus"></i>
@@ -91,7 +93,7 @@ export const porjectDetails = () => {
                                 <div class="flex items-center gap-2">
                                     <div class="h-2 w-2 bg-green-500 rounded-full"></div>
                                     <h2 class="text-white font-medium">Done</h2>
-                                    <span class="text-gray-400 text-sm">(0)</span>
+                                    <span id="doneCount" class="text-gray-400 text-sm">(0)</span>
                                 </div>
                                 <button class="text-gray-400 hover:text-purple-400 transition-colors">
                                     <i class="fas fa-plus"></i>
@@ -117,6 +119,8 @@ export const porjectDetails = () => {
 
         const tasks = taskStore.get();
 
+        const counts = { todo: 0, in_progress: 0, done: 0 };
+
         if (tasks && tasks.length) {
             tasks.forEach(t => {
                 const card = taskCard(t.task_id, t.task_title, t.task_description,
@@ -124,13 +128,20 @@ export const porjectDetails = () => {
 
                 if (t.task_status === 'todo'){
                     todoCont.appendChild(card);
+                    counts.todo++;
                 } else if (t.task_status === 'in_progress'){
                     doingCont.appendChild(card);
+                    counts.in_progress++;
                 } else {
                     doneCont.appendChild(card);
+                    counts.done++;
                 }
             })
         }
+
+        element.querySelector('#todoCount').textContent = `(${counts.todo})`;
+        element.querySelector('#doingCount').textContent = `(${counts.in_progress})`;
+        element.querySelector('#doneCount').textContent = `(${counts.done})`;
     };
 
 

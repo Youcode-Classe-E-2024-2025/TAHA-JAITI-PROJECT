@@ -54,7 +54,10 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, c
         <!-- Assignee -->
         <div class="flex items-center justify-between border-t border-purple-500/10 pt-3">
             <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30"></div>
+                <div 
+                    class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                    ${assignee ? assignee[0].charAt(0).toUpperCase() : '?'}
+                </div>
                 <span class="text-xs text-gray-400">${assignee || 'Unassigned'}</span>
             </div>
             <span class="text-xs text-gray-500">${dueDisplay}</span>
