@@ -3,7 +3,7 @@ import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
 import { taskStore } from "../stores/tasks.js";
-import { handleCategory } from "../components/modals.js";
+import { handleCategory, handleTag } from "../components/modals.js";
 
 export const projectsContainer = () => {
     const element = document.createElement('div');
@@ -165,6 +165,10 @@ export const porjectDetails = () => {
         handleCategory();
     });
 
+    const addTag = main.querySelector('#addTag');
+    addTag.addEventListener('click', () => {
+        handleTag();
+    });
 
     const unsubscribe = taskStore.subscribe(renderTasks);
 
