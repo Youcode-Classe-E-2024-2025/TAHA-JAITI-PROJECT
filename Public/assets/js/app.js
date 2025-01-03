@@ -2,7 +2,7 @@ import page from "page";
 import { loginForm } from "./pages/login.js";
 import { registerForm } from "./pages/register.js";
 import { homePage } from "./pages/home.js";
-import { projectsContainer } from "./pages/projects.js";
+import { projectsContainer, porjectDetails } from "./pages/projects.js";
 
 import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
@@ -52,11 +52,18 @@ function renderProjects() {
     getTasks();
 }
 
+function renderProjectDetails(ctx) {
+    const {id} = ctx.params;
+    clearRoot();
+    root.appendChild(porjectDetails(id));
+}
+
 page('/', renderHome);
 page('/login', renderLogin);
 page('/signup', renderRegister);
 
 page('/projects', renderProjects);
+page('/project/:id', renderProjectDetails);
 
 page('/404', renderBad);
 page('*', renderErr);
