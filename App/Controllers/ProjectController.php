@@ -11,7 +11,6 @@ class ProjectController extends GenericController
 
     public function createProject()
     {
-        $this->isAdmin();
 
         try {
             $data = $this->getRequestData();

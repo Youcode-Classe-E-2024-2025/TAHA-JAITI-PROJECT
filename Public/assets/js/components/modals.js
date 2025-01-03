@@ -1,6 +1,7 @@
 import axios from "axios";
 import page from "page";
 import { sweetAlert } from "../utils/sweetAlert";
+import { getUsers } from "../api/users";
 
 const categoryModal = () => {
     const modal = document.createElement('div');
@@ -144,7 +145,9 @@ export const handleTag = () => {
 
 };
 
-const projectModal = () => {
+const projectModal = async () => {
+    const assignees = await getUsers();
+    
     const modal = document.createElement('div');
     modal.className = `fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center`;
     
@@ -179,7 +182,7 @@ const projectModal = () => {
                 <div class="space-y-2">
                     <label for="assigned_members" class="block text-sm font-medium text-purple-300">Assign Members</label>
                     <select id="assigned_members" name="assigned_members" multiple class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        
+                        ${assignees.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
                     </select>
                 </div>
             </div>
@@ -195,9 +198,48 @@ const projectModal = () => {
     return modal;
 };
 
-export const handleProject = () => {
-    const modal = projectModal();
+export const handleProject = async () => {
+    const modal = await projectModal();
     document.body.appendChild(modal);
 
+    const form = modal.querySelector('#formModal');
+
+    const closeBtn = modal.querySelector('#closeBtn');
+    const closeModal = () => {
+        modal.remove();
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        const name = data.get('name');
+        const description = data.get('description');
+        const is_public = data.get('is_public');
+
+        try {
+            const response = await axios.post('http://localhost/api/project', {
+                name, description, is_public 
+            });
+
+            if (response.status === 200){
+                sweetAlert('Project Created');
+            } else {
+                console.log('error');
+            }
+
+            closeModal();
+        } catch (err){
+            sweetAlert('An error occurred. Please try again.');
+            page('/404');
+        }
+
+    });
 
 };

@@ -60,7 +60,6 @@ class AuthController extends GenericController
 
             unset($userObject->password);
             $this->successResponse($userObject, 'User logged in successfuly');
-
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
         }
@@ -71,19 +70,27 @@ class AuthController extends GenericController
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
-
+    
             session_unset();
+    
             if (ini_get("session.use_cookies")) {
                 $params = session_get_cookie_params();
-                setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+                setcookie(
+                    session_name(), 
+                    '', 
+                    time() - 42000, 
+                    $params["path"], 
+                    $params["domain"], 
+                    $params["secure"], 
+                    $params["httponly"]
+                );
             }
-
+    
             session_destroy();
-
-            // Respond with success
+    
             $this->successResponse(null, 'User logged out successfully');
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occurred while logging out: ' . $e->getMessage());
+            $this->errResponse('An error occurred while logging out. Please try again.');
         }
     }
 }

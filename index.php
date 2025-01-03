@@ -37,6 +37,6 @@ $router->addRoute('GET', '/api/tag', 'TagController@getTags');
 $router->addRoute('POST', '/api/tag/assign', 'TagController@assignTag');
 
 //user routes
-$router->addRoute('GET', '/api/user', 'UserController@getUsers');
+$router->addRoute('GET', '/api/users', 'UserController@getUsers');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
