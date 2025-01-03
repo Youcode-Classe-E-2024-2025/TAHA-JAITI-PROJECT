@@ -65,7 +65,7 @@ page('/login', renderLogin);
 page('/signup', renderRegister);
 
 page('/projects', renderProjects);
-page('/project/:id', renderProjectDetails);
+page('/projects/:id', renderProjectDetails);
 
 page('/404', renderBad);
 page('*', renderErr);

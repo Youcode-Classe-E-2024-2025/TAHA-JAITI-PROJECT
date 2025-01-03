@@ -3,6 +3,7 @@ import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
 import { taskStore } from "../stores/tasks.js";
+import { handleCategory } from "../components/modals.js";
 
 export const projectsContainer = () => {
     const element = document.createElement('div');
@@ -20,8 +21,8 @@ export const projectsContainer = () => {
                     project.task_count,
                     project.members_count
                 );
-                
-                card.addEventListener('click', () => page(`/project/${project.project_id}`));
+
+                card.addEventListener('click', () => page(`/projects/${project.project_id}`));
                 element.appendChild(card);
             });
         } else {
@@ -42,6 +43,20 @@ export const projectsContainer = () => {
 };
 
 export const porjectDetails = () => {
+    const main = document.createElement('div');
+    main.classList = 'flex flex-col gap-4 p-4'
+    main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
+                        <button id='addCat' class="btn_second">
+                        + CATEGORY
+                        </button>
+                        <button id='addTag' class="btn_second">
+                        + TAG
+                        </button>
+                        <button id='addTask' class="btn_second">
+                        + TASK
+                        </button>
+                    </div>`;
+
     const element = document.createElement('div');
     element.classList = 'grid grid-cols-1 md:grid-cols-3 gap-6 p-4';
 
@@ -106,7 +121,8 @@ export const porjectDetails = () => {
 
                                 
                             </div>
-                        </div>`
+                        </div>`;
+    main.appendChild(element);
 
     const todoCont = element.querySelector('#todoCont');
     const doingCont = element.querySelector('#doingCont');
@@ -126,10 +142,10 @@ export const porjectDetails = () => {
                 const card = taskCard(t.task_id, t.task_title, t.task_description,
                     t.task_deadline, t.task_created_at, t.assignee_names, t.tag_names, t.category_name)
 
-                if (t.task_status === 'todo'){
+                if (t.task_status === 'todo') {
                     todoCont.appendChild(card);
                     counts.todo++;
-                } else if (t.task_status === 'in_progress'){
+                } else if (t.task_status === 'in_progress') {
                     doingCont.appendChild(card);
                     counts.in_progress++;
                 } else {
@@ -144,6 +160,11 @@ export const porjectDetails = () => {
         element.querySelector('#doneCount').textContent = `(${counts.done})`;
     };
 
+    const addCat = main.querySelector('#addCat');
+    addCat.addEventListener('click', () => {
+        handleCategory();
+    });
+
 
     const unsubscribe = taskStore.subscribe(renderTasks);
 
@@ -151,5 +172,5 @@ export const porjectDetails = () => {
 
     element.addEventListener('DOMNodeRemoved', unsubscribe);
 
-    return element;
+    return main;
 };
