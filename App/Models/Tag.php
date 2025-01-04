@@ -74,4 +74,11 @@ class Tag{
         }
     }
 
+    public function clearTags(){
+        $sql = "DELETE FROM task_tags WHERE task_id = :task_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':task_id', $this->taskId);
+        $stmt->execute();
+    }
+
 }

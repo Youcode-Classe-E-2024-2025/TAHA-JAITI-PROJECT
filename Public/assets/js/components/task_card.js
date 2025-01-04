@@ -86,29 +86,32 @@ export const taskCard = (task) => {
         <!-- Add Buttons -->
         <div class="flex justify-between items-center mt-3 gap-2">
             <button title="Add Assignee" class="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded-sm hover:bg-green-500/20 flex items-center">
-                <i class="fas fa-user-plus mr-1"></i>Add Assignee
+                <i class="fas fa-user-plus mr-1"></i>+ Assignee
             </button>
             <button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
-                <i class="fas fa-tag mr-1"></i>Add Tag
+                <i class="fas fa-tag mr-1"></i>+ Tag
             </button>
             <button title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
-                <i class="fas fa-list-alt mr-1"></i>Add Category
+                <i class="fas fa-list-alt mr-1"></i>+ Category
             </button>
         </div>
     `;
 
     const editTask = element.querySelector('#editTask');
-    editTask.addEventListener('click', () => {
+    editTask.addEventListener('click', (e) => {
+        e.stopPropagation();
         editTaskModal(task);
     });
 
     const deleteTask = element.querySelector('#deleteTask');
-    deleteTask.addEventListener('click', () => {
+    deleteTask.addEventListener('click', (e) => {
+        e.stopPropagation();
         deleteTaskDB(task);
     });
 
     const addTag = element.querySelector('#addTag');
-    addTag.addEventListener('click', () => {
+    addTag.addEventListener('click', (e) => {
+        e.stopPropagation();
         addTagModal(task);
     });
 

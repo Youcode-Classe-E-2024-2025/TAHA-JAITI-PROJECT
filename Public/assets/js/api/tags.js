@@ -29,6 +29,7 @@ export const addTagDB = async (tag, id) => {
         });
 
         if (response.status === 200){
+            page(`${window.location.pathname}`);
             sweetAlert('Tag assigned successfully');
         } else {
             sweetAlert('An error occured while adding tag');

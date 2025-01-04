@@ -82,6 +82,9 @@ export const editTaskModal = async (task) => {
         </div>
     `;
 
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
     const closeModal = () => {
         modalOverlay.remove();
     };

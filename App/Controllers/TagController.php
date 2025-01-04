@@ -76,6 +76,7 @@ class TagController extends GenericController
             }
 
             $this->tagModel->setTask((int)$data->id);
+            $this->tagModel->clearTags();
 
             $errors = [];
             foreach ($data->tag as $tagId) {
