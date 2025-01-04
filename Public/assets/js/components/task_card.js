@@ -1,3 +1,4 @@
+import { deleteTaskDB } from "../api/tasks.js";
 import { editTaskModal } from "./editMods.js";
 
 const formatDate = (date) => {
@@ -61,7 +62,7 @@ export const taskCard = (task) => {
                     <i class="fas fa-edit mr-1"></i>Edit
                 </button>
                 <!-- Delete Button -->
-                <button title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
+                <button id="deleteTask" title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
                     <i class="fas fa-trash mr-1"></i>Delete
                 </button>
             </div>
@@ -105,6 +106,11 @@ export const taskCard = (task) => {
     const editTask = element.querySelector('#editTask');
     editTask.addEventListener('click', () => {
         editTaskModal(task);
+    });
+
+    const deleteTask = element.querySelector('#deleteTask');
+    deleteTask.addEventListener('click', () => {
+        deleteTaskDB(task);
     });
 
     return element;

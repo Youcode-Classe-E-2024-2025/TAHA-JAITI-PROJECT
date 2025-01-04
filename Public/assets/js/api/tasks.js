@@ -17,3 +17,21 @@ export const editTaskDB =  async (task) => {
         page('/404');
     }
 }
+
+export const deleteTaskDB = async (task) => {
+    try {
+        const reponse = await axios.delete(`http://localhost/api/task?id=${task.id}`);
+
+
+        if (reponse.status === 200){
+            const currentTasks = taskStore.get();
+            const updatedTasks = currentTasks.filter(t => t.id !== task.id);
+            taskStore.set(updatedTasks);
+            
+            sweetAlert('Task deleted successfully');
+        }
+    } catch (err){
+        page('/404');
+    }
+
+};

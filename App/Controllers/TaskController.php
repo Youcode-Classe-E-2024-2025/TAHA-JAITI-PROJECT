@@ -97,18 +97,14 @@ class TaskController extends GenericController{
     }
 
     public function deleteTask(){
-        $this->isAdmin();
         try {
-            $data = $this->getRequestData();
             
-            if (empty($data) || empty($data->task_id)){
-                $this->errResponse('Empty data');
-            }
+            $id = $_GET['id'];
 
-            $result = $this->taskModel->deleteTask($data->task_id);
+            $result = $this->taskModel->deleteTask(intval($id));
 
             if ($result){
-                $this->successResponse($data, 'Task deleted successfully');
+                $this->successResponse(null, 'Task deleted successfully');
             } else {
                 $this->errResponse('No task found');
             }
