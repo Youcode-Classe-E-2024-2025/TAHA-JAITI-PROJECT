@@ -17,7 +17,7 @@ const getDueDisplay = (deadline) => {
     return `Due in ${diff}d`;
 };
 
-export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, category) => {    
+export const taskCard = (id, title, desc, deadline, created_at, assignee = [], tag = [], category) => {    
     const element = document.createElement('div');
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
     element.dataset.id = id;
@@ -25,9 +25,30 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, c
     console.log(assignee);
     
 
+    assignee = Array.isArray(assignee) ? assignee : [];
+
     const formattedCreatedDate = formatDate(created_at);
     const dueDisplay = getDueDisplay(deadline);
-    
+
+    const assigneeMarkup = assignee.length > 0 
+        ? assignee.slice(0, 3).map(a => `
+            <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                ${a[0]?.charAt(0).toUpperCase() || '?'}
+            </div>
+        `).join('') + 
+        (assignee.length > 3 
+            ? `<div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                +${assignee.length - 3}
+            </div>`
+            : '')
+        : `<span class="text-xs text-gray-400">No assignees</span>`;
+
+    const tagsMarkup = Array.isArray(tag) && tag.length > 0
+        ? tag.map(t => `
+            <span class="text-xs px-2 py-1 bg-gray-500/10 text-gray-300 rounded-sm">#${t}</span>
+        `).join('')
+        : `<span class="text-xs text-gray-500 italic">No tags</span>`;
+
     element.innerHTML = `
         <!-- Task CARD -->
         <div class="flex justify-between items-start mb-2">
@@ -44,10 +65,10 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, c
         <!-- Category & Tags -->
         <div class="flex flex-wrap gap-2 mb-3">
             ${category ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${category}</span>` : ''}
-            ${tag ? tag.map(t => `<span class="text-xs px-2 py-1 bg-gray-500/10 text-gray-300 rounded-sm">#${t}</span>`).join('') : ''}                                    
+            ${tagsMarkup}
         </div>
         <!-- Description -->
-        <p class="text-gray-300 text-md mb-3">${desc}</p>
+        <p class="text-gray-300 text-md mb-3">${desc || '<span class="text-gray-500 italic">No description provided</span>'}</p>
         <!-- Task Meta -->
         <div class="grid grid-cols-2 gap-2 mb-3 text-xs text-gray-300">
             <div class="flex items-center gap-1">
@@ -58,11 +79,7 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, c
         <!-- Assignee -->
         <div class="flex items-center justify-between border-t border-purple-500/10 pt-3">
             <div class="flex items-center gap-2">
-                <div 
-                    class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
-                    ${assignee ? assignee[0].charAt(0).toUpperCase() : '?'}
-                </div>
-                <span class="text-xs text-gray-300">${assignee || 'Unassigned'}</span>
+                ${assigneeMarkup}
             </div>
             <span class="text-xs text-gray-500">${dueDisplay}</span>
         </div>
