@@ -144,11 +144,37 @@ class TaskController extends GenericController{
     public function updateTask() {
         try {
             $data = $this->getRequestData();
+            $erros = Validator::validateTask($data);
 
-            
+            if (!empty($erros)){
+                $this->errResponse(implode(', ', $erros));
+            }
 
+            $this->taskModel->setId(intval($data->id));
+            $this->taskModel->setTitle($data->title);
+            $this->taskModel->setDesc($data->description);
+            $this->taskModel->setStatus($data->status);
+            $this->taskModel->setDeadline($data->deadline);
+
+            if (!empty($data->category_id)){
+                $this->taskModel->setCategory($data->category_id);
+            }
+
+            $result = $this->taskModel->updateTask();
+
+            if (!empty($data->assignees) && is_array($data->assignees)){
+                foreach($data->assignees as $userId){
+                    $this->taskModel->assignTask( intval($data->id),intval($userId));
+                }
+            }
+
+            if ($result){
+                $this->successResponse((int) $result ,'Task created succesfuly');
+            }
+
+            $this->errResponse('Failed to create task');
         } catch (Exception $e){
-            $this->errResponse('An unexpected error occurred:' . $e->getMessage());
+            $this->errResponse('An unexpected error occured' . $e);
         }
-    }
+     }
 }

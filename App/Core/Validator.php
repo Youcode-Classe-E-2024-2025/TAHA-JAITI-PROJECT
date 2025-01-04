@@ -58,9 +58,6 @@ class Validator {
             $errors[] = 'Deadline is required';
         }
 
-        if (empty($data->project_id)){
-            $errors[] = 'Project is missing';
-        }
 
         return $errors;
     }

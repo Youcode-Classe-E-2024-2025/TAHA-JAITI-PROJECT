@@ -93,6 +93,7 @@ export const editTaskModal = async (task) => {
             title: document.getElementById('taskTitle').value,
             description: document.getElementById('taskDescription').value,
             deadline: document.getElementById('taskDeadline').value,
+            status: task.status,
             assignees: Array.from(document.getElementById('taskAssignees').selectedOptions).map(option => option.value),
         };
         

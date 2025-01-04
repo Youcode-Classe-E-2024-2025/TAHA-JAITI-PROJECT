@@ -4,6 +4,7 @@ class Task
 {
 
     private PDO $db;
+    private $id;
     private $title;
     private $description;
     private $status;
@@ -14,6 +15,11 @@ class Task
     public function __construct()
     {
         $this->db = Database::getConnection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function setTitle($title)
@@ -64,6 +70,11 @@ class Task
 
     public function assignTask($taskId, $userId): bool
     {
+        $deleteSql = "DELETE FROM user_assignments WHERE task_id = :tId";
+        $stmt = $this->db->prepare($deleteSql);
+        $stmt->bindParam(':tId', $taskId);
+        $stmt->execute();
+
         $sql = "INSERT INTO user_assignments (user_id, task_id) VALUES (:uId, :tId);";
 
         $stmt = $this->db->prepare($sql);
@@ -88,27 +99,48 @@ class Task
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public function deleteTask($id) :bool{
+    public function deleteTask($id): bool
+    {
         $sql = "DELETE FROM tasks WHERE id = :id";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         }
 
         return false;
     }
 
-    public function updateStatus($id, $status): bool {
+    public function updateStatus($id, $status): bool
+    {
         $sql = "UPDATE tasks SET status = :status WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':id', $id);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function updateTask()
+    {
+        $sql = "UPDATE tasks SET title = :title, description = :desc, status = :status, 
+        deadline = :deadline WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':title', $this->title);
+        $stmt->bindParam(':desc', $this->description);
+        $stmt->bindParam(':status', $this->status);
+        $stmt->bindParam(':deadline', $this->deadline);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
             return true;
         }
 
