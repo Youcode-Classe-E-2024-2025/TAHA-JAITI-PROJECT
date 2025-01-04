@@ -54,7 +54,7 @@ class Project {
     }
     
     public function getAllProjects(): array{
-        $sql = "SELECT * FROM project_data";
+        $sql = "SELECT * FROM project_data WHERE is_public = true;";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

@@ -4,6 +4,7 @@ import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
 import { taskStore } from "../stores/tasks.js";
 import { handleCategory, handleTag } from "../components/modals.js";
+import { userId } from "../utils/userUtil.js";
 
 export const projectsContainer = () => {
     const element = document.createElement('div');
@@ -22,7 +23,13 @@ export const projectsContainer = () => {
                     project.members_count
                 );
 
-                card.addEventListener('click', () => page(`/projects/${project.project_id}`));
+                card.addEventListener('click', () => {
+                    if (userId){
+                        page(`/projects/${project.project_id}`)
+                    } else {
+                        return page('/signup');
+                    }
+                });
                 element.appendChild(card);
             });
         } else {

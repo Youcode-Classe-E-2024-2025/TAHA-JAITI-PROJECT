@@ -73,11 +73,8 @@ class ProjectController extends GenericController
 
             if ($projects){
                 $this->successResponse($projects);
-            } else {
-                $this->errResponse('No projects found');
             }
-
-
+            
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
