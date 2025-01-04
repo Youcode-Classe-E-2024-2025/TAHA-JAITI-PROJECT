@@ -22,7 +22,7 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
     element.dataset.id = id;
 
-    console.log(assignee);
+    console.log(id + title);
     
 
     assignee = Array.isArray(assignee) ? assignee : [];
@@ -54,7 +54,7 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
         <div class="flex justify-between items-start mb-2">
             <span class="text-md font-medium text-purple-400">${title}</span>
             <div class="flex gap-2">
-                <button
+                <button id='editTask'
                     class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20"
                     >Edit</button>
                 <button
@@ -84,6 +84,11 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
             <span class="text-xs text-gray-500">${dueDisplay}</span>
         </div>
     `;
+
+    const editTask = element.querySelector('#editTask');
+    editTask.addEventListener('click', () => {
+
+    });
 
     return element;
 };

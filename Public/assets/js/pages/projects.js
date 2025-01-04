@@ -136,79 +136,71 @@ export const porjectDetails = () => {
     const doingCont = element.querySelector('#doingCont');
     const doneCont = element.querySelector('#doneCont');
 
+    const containers = [
+        { element: todoCont, status: 'todo' },
+        { element: doingCont, status: 'in_progress' },
+        { element: doneCont, status: 'completed' },
+    ];
+
     const renderTasks = () => {
-        todoCont.innerHTML = '';
-        doingCont.innerHTML = '';
-        doneCont.innerHTML = '';
-
         const tasks = taskStore.get();
+        const counts = { todo: 0, in_progress: 0, completed: 0 };
 
-        const counts = { todo: 0, in_progress: 0, done: 0 };
+        containers.forEach(({ element }) => (element.innerHTML = ''));
 
         if (tasks && tasks.length) {
-            tasks.forEach(t => {
-                const card = taskCard(t.id, t.title, t.description,
-                    t.deadline, t.created_at, t.assignee_names, t.tag_names, t.category_name)
+            tasks.forEach(task => {
+                const card = taskCard(
+                    task.id,
+                    task.title,
+                    task.description || '',
+                    task.deadline || '',
+                    task.created_at || '',
+                    task.assignee_names || [],
+                    task.tag_names || [],
+                    task.category_name || ''
+                );
 
-                if (t.status === 'todo') {
-                    todoCont.appendChild(card);
-                    counts.todo++;
-                } else if (t.status === 'in_progress') {
-                    doingCont.appendChild(card);
-                    counts.in_progress++;
-                } else {
-                    doneCont.appendChild(card);
-                    counts.done++;
+                const container = containers.find(c => c.status === task.status);
+                if (container) {
+                    container.element.appendChild(card);
+                    counts[task.status]++;
                 }
-
-            })
+            });
         }
 
         element.querySelector('#todoCount').textContent = `(${counts.todo})`;
         element.querySelector('#doingCount').textContent = `(${counts.in_progress})`;
-        element.querySelector('#doneCount').textContent = `(${counts.done})`;
-
-        const containers = [
-            { element: todoCont, status: 'todo' },
-            { element: doingCont, status: 'in_progress' },
-            { element: doneCont, status: 'completed' },
-        ];
-
-        containers.forEach(({ element, status }) => {
-            new Sortable(element, {
-                group: 'tasks',
-                animation: 150,
-                onEnd(evt) {
-                    const taskId = evt.item.dataset.id;
-
-                    const targetContainer = containers.find(c => c.element === evt.to);
-                    if (targetContainer) {
-                        updateTaskStatus(taskId, targetContainer.status);
-                    }
-                },
-            });
-        });
+        element.querySelector('#doneCount').textContent = `(${counts.completed})`;
     };
 
-    const addCat = main.querySelector('#addCat');
-    addCat.addEventListener('click', () => {
-        handleCategory();
+    containers.forEach(({ element, status }) => {
+        new Sortable(element, {
+            group: 'tasks',
+            animation: 150,
+            sort: false,
+            onEnd(evt) {
+                const taskId = evt.item.dataset.id;
+                const targetContainer = containers.find(c => c.element === evt.to);
+                if (targetContainer) {
+                    updateTaskStatus(taskId, targetContainer.status);
+                }
+            },
+        });
     });
+
+    const addCat = main.querySelector('#addCat');
+    addCat.addEventListener('click', handleCategory);
 
     const addTag = main.querySelector('#addTag');
-    addTag.addEventListener('click', () => {
-        handleTag();
-    });
+    addTag.addEventListener('click', handleTag);
 
     const addTask = main.querySelector('#addTask');
-    addTask.addEventListener('click', () => {
-        handleTask();
-    });
+    addTask.addEventListener('click', handleTask);
 
     taskStore.subscribe(renderTasks);
 
     renderTasks();
-
 
     return main;
 };
