@@ -100,4 +100,18 @@ class Task
 
         return false;
     }
+
+    public function updateStatus($id, $status): bool {
+        $sql = "UPDATE tasks SET status = :status WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':id', $id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 }

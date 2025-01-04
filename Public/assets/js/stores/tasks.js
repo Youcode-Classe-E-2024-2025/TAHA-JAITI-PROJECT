@@ -9,7 +9,7 @@ export const getProjectTasks = async (id) => {
     try {
         const response = await axios.get(`http://localhost/api/task?id=${id}`);
 
-        if (response.status === 200){
+        if (response.status === 200) {
             const data = response.data.data;
 
             taskStore.set(data);
@@ -18,9 +18,36 @@ export const getProjectTasks = async (id) => {
             return null;
         }
 
-    } catch (err){
+    } catch (err) {
         page('/404');
         throw err;
     }
 
+};
+
+export const updateTaskStatus = async (taskId, status) => {
+    const tasks = taskStore.get();
+    const index = tasks.findIndex(task => task.task_id === parseInt(taskId));
+
+    if (index === -1) {
+        sweetAlert('Task not found');
+        return;
+    }
+
+    try {
+        const response = await axios.put(`http://localhost/api/task/status?id=${taskId}`, {
+            status,
+        });
+
+        if (response.status === 200) {
+            tasks[index].task_status = status;
+            taskStore.set([...tasks]);
+
+            sweetAlert('Task status updated successfully');
+        } else {
+            sweetAlert('Failed to update task status: ' + response.data.message);
+        }
+    } catch (err) {
+        sweetAlert('Error updating task status: ' + (err.message || 'Unknown error'));
+    }
 };

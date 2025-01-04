@@ -1,8 +1,9 @@
 import page from "page";
+import Sortable from "sortablejs";
 import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
-import { taskStore } from "../stores/tasks.js";
+import { taskStore, updateTaskStatus } from "../stores/tasks.js";
 import { handleCategory, handleTag, handleTask } from "../components/modals.js";
 import { userId } from "../utils/userUtil.js";
 
@@ -24,7 +25,7 @@ export const projectsContainer = () => {
                 );
 
                 card.addEventListener('click', () => {
-                    if (userId){
+                    if (userId) {
                         page(`/projects/${project.project_id}`)
                     } else {
                         return page('/signup');
@@ -166,6 +167,27 @@ export const porjectDetails = () => {
         element.querySelector('#todoCount').textContent = `(${counts.todo})`;
         element.querySelector('#doingCount').textContent = `(${counts.in_progress})`;
         element.querySelector('#doneCount').textContent = `(${counts.done})`;
+
+        const containers = [
+            { element: todoCont, status: 'todo' },
+            { element: doingCont, status: 'in_progress' },
+            { element: doneCont, status: 'completed' },
+        ];
+
+        containers.forEach(({ element, status }) => {
+            new Sortable(element, {
+                group: 'tasks',
+                animation: 150,
+                onEnd(evt) {
+                    const taskId = evt.item.dataset.id;
+
+                    const targetContainer = containers.find(c => c.element === evt.to);
+                    if (targetContainer) {
+                        updateTaskStatus(taskId, targetContainer.status);
+                    }
+                },
+            });
+        });
     };
 
     const addCat = main.querySelector('#addCat');

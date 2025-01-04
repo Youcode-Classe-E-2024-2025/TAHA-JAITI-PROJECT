@@ -117,4 +117,27 @@ class TaskController extends GenericController{
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+
+    public function updateStatus(){
+        try {
+            $data = $this->getRequestData();
+
+            $id = $_GET['id'];
+
+            if (!isset($data->status)){
+                $this->errResponse('status is required');
+            }
+
+            $result = $this->taskModel->updateStatus($id, $data->status);
+
+            if ($result){
+                $this->successResponse($data, 'Task status updated');
+            } else {
+                $this->errResponse('Failed to update task status');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }

@@ -19,8 +19,9 @@ const getDueDisplay = (deadline) => {
 
 export const taskCard = (id, title, desc, deadline, created_at, assignee, tag, category) => {
     const element = document.createElement('div');
-    element.className = 'bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
-    
+    element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
+    element.dataset.id = id;
+
     const formattedCreatedDate = formatDate(created_at);
     const dueDisplay = getDueDisplay(deadline);
     
