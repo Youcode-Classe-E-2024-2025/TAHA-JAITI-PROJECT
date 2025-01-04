@@ -163,6 +163,7 @@ class TaskController extends GenericController{
             $result = $this->taskModel->updateTask();
 
             if (!empty($data->assignees) && is_array($data->assignees)){
+                $this->taskModel->unassignUsers(intval($data->id));
                 foreach($data->assignees as $userId){
                     $this->taskModel->assignTask( intval($data->id),intval($userId));
                 }

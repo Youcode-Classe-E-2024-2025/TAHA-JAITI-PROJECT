@@ -70,15 +70,24 @@ class Task
 
     public function assignTask($taskId, $userId): bool
     {
-        $deleteSql = "DELETE FROM user_assignments WHERE task_id = :tId";
-        $stmt = $this->db->prepare($deleteSql);
-        $stmt->bindParam(':tId', $taskId);
-        $stmt->execute();
-
         $sql = "INSERT INTO user_assignments (user_id, task_id) VALUES (:uId, :tId);";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':uId', $userId);
+        $stmt->bindParam(':tId', $taskId);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function unassignUsers($taskId): bool
+    {
+        $sql = "DELETE FROM user_assignments WHERE task_id = :tId";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':tId', $taskId);
 
         if ($stmt->execute()) {

@@ -9,17 +9,7 @@ export const editTaskDB =  async (task) => {
     try {
         const response = await axios.put(`http://localhost/api/task`, {...task});
         if (response.status === 200){
-            const currentTasks = taskStore.get();
-
-            const updated = currentTasks.map((t) => {
-                if (t.id === task.id) {
-                    return { ...t, ...task };
-                }
-                return t;
-            });
-
-            taskStore.set(updated);
-            sweetAlert("Task updated successfully");
+            page(`${window.location.pathname}`);
             sweetAlert('Task updated successfully');
         }
     } catch (err){
