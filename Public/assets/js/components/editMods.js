@@ -3,6 +3,7 @@ import { editTaskDB } from "../api/tasks";
 import { sweetAlert } from "../utils/sweetAlert";
 import { fixDate } from "../utils/date";
 import { addTagDB, getTags } from "../api/tags";
+import { getCategories, addCatDB } from "../api/category";
 
 export const editTaskModal = async (task) => {
     const users = await getUsers();
@@ -194,16 +195,95 @@ export const addTagModal = async (task) => {
         e.preventDefault();
 
         const selectedTags = Array.from(document.getElementById('taskTags').selectedOptions).map(option => parseInt(option.value));
-        
-        if (selectedTags.length === 0){
+
+        if (selectedTags.length === 0) {
             sweetAlert('At least one tag is required');
             return;
         }
-        
+
 
         addTagDB(selectedTags, task.id);
 
         modalOverlay.remove();
     });
 
-}
+};
+
+export const addCatModal = async (task) => {
+    const category = await getCategories();
+    console.log(category);
+    
+
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4 z-50';
+
+    const modalContent = document.createElement('form');
+    modalContent.id = 'addCatForm';
+    modalContent.className = 'bg-gray-900 rounded-sm w-full max-w-lg border border-purple-500/30 max-h-[90vh] flex flex-col';
+
+    modalContent.innerHTML = `
+                <div class="p-4 sm:p-6 border-b border-purple-500/20">
+                    <h2 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-300 to-white bg-clip-text text-transparent">Add a category</h2>
+                </div>
+
+                <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+                    <div class="space-y-2">
+                        <label for="categories" class="block text-sm font-medium text-purple-300">Select a category</label>
+                        <select id="categories"
+                            name="categories" 
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        >
+                            ${category.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
+                    <button 
+                        type="button"
+                        id="cancelAddCat" 
+                        class="px-4 sm:px-6 py-2 border border-purple-500/30 rounded-sm text-purple-300 hover:bg-purple-500/10 transition-all"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-700 transition-all"
+                    >
+                        Add Tags
+                    </button>
+                </div>
+            `;
+
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    const closeModal = () => {
+        modalOverlay.remove();
+    };
+
+    modalContent.querySelector('#cancelAddCat').addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    modalContent.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = new FormData(modalContent);
+        const id = data.get('categories');
+
+        console.log(id);
+        
+
+        if (!id){
+            sweetAlert('Please select a category');
+        }
+
+        addCatDB(task.id, id);
+
+        modalOverlay.remove();
+    });
+
+};

@@ -1,5 +1,5 @@
 import { deleteTaskDB } from "../api/tasks.js";
-import { editTaskModal, addTagModal } from "./editMods.js";
+import { editTaskModal, addTagModal, addCatModal } from "./editMods.js";
 import { formatDate } from "../utils/date.js";
 
 
@@ -91,7 +91,7 @@ export const taskCard = (task) => {
             <button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
                 <i class="fas fa-tag mr-1"></i>+ Tag
             </button>
-            <button title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
+            <button id="addCat" title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
                 <i class="fas fa-list-alt mr-1"></i>+ Category
             </button>
         </div>
@@ -113,6 +113,12 @@ export const taskCard = (task) => {
     addTag.addEventListener('click', (e) => {
         e.stopPropagation();
         addTagModal(task);
+    });
+
+    const addCat = element.querySelector('#addCat');
+    addCat.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addCatModal(task);
     });
 
     return element;

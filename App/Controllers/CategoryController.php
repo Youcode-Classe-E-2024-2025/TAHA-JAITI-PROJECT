@@ -53,13 +53,13 @@ class CategoryController extends GenericController{
         try {
             $data = $this->getRequestData();
 
-            if (!isset($data->task_id) || !isset($data->cat_id)) {
+            if (!isset($data->id) || !isset($data->cat_id)) {
                 $this->errResponse('Task ID and Category ID are required');
                 return;
             }
 
             $this->catModel->setId((int) $data->cat_id);
-            $this->catModel->setTask((int) $data->task_id);
+            $this->catModel->setTask( intval($data->id));
 
             $result = $this->catModel->assignCat();
 
