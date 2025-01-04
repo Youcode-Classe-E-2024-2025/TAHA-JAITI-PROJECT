@@ -19,9 +19,9 @@ export const getUsers = async () => {
     }
 };
 
-export const getProjectUsers = async () => {
+export const getProjectUsers = async (id) => {
     try {
-        const reponse = await axios.get('http://localhost/api/users');
+        const reponse = await axios.get('http://localhost/api/users/projects/?id=' + id);
 
         const data = reponse.data.data;
 

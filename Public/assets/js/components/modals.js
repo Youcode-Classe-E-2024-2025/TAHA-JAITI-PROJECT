@@ -1,7 +1,7 @@
 import axios from "axios";
 import page from "page";
 import { sweetAlert } from "../utils/sweetAlert";
-import { getUsers } from "../api/users";
+import { getProjectUsers, getUsers } from "../api/users";
 import { userId } from "../utils/userUtil";
 import { getCategories } from '../api/category.js';
 import { getTags } from "../api/tags.js";
@@ -293,9 +293,11 @@ export const handleProject = async () => {
 };
 
 const taskModal = async () => {
+    const projectId = window.location.pathname.split('/')[2];
+
     const categories = await getCategories();
     const tags = await getTags();
-    const users = await getUsers();
+    const users = await getProjectUsers(projectId);
     
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4';

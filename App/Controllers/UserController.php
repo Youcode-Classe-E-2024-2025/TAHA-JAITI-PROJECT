@@ -23,4 +23,22 @@ class UserController extends GenericController {
         }
     }
 
+    public function getProjectUsers() {
+        try {
+
+            $id = $_GET['id'];
+
+            $users = $this->userModel->getProjectUsers(intval($id));
+
+            if ($users){
+                $this->successResponse($users);
+            } else {
+                $this->errResponse('No users found');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
 }

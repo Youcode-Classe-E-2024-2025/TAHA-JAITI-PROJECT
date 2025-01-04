@@ -92,13 +92,16 @@ class User
         return [];
     }   
 
-    public function getProjects(): array
+    public function getProjectUsers($id): array
     {
+        $stmt = $this->db->prepare('SELECT u.id, u.name FROM users U LEFT JOIN project_members pm ON u.id = pm.user_id WHERE pm.project_id = :pid');
+        $stmt->execute([':pid' => $id]);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         return [];
     }
 
-    public function getTasks(): array
-    {
-        return [];
-    }
 }

@@ -40,5 +40,6 @@ $router->addRoute('POST', '/api/tags/assign', 'TagController@assignTag');
 
 //user routes
 $router->addRoute('GET', '/api/users', 'UserController@getUsers');
+$router->addRoute('GET', '/api/users/projects/', 'UserController@getProjectUsers');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
