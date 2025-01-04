@@ -205,13 +205,10 @@ export const porjectDetails = () => {
         handleTask();
     });
 
-    const unsubscribe = taskStore.subscribe(() => {
-        renderTasks();
-    });
+    taskStore.subscribe(renderTasks);
 
     renderTasks();
 
-    element.addEventListener('DOMNodeRemoved', unsubscribe);
 
     return main;
 };

@@ -40,9 +40,6 @@ export const updateTaskStatus = async (taskId, status) => {
         });
 
         if (response.status === 200) {
-            tasks[index].task_status = status;
-            taskStore.set([...tasks]);
-
             sweetAlert('Task status updated successfully');
         } else {
             sweetAlert('Failed to update task status: ' + response.data.message);
@@ -50,4 +47,7 @@ export const updateTaskStatus = async (taskId, status) => {
     } catch (err) {
         sweetAlert('Error updating task status: ' + (err.message || 'Unknown error'));
     }
+
+    tasks[index].task_status = status;
+    taskStore.set([...tasks]);
 };
