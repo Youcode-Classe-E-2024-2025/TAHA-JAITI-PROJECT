@@ -19,9 +19,11 @@ class ProjectController extends GenericController
                 $this->errResponse(implode(', ', $errors));
             }
 
+            $ispublic = $data->is_public === 'true' ? true : false;
+
             $this->projectModel->setName(str_secure($data->name));
             $this->projectModel->setDesc(str_secure($data->description));
-            $this->projectModel->setIsPublic((bool) $data->is_public);
+            $this->projectModel->setIsPublic($ispublic);
             $this->projectModel->setDeadline(str_secure($data->deadline));
             $this->projectModel->setCreator($data->creator);
 
