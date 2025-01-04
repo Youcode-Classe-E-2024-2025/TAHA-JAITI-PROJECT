@@ -1,4 +1,5 @@
 import page from "page";
+
 import { loginForm } from "./pages/login.js";
 import { registerForm } from "./pages/register.js";
 import { homePage } from "./pages/home.js";
@@ -54,7 +55,7 @@ function renderProjects() {
 }
 
 function renderProjectDetails(ctx) {
-    const {id} = ctx.params;
+    const { id } = ctx.params;
     clearRoot();
     root.appendChild(porjectDetails(id));
     getProjectTasks(id);
@@ -80,4 +81,5 @@ document.addEventListener('DOMContentLoaded', () => {
             page(route);
         });
     });
+
 });

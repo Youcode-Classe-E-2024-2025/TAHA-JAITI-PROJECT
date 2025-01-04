@@ -50,7 +50,7 @@ export const taskCard = (task) => {
         <!-- Task CARD -->
         <div class="flex justify-between items-start mb-2">
             <span class="text-md font-medium text-purple-400">${task.title}</span>
-            <div class="flex gap-2">
+            <div data-admin class="flex gap-2">
                 <!-- Edit Button -->
                 <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
                     <i class="fas fa-edit mr-1"></i>Edit
@@ -84,10 +84,7 @@ export const taskCard = (task) => {
         </div>
 
         <!-- Add Buttons -->
-        <div class="flex justify-between items-center mt-3 gap-2">
-            <button title="Add Assignee" class="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded-sm hover:bg-green-500/20 flex items-center">
-                <i class="fas fa-user-plus mr-1"></i>+ Assignee
-            </button>
+        <div data-admin class="flex justify-between items-center mt-3 gap-2">
             <button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
                 <i class="fas fa-tag mr-1"></i>+ Tag
             </button>
@@ -120,6 +117,8 @@ export const taskCard = (task) => {
         e.stopPropagation();
         addCatModal(task);
     });
+
+    
 
     return element;
 };
