@@ -380,7 +380,6 @@ const taskModal = async () => {
                             name="assignees" 
                             multiple 
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            required
                         >
                             ${users ? users.map(user => `<option value="${user.id}">${user.name}</option>`).join('') : ''}
                         </select>
@@ -394,7 +393,6 @@ const taskModal = async () => {
                             name="category" 
                             id="category"
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            required
                         >
                             ${categories ? categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('') : ''}
                         </select>
@@ -438,5 +436,38 @@ export const handleTask = async () => {
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        const title = data.get('title');
+        const description = data.get('description');
+        const status = data.get('status');
+        const deadline = data.get('deadline');
+        const category = data.get('category');
+        const assignees = data.getAll('assignees');
+        const tags = data.getAll('tags');
+
+        const project_id = window.location.pathname.split('/')[2];
+
+        try {
+            const response = await axios.post('http://localhost/api/task', {
+                title, description, status, deadline, category, assignees, tags, project_id
+            });
+
+            if (response.status === 200) {
+                sweetAlert('Task Created');
+                page(`/projects/${project_id}`);
+            } else {
+                console.log('error');
+            }
+
+            closeModal();
+        } catch (err) {
+            sweetAlert('An error occurred. Please try again.');
+            page('/404');
+        }
     });
 };

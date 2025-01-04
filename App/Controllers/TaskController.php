@@ -10,8 +10,6 @@ class TaskController extends GenericController{
     }
 
     public function createTask(){
-        $this->isAdmin();
-
         try {
             $data = $this->getRequestData();
             $erros = Validator::validateTask($data);
