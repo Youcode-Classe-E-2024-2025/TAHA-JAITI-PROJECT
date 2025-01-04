@@ -2,13 +2,14 @@ import { getUsers } from "../api/users";
 import { editTaskDB } from "../api/tasks";
 import { sweetAlert } from "../utils/sweetAlert";
 import { fixDate } from "../utils/date";
+import { getTags } from "../api/tags";
 
 export const editTaskModal = async (task) => {
     const users = await getUsers();
-    
+
     const modalOverlay = document.createElement('div');
     modalOverlay.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4 z-50';
-    
+
     const modalContent = document.createElement('form');
     modalContent.id = 'editTaskForm';
     modalContent.className = 'bg-gray-900 rounded-sm w-full max-w-lg border border-purple-500/30 max-h-[90vh] flex flex-col';
@@ -56,9 +57,9 @@ export const editTaskModal = async (task) => {
                         class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                         multiple
                     >
-                        ${users.map(user => 
-                            `<option value="${user.id}">${user.name}</option>`
-                        ).join('')}
+                        ${users.map(user =>
+        `<option value="${user.id}">${user.name}</option>`
+    ).join('')}
                     </select>
                 </div>
             </div>
@@ -98,22 +99,22 @@ export const editTaskModal = async (task) => {
             status: task.status,
             assignees: Array.from(document.getElementById('taskAssignees').selectedOptions).map(option => option.value),
         };
-        
+
         if (!updatedTask.title.trim()) {
             sweetAlert('Task title is required.');
             return;
         }
-    
+
         if (!updatedTask.description.trim()) {
             sweetAlert('Task description is required.');
             return;
         }
-    
+
         if (!updatedTask.deadline.trim()) {
             sweetAlert('Task deadline is required.');
             return;
         }
-    
+
         if (updatedTask.assignees.length === 0) {
             sweetAlert('At least one assignee is required.');
             return;
@@ -124,3 +125,56 @@ export const editTaskModal = async (task) => {
         modalOverlay.remove();
     });
 };
+
+export const addTagModal = async () => {
+    const tags = await getTags();
+
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4 z-50';
+
+    const modalContent = document.createElement('form');
+    modalContent.id = 'addTagForm';
+    modalContent.className = 'bg-gray-900 rounded-sm w-full max-w-lg border border-purple-500/30 max-h-[90vh] flex flex-col';
+
+    modalContent.innerHTML = `
+                <div class="p-4 sm:p-6 border-b border-purple-500/20">
+                    <h2 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-300 to-white bg-clip-text text-transparent">Add Tags to Task</h2>
+                </div>
+
+                <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+                    <div class="space-y-2">
+                        <label for="taskTags" class="block text-sm font-medium text-purple-300">Select Tags</label>
+                        <select 
+                            id="taskTags" 
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            multiple
+                        >
+                            ${tags.map(t => `<option value="${t.id}">${t.name}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
+                    <button 
+                        type="button"
+                        id="cancelAddTag" 
+                        class="px-4 sm:px-6 py-2 border border-purple-500/30 rounded-sm text-purple-300 hover:bg-purple-500/10 transition-all"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-700 transition-all"
+                    >
+                        Add Tags
+                    </button>
+                </div>
+            `;
+
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+        modalOverlay.remove();
+    });
+}
