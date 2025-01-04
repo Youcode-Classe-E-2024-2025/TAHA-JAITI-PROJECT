@@ -43,14 +43,12 @@ class GenericController
 
     protected function startSession($user): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start([
-                'cookie_lifetime' => 3600,
-                'cookie_secure' => true,
-                'cookie_httponly' => true,
-                'cookie_samesite' => 'Strict',
-            ]);
-        }
+        session_start([
+            'cookie_lifetime' => 3600,
+            'cookie_secure' => true,
+            'cookie_httponly' => true,
+            'cookie_samesite' => 'Strict',
+        ]);
 
         $_SESSION['user_id'] = $user->id;
         $_SESSION['role'] = $user->role;
@@ -61,18 +59,28 @@ class GenericController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-
         return isset($_SESSION['user_id']) && isset($_SESSION['role']);
     }
 
-    public function isAdmin(): void
+    protected function getCurrentRole(): ?string 
+    {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+        return $_SESSION['role'];
+    }
+
+    public function isAdmin(): bool
     {
         if (!$this->isLoggedIn()) {
             $this->errResponse('Unauthorized access', 401);
         }
 
-        if ($_SESSION['role'] !== 'chief') {
+        $role = $this->getCurrentRole();
+        if ($role !== 'chief') {
             $this->errResponse('Unauthorized user', 401);
         }
+
+        return true;
     }
 }

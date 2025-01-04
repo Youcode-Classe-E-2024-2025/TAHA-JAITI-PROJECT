@@ -367,7 +367,7 @@ const taskModal = async () => {
                             multiple 
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[80px]"
                         >
-                            ${tags.map(tag => `<option value="${tag.id}">${tag.name}</option>`).join('')}
+                            ${tags ? tags.map(tag => `<option value="${tag.id}">${tag.name}</option>`).join('') : ''}
                         </select>
                         <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple tags</p>
                     </div>
@@ -382,7 +382,7 @@ const taskModal = async () => {
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             required
                         >
-                            ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
+                            ${users ? users.map(user => `<option value="${user.id}">${user.name}</option>`).join('') : ''}
                         </select>
                         <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple assignees</p>
                     </div>
@@ -396,7 +396,7 @@ const taskModal = async () => {
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             required
                         >
-                            ${categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('')}
+                            ${categories ? categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('') : ''}
                         </select>
                     </div>
                
@@ -426,4 +426,17 @@ const taskModal = async () => {
 export const handleTask = async () => {
     const modal = await taskModal();
     document.body.appendChild(modal);
+
+    const form = modal.querySelector('#formModal');
+
+    const closeBtn = modal.querySelector('#closeBtn');
+    const closeModal = () => {
+        modal.remove();
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
 };

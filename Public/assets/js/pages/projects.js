@@ -183,7 +183,9 @@ export const porjectDetails = () => {
         handleTask();
     });
 
-    const unsubscribe = taskStore.subscribe(renderTasks);
+    const unsubscribe = taskStore.subscribe(() => {
+        renderTasks();
+    });
 
     renderTasks();
 

@@ -36,7 +36,7 @@ class User
         $this->role = $role;
     }
 
-    public function register(): int
+    public function register()
     {
         $sql = 'SELECT id FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);

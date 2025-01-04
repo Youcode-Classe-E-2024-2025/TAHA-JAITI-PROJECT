@@ -2,9 +2,6 @@
 
 class AuthController extends GenericController
 {
-
-    
-
     public function register(): void
     {
         try {
@@ -26,6 +23,7 @@ class AuthController extends GenericController
             $userData = $user->register();
 
             if ($userData) {
+                unset($data->password);
                 $this->successResponse($data, 'User registered succesfully');
             } else {
                 $this->errResponse('A user with this email already exists');
@@ -56,6 +54,7 @@ class AuthController extends GenericController
                 $this->errResponse('Invalid password or email');
             }
 
+            unset($userObject->password);
             $this->startSession($userObject);
 
             $this->successResponse($userObject, 'User logged in successfuly');
@@ -70,7 +69,7 @@ class AuthController extends GenericController
                 session_start();
             }
     
-            session_unset();
+            $_SESSION = [];
     
             if (ini_get("session.use_cookies")) {
                 $params = session_get_cookie_params();

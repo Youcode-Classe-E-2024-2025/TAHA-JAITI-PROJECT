@@ -46,6 +46,7 @@ class TagController extends GenericController {
     }
 
     public function getTags(){
+        
         try {
 
             $tags = $this->tagModel->getTags();
