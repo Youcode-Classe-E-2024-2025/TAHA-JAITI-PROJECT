@@ -11,7 +11,6 @@ class ProjectController extends GenericController
 
     public function createProject()
     {
-
         try {
             $data = $this->getRequestData();
             $errors = Validator::validateProject($data);
@@ -24,13 +23,13 @@ class ProjectController extends GenericController
             $this->projectModel->setDesc(str_secure($data->description));
             $this->projectModel->setIsPublic((bool) $data->is_public);
             $this->projectModel->setDeadline(str_secure($data->deadline));
-            $this->projectModel->setCreator($_SESSION['user_id']);
+            $this->projectModel->setCreator($data->creator);
 
             $result = $this->projectModel->createProject();
 
-            if (!empty($data->assignUsers) && is_array(($data->assignUsers))){
-                foreach($data->assignUsers as $userId){
-                    $this->projectModel->assignMember( intval($result),$userId);
+            if (!empty($data->users)){
+                foreach($data->users as $userId){
+                    $this->projectModel->assignMember( intval($result),intval($userId));
                 }
             }
 
@@ -45,7 +44,6 @@ class ProjectController extends GenericController
     }
 
     public function deleteProject(){
-        $this->isAdmin();
         try {
             $data = $this->getRequestData();
             
@@ -84,7 +82,6 @@ class ProjectController extends GenericController
     }
 
     public function assignMember(){
-        $this->isAdmin();
         try {
             $data = $this->getRequestData();
 
