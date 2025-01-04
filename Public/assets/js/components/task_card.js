@@ -1,3 +1,5 @@
+import { editTask } from "./editmodals.js";
+
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -17,18 +19,15 @@ const getDueDisplay = (deadline) => {
     return `Due in ${diff}d`;
 };
 
-export const taskCard = (id, title, desc, deadline, created_at, assignee = [], tag = [], category) => {    
+export const taskCard = (task) => {    
     const element = document.createElement('div');
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
-    element.dataset.id = id;
+    element.dataset.id = task.id;        
 
-    console.log(id + title);
-    
+    const assignee = Array.isArray(task.assignee_names) ? task.assignee_names : [];
 
-    assignee = Array.isArray(assignee) ? assignee : [];
-
-    const formattedCreatedDate = formatDate(created_at);
-    const dueDisplay = getDueDisplay(deadline);
+    const formattedCreatedDate = formatDate(task.created_at);
+    const dueDisplay = getDueDisplay(task.deadline);
 
     const assigneeMarkup = assignee.length > 0 
         ? assignee.slice(0, 3).map(a => `
@@ -43,8 +42,8 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
             : '')
         : `<span class="text-xs text-gray-400">No assignees</span>`;
 
-    const tagsMarkup = Array.isArray(tag) && tag.length > 0
-        ? tag.map(t => `
+    const tagsMarkup = Array.isArray(task.tag_names) && task.tag_names.length > 0
+        ? task.tag_names.map(t => `
             <span class="text-xs px-2 py-1 bg-gray-500/10 text-gray-300 rounded-sm">#${t}</span>
         `).join('')
         : `<span class="text-xs text-gray-500 italic">No tags</span>`;
@@ -52,7 +51,7 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
     element.innerHTML = `
         <!-- Task CARD -->
         <div class="flex justify-between items-start mb-2">
-            <span class="text-md font-medium text-purple-400">${title}</span>
+            <span class="text-md font-medium text-purple-400">${task.title}</span>
             <div class="flex gap-2">
                 <button id='editTask'
                     class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20"
@@ -64,11 +63,11 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
         </div>
         <!-- Category & Tags -->
         <div class="flex flex-wrap gap-2 mb-3">
-            ${category ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${category}</span>` : ''}
+            ${task.category_name ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${task.category_name}</span>` : ''}
             ${tagsMarkup}
         </div>
         <!-- Description -->
-        <p class="text-gray-300 text-md mb-3">${desc || '<span class="text-gray-500 italic">No description provided</span>'}</p>
+        <p class="text-gray-300 text-md mb-3">${task.description || '<span class="text-gray-500 italic">No description provided</span>'}</p>
         <!-- Task Meta -->
         <div class="grid grid-cols-2 gap-2 mb-3 text-xs text-gray-300">
             <div class="flex items-center gap-1">
@@ -87,7 +86,13 @@ export const taskCard = (id, title, desc, deadline, created_at, assignee = [], t
 
     const editTask = element.querySelector('#editTask');
     editTask.addEventListener('click', () => {
-
+        editTask({
+            title,
+            description: desc,
+            deadline,
+            assignees: assignee,
+            tags: tag
+        });
     });
 
     return element;

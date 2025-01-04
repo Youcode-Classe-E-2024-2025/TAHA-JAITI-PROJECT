@@ -150,16 +150,7 @@ export const porjectDetails = () => {
 
         if (tasks && tasks.length) {
             tasks.forEach(task => {
-                const card = taskCard(
-                    task.id,
-                    task.title,
-                    task.description || '',
-                    task.deadline || '',
-                    task.created_at || '',
-                    task.assignee_names || [],
-                    task.tag_names || [],
-                    task.category_name || ''
-                );
+                const card = taskCard(task);
 
                 const container = containers.find(c => c.status === task.status);
                 if (container) {
