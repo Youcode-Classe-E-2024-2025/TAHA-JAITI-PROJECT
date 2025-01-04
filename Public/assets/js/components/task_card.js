@@ -25,7 +25,6 @@ export const taskCard = (task) => {
     element.dataset.id = task.id;        
 
     const assignee = Array.isArray(task.assignee_names) ? task.assignee_names : [];
-
     const formattedCreatedDate = formatDate(task.created_at);
     const dueDisplay = getDueDisplay(task.deadline);
 
@@ -48,22 +47,28 @@ export const taskCard = (task) => {
         `).join('')
         : `<span class="text-xs text-gray-500 italic">No tags</span>`;
 
+    const categoryMarkup = task.category_name 
+        ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${task.category_name}</span>`
+        : '';
+
     element.innerHTML = `
         <!-- Task CARD -->
         <div class="flex justify-between items-start mb-2">
             <span class="text-md font-medium text-purple-400">${task.title}</span>
             <div class="flex gap-2">
-                <button id='editTask'
-                    class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20"
-                    >Edit</button>
-                <button
-                    class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20"
-                    >Delete</button>
+                <!-- Edit Button -->
+                <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
+                    <i class="fas fa-edit mr-1"></i>Edit
+                </button>
+                <!-- Delete Button -->
+                <button title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
+                    <i class="fas fa-trash mr-1"></i>Delete
+                </button>
             </div>
         </div>
         <!-- Category & Tags -->
         <div class="flex flex-wrap gap-2 mb-3">
-            ${task.category_name ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${task.category_name}</span>` : ''}
+            ${categoryMarkup}
             ${tagsMarkup}
         </div>
         <!-- Description -->
@@ -81,6 +86,19 @@ export const taskCard = (task) => {
                 ${assigneeMarkup}
             </div>
             <span class="text-xs text-gray-500">${dueDisplay}</span>
+        </div>
+
+        <!-- Add Buttons -->
+        <div class="flex justify-between items-center mt-3 gap-2">
+            <button title="Add Assignee" class="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded-sm hover:bg-green-500/20 flex items-center">
+                <i class="fas fa-user-plus mr-1"></i>Add Assignee
+            </button>
+            <button title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
+                <i class="fas fa-tag mr-1"></i>Add Tag
+            </button>
+            <button title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
+                <i class="fas fa-list-alt mr-1"></i>Add Category
+            </button>
         </div>
     `;
 
