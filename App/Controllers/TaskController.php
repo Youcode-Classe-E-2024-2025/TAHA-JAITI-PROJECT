@@ -30,9 +30,9 @@ class TaskController extends GenericController{
 
             $result = $this->taskModel->createTask();
 
-            if (!empty($data->assignUsers) && is_array(($data->assignUsers))){
-                foreach($data->assignUsers as $userId){
-                    $this->taskModel->assignTask( intval($result),$userId);
+            if (!empty($data->assignees) && is_array($data->assignees)){
+                foreach($data->assignees as $userId){
+                    $this->taskModel->assignTask( intval($result),intval($userId));
                 }
             }
 
@@ -138,6 +138,17 @@ class TaskController extends GenericController{
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function updateTask() {
+        try {
+            $data = $this->getRequestData();
+
+            
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred:' . $e->getMessage());
         }
     }
 }

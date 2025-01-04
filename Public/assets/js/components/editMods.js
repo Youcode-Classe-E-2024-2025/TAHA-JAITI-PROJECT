@@ -120,6 +120,7 @@ export const editTaskModal = async (task) => {
     modalContent.addEventListener('submit', (e) => {
         e.preventDefault();
         const updatedTask = {
+            id: task.id,
             title: document.getElementById('taskTitle').value,
             description: document.getElementById('taskDescription').value,
             deadline: document.getElementById('taskDeadline').value,

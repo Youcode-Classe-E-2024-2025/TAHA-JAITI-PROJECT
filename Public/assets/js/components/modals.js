@@ -358,19 +358,7 @@ const taskModal = async () => {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label for="tags" class="block text-sm font-medium text-purple-300">Tags</label>
-                        <select 
-                            id="tags" 
-                            name="tags" 
-                            multiple 
-                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[80px]"
-                        >
-                            ${tags ? tags.map(tag => `<option value="${tag.id}">${tag.name}</option>`).join('') : ''}
-                        </select>
-                        <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple tags</p>
-                    </div>
+                    
                     
 
                     <div class="space-y-2">
@@ -384,18 +372,6 @@ const taskModal = async () => {
                             ${users ? users.map(user => `<option value="${user.id}">${user.name}</option>`).join('') : ''}
                         </select>
                         <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple assignees</p>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                        <label for="category" class="block text-sm font-medium text-purple-300">Category</label>
-                        <select 
-                            name="category" 
-                            id="category"
-                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        >
-                            ${categories ? categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('') : ''}
-                        </select>
                     </div>
                
             </div>
@@ -446,15 +422,13 @@ export const handleTask = async () => {
         const description = data.get('description');
         const status = data.get('status');
         const deadline = data.get('deadline');
-        const category = data.get('category');
         const assignees = data.getAll('assignees');
-        const tags = data.getAll('tags');
 
         const project_id = window.location.pathname.split('/')[2];
 
         try {
             const response = await axios.post('http://localhost/api/task', {
-                title, description, status, deadline, category, assignees, tags, project_id
+                title, description, status, deadline, assignees, project_id
             });
 
             if (response.status === 200) {

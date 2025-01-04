@@ -26,6 +26,7 @@ $router->addRoute('POST', '/api/task/assign', 'TaskController@assignTask');
 $router->addRoute('GET', '/api/task', 'TaskController@getAllTasks'); //get project tasks based on project id
 $router->addRoute('DELETE', '/api/task', 'TaskController@deleteTask');
 $router->addRoute('PUT', '/api/task/status', 'TaskController@updateStatus');
+$router->addRoute('PUT', '/api/task', 'TaskController@updateTask');
 
 //category routes
 $router->addRoute('POST', '/api/categories', 'CategoryController@createCat');
