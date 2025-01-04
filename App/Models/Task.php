@@ -79,7 +79,7 @@ class Task
 
     public function getAllTasks($id): ?array
     {
-        $sql = "SELECT * FROM task_data WHERE task_project = :id";
+        $sql = "SELECT * FROM task_data WHERE project_id = :id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);

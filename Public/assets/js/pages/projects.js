@@ -147,13 +147,13 @@ export const porjectDetails = () => {
 
         if (tasks && tasks.length) {
             tasks.forEach(t => {
-                const card = taskCard(t.task_id, t.task_title, t.task_description,
-                    t.task_deadline, t.task_created_at, t.assignee_names, t.tag_names, t.category_name)
+                const card = taskCard(t.id, t.title, t.description,
+                    t.deadline, t.created_at, t.assignee_names, t.tag_names, t.category_name)
 
-                if (t.task_status === 'todo') {
+                if (t.status === 'todo') {
                     todoCont.appendChild(card);
                     counts.todo++;
-                } else if (t.task_status === 'in_progress') {
+                } else if (t.status === 'in_progress') {
                     doingCont.appendChild(card);
                     counts.in_progress++;
                 } else {

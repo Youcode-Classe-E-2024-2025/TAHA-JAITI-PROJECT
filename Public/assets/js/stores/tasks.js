@@ -27,7 +27,7 @@ export const getProjectTasks = async (id) => {
 
 export const updateTaskStatus = async (taskId, status) => {
     const tasks = taskStore.get();
-    const index = tasks.findIndex(task => task.task_id === parseInt(taskId));
+    const index = tasks.findIndex(task => task.id === parseInt(taskId));
 
     if (index === -1) {
         sweetAlert('Task not found');
@@ -48,6 +48,6 @@ export const updateTaskStatus = async (taskId, status) => {
         sweetAlert('Error updating task status: ' + (err.message || 'Unknown error'));
     }
 
-    tasks[index].task_status = status;
+    tasks[index].status = status;
     taskStore.set([...tasks]);
 };
