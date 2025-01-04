@@ -1,14 +1,8 @@
-import { getTags } from "../api/tags";
 import { getUsers } from "../api/users";
-import { getCategories } from "../api/category";
 import { editTaskDB } from "../api/tasks";
 
 export const editTaskModal = async (task) => {
-    const [tags, users, categories] = await Promise.all([
-        getTags(),
-        getUsers(),
-        getCategories()
-    ]);
+    const users = await getUsers();
 
     const modalOverlay = document.createElement('div');
     modalOverlay.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4 z-50';
@@ -66,31 +60,6 @@ export const editTaskModal = async (task) => {
                     </select>
                 </div>
             </div>
-
-            <div class="space-y-2">
-                <label for="taskTags" class="block text-sm font-medium text-purple-300">Tags</label>
-                <select 
-                    id="taskTags" 
-                    class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    multiple
-                >
-                    ${tags.map(tag => 
-                        `<option value="${tag.id}">${tag.name}</option>`
-                    ).join('')}
-                </select>
-            </div>
-
-            <div class="space-y-2">
-                <label for="taskCategory" class="block text-sm font-medium text-purple-300">Category</label>
-                <select 
-                    id="taskCategory" 
-                    class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                    ${categories.map(category => 
-                        `<option value="${category.id}">${category.name}</option>`
-                    ).join('')}
-                </select>
-            </div>
         </div>
 
         <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
@@ -125,8 +94,6 @@ export const editTaskModal = async (task) => {
             description: document.getElementById('taskDescription').value,
             deadline: document.getElementById('taskDeadline').value,
             assignees: Array.from(document.getElementById('taskAssignees').selectedOptions).map(option => option.value),
-            tags: Array.from(document.getElementById('taskTags').selectedOptions).map(option => option.value),
-            category: document.getElementById('taskCategory').value,
         };
         
         editTaskDB(updatedTask);
