@@ -39,9 +39,7 @@ export const updateTaskStatus = async (taskId, status) => {
             status,
         });
 
-        if (response.status === 200) {
-            return;
-        } else {
+        if (response.status !== 200) {
             sweetAlert('Failed to update task status: ' + response.data.message);
         }
     } catch (err) {
