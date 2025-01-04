@@ -1,4 +1,4 @@
-import { editTask } from "./editmodals.js";
+import { editTaskModal } from "./editMods.js";
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -86,13 +86,7 @@ export const taskCard = (task) => {
 
     const editTask = element.querySelector('#editTask');
     editTask.addEventListener('click', () => {
-        editTask({
-            title,
-            description: desc,
-            deadline,
-            assignees: assignee,
-            tags: tag
-        });
+        editTaskModal(task);
     });
 
     return element;

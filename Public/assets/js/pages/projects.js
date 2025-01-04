@@ -151,7 +151,7 @@ export const porjectDetails = () => {
         if (tasks && tasks.length) {
             tasks.forEach(task => {
                 const card = taskCard(task);
-
+                
                 const container = containers.find(c => c.status === task.status);
                 if (container) {
                     container.element.appendChild(card);
