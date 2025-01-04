@@ -2,7 +2,7 @@ import { getUsers } from "../api/users";
 import { editTaskDB } from "../api/tasks";
 import { sweetAlert } from "../utils/sweetAlert";
 import { fixDate } from "../utils/date";
-import { getTags } from "../api/tags";
+import { addTagDB, getTags } from "../api/tags";
 
 export const editTaskModal = async (task) => {
     const users = await getUsers();
@@ -82,11 +82,14 @@ export const editTaskModal = async (task) => {
         </div>
     `;
 
-    modalOverlay.appendChild(modalContent);
-    document.body.appendChild(modalOverlay);
-
-    document.getElementById('cancelEdit').addEventListener('click', () => {
+    const closeModal = () => {
         modalOverlay.remove();
+    };
+
+    modalContent.querySelector('#cancelEdit').addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
     });
 
     modalContent.addEventListener('submit', (e) => {
@@ -126,7 +129,7 @@ export const editTaskModal = async (task) => {
     });
 };
 
-export const addTagModal = async () => {
+export const addTagModal = async (task) => {
     const tags = await getTags();
 
     const modalOverlay = document.createElement('div');
@@ -144,8 +147,8 @@ export const addTagModal = async () => {
                 <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
                     <div class="space-y-2">
                         <label for="taskTags" class="block text-sm font-medium text-purple-300">Select Tags</label>
-                        <select 
-                            id="taskTags" 
+                        <select id="taskTags"
+                            name"taskTags" 
                             class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             multiple
                         >
@@ -174,7 +177,30 @@ export const addTagModal = async () => {
     modalOverlay.appendChild(modalContent);
     document.body.appendChild(modalOverlay);
 
-    document.getElementById('cancelEdit').addEventListener('click', () => {
+    const closeModal = () => {
+        modalOverlay.remove();
+    };
+
+    modalContent.querySelector('#cancelAddTag').addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    modalContent.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const selectedTags = Array.from(document.getElementById('taskTags').selectedOptions).map(option => parseInt(option.value));
+        
+        if (selectedTags.length === 0){
+            sweetAlert('At least one tag is required');
+            return;
+        }
+        
+
+        addTagDB(selectedTags, task.id);
+
         modalOverlay.remove();
     });
+
 }

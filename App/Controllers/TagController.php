@@ -1,6 +1,7 @@
 <?php
 
-class TagController extends GenericController {
+class TagController extends GenericController
+{
 
     private $tagModel;
 
@@ -9,7 +10,8 @@ class TagController extends GenericController {
         $this->tagModel = new Tag();
     }
 
-    public function createTag(){
+    public function createTag()
+    {
         try {
             $data = $this->getRequestData();
             $errors = Validator::validateName($data);
@@ -18,7 +20,7 @@ class TagController extends GenericController {
                 $this->errResponse(implode(', ', $errors));
             }
 
-            if (!empty($data->color)){
+            if (!empty($data->color)) {
                 $this->tagModel->setColor($data->color);
             }
 
@@ -26,11 +28,11 @@ class TagController extends GenericController {
 
             $result = $this->tagModel->createTag();
 
-            if (!empty($data->assign_tasks) && is_array(($data->assign_tasks))){
-                foreach($data->assign_tasks as $taskId){
+            if (!empty($data->assign_tasks) && is_array(($data->assign_tasks))) {
+                foreach ($data->assign_tasks as $taskId) {
                     $this->tagModel->setId((int) $result);
                     $this->tagModel->setTask((int) $taskId);
-            
+
                     $this->tagModel->assignTag();
                 }
             }
@@ -40,49 +42,59 @@ class TagController extends GenericController {
             } else {
                 $this->errResponse('Failed to create tag');
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
 
-    public function getTags(){
-        
+    public function getTags()
+    {
+
         try {
 
             $tags = $this->tagModel->getTags();
 
-            if ($tags){
+            if ($tags) {
                 $this->successResponse($tags);
             } else {
                 $this->errResponse('No tags found');
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->errResponse('An unexpected error occured');
         }
     }
 
-    public function assignTag(){
+    public function assignTag()
+    {
         try {
             $data = $this->getRequestData();
 
-            if (!isset($data->task_id) || !isset($data->tag_id)) {
-                $this->errResponse('Task ID and Tag ID are required');
+            // Validate input
+            if (!isset($data->id) || !isset($data->tag) || !is_array($data->tag)) {
+                $this->errResponse('Task ID and Tag list are required');
                 return;
             }
 
-            $this->tagModel->setId((int) $data->tag_id);
-            $this->tagModel->setTask((int) $data->task_id);
+            $this->tagModel->setTask((int)$data->id);
 
-            $result = $this->tagModel->assignTag();
+            $errors = [];
+            foreach ($data->tag as $tagId) {
+                $this->tagModel->setId((int)$tagId);
+                $result = $this->tagModel->assignTag();
 
-            if ($result){
-                $this->successResponse($data, "Tag assigned to tasl");
-            } else {
-                $this->errResponse('Failed to assign tag');
+                if (!$result) {
+                    $errors[] = $tagId;
+                }
             }
 
-        } catch (Exception $e){
-            $this->errResponse('An unexpected error occured'. $e->getMessage());
+            if (empty($errors)) {
+                $this->successResponse($data, "Tags successfully assigned to the task");
+            } else {
+                $failedTags = implode(', ', $errors);
+                $this->errResponse("Failed to assign tags with IDs: $failedTags");
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 }

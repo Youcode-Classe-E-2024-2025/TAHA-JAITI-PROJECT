@@ -1,5 +1,6 @@
 import axios from "axios";
 import page from "page";
+import { sweetAlert } from "../utils/sweetAlert";
 
 export const getTags = async () => {
     try {
@@ -18,3 +19,23 @@ export const getTags = async () => {
         throw err;
     }
 };
+
+export const addTagDB = async (tag, id) => {
+    try {
+
+        const response = await axios.post('http://localhost/api/tags/assign', {
+            tag,
+            id
+        });
+
+        if (response.status === 200){
+            sweetAlert('Tag assigned successfully');
+        } else {
+            sweetAlert('An error occured while adding tag');
+        }
+
+    } catch (err){
+        page('/404');
+        throw err;
+    }
+}
