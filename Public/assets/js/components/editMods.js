@@ -1,9 +1,11 @@
 import { getUsers } from "../api/users";
 import { editTaskDB } from "../api/tasks";
+import { sweetAlert } from "../utils/sweetAlert";
+import { fixDate } from "../utils/date";
 
 export const editTaskModal = async (task) => {
     const users = await getUsers();
-
+    
     const modalOverlay = document.createElement('div');
     modalOverlay.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4 z-50';
     
@@ -42,7 +44,7 @@ export const editTaskModal = async (task) => {
                     <input 
                         type="date" 
                         id="taskDeadline" 
-                        value="${task.deadline || ''}" 
+                        value="${fixDate(task.deadline)}" 
                         class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     >
                 </div>
@@ -97,6 +99,26 @@ export const editTaskModal = async (task) => {
             assignees: Array.from(document.getElementById('taskAssignees').selectedOptions).map(option => option.value),
         };
         
+        if (!updatedTask.title.trim()) {
+            sweetAlert('Task title is required.');
+            return;
+        }
+    
+        if (!updatedTask.description.trim()) {
+            sweetAlert('Task description is required.');
+            return;
+        }
+    
+        if (!updatedTask.deadline.trim()) {
+            sweetAlert('Task deadline is required.');
+            return;
+        }
+    
+        if (updatedTask.assignees.length === 0) {
+            sweetAlert('At least one assignee is required.');
+            return;
+        }
+
         editTaskDB(updatedTask);
 
         modalOverlay.remove();

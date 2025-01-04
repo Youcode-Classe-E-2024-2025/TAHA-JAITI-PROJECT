@@ -1,13 +1,7 @@
 import { deleteTaskDB } from "../api/tasks.js";
 import { editTaskModal } from "./editMods.js";
+import { formatDate } from "../utils/date.js";
 
-const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-};
 
 const getDueDisplay = (deadline) => {
     const now = new Date();
