@@ -10,7 +10,6 @@ class TagController extends GenericController {
     }
 
     public function createTag(){
-        $this->isAdmin();
         try {
             $data = $this->getRequestData();
             $errors = Validator::validateName($data);
@@ -62,8 +61,6 @@ class TagController extends GenericController {
     }
 
     public function assignTag(){
-        $this->isAdmin();
-
         try {
             $data = $this->getRequestData();
 

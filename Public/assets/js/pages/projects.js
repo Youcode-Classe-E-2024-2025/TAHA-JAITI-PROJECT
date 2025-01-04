@@ -3,7 +3,7 @@ import { projectStore } from "../stores/projects.js";
 import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
 import { taskStore } from "../stores/tasks.js";
-import { handleCategory, handleTag } from "../components/modals.js";
+import { handleCategory, handleTag, handleTask } from "../components/modals.js";
 import { userId } from "../utils/userUtil.js";
 
 export const projectsContainer = () => {
@@ -159,6 +159,7 @@ export const porjectDetails = () => {
                     doneCont.appendChild(card);
                     counts.done++;
                 }
+
             })
         }
 
@@ -175,6 +176,11 @@ export const porjectDetails = () => {
     const addTag = main.querySelector('#addTag');
     addTag.addEventListener('click', () => {
         handleTag();
+    });
+
+    const addTask = main.querySelector('#addTask');
+    addTask.addEventListener('click', () => {
+        handleTask();
     });
 
     const unsubscribe = taskStore.subscribe(renderTasks);

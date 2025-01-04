@@ -10,8 +10,6 @@ class CategoryController extends GenericController{
     }
 
     public function createCat(){
-        $this->isAdmin();
-
         try {
             $data = $this->getRequestData();
 
@@ -35,7 +33,6 @@ class CategoryController extends GenericController{
     }
 
     public function getAllCategories(){
-        $this->isAdmin();
 
         try {
             
@@ -53,7 +50,6 @@ class CategoryController extends GenericController{
     }
 
     public function assignCat(){
-        $this->isAdmin();
         try {
             $data = $this->getRequestData();
 

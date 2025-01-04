@@ -29,14 +29,14 @@ $router->addRoute('GET', '/api/task', 'TaskController@getAllTasks'); //get proje
 $router->addRoute('DELETE', '/api/task', 'TaskController@deleteTask');
 
 //category routes
-$router->addRoute('POST', '/api/category', 'CategoryController@createCat');
-$router->addRoute('GET', '/api/category', 'CategoryController@getAllCategories');
-$router->addRoute('POST', '/api/category/assign', 'CategoryController@assignCat');
+$router->addRoute('POST', '/api/categories', 'CategoryController@createCat');
+$router->addRoute('GET', '/api/categories', 'CategoryController@getAllCategories');
+$router->addRoute('POST', '/api/categories/assign', 'CategoryController@assignCat');
 
 //tag routes
-$router->addRoute('POST', '/api/tag', 'TagController@createTag');
-$router->addRoute('GET', '/api/tag', 'TagController@getTags');
-$router->addRoute('POST', '/api/tag/assign', 'TagController@assignTag');
+$router->addRoute('POST', '/api/tags', 'TagController@createTag');
+$router->addRoute('GET', '/api/tags', 'TagController@getTags');
+$router->addRoute('POST', '/api/tags/assign', 'TagController@assignTag');
 
 //user routes
 $router->addRoute('GET', '/api/users', 'UserController@getUsers');

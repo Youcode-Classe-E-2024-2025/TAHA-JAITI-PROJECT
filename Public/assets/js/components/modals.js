@@ -3,6 +3,8 @@ import page from "page";
 import { sweetAlert } from "../utils/sweetAlert";
 import { getUsers } from "../api/users";
 import { userId } from "../utils/userUtil";
+import { getCategories } from '../api/category.js';
+import { getTags } from "../api/tags.js";
 
 const categoryModal = () => {
     const modal = document.createElement('div');
@@ -288,4 +290,138 @@ export const handleProject = async () => {
 
     });
 
+};
+
+const taskModal = async () => {
+    const categories = await getCategories();
+    const tags = await getTags();
+    const users = await getUsers();
+    
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center p-4';
+    
+    modal.innerHTML = `
+        <form id="formModal" class="bg-gray-900 rounded-sm w-full max-w-lg border border-purple-500/30 max-h-[90vh] flex flex-col">
+            <div class="p-4 sm:p-6 border-b border-purple-500/20">
+                <h2 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-300 to-white bg-clip-text text-transparent">Add Task</h2>
+            </div>
+            
+            <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+                <div class="space-y-2">
+                    <label for="title" class="block text-sm font-medium text-purple-300">Task Title</label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        id="title" 
+                        class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+                        required
+                    >
+                </div>
+
+                <div class="space-y-2">
+                    <label for="description" class="block text-sm font-medium text-purple-300">Description</label>
+                    <textarea 
+                        name="description" 
+                        id="description" 
+                        rows="4" 
+                        class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label for="status" class="block text-sm font-medium text-purple-300">Status</label>
+                        <select 
+                            name="status" 
+                            id="status"
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            required
+                        >
+                            <option value="todo">To Do</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label for="deadline" class="block text-sm font-medium text-purple-300">Deadline</label>
+                        <input 
+                            type="datetime-local" 
+                            name="deadline" 
+                            id="deadline"
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label for="tags" class="block text-sm font-medium text-purple-300">Tags</label>
+                        <select 
+                            id="tags" 
+                            name="tags" 
+                            multiple 
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[80px]"
+                        >
+                            ${tags.map(tag => `<option value="${tag.id}">${tag.name}</option>`).join('')}
+                        </select>
+                        <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple tags</p>
+                    </div>
+                    
+
+                    <div class="space-y-2">
+                        <label for="assignees" class="block text-sm font-medium text-purple-300">Assignees</label>
+                        <select 
+                            id="assignees" 
+                            name="assignees" 
+                            multiple 
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            required
+                        >
+                            ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
+                        </select>
+                        <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple assignees</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                        <label for="category" class="block text-sm font-medium text-purple-300">Category</label>
+                        <select 
+                            name="category" 
+                            id="category"
+                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            required
+                        >
+                            ${categories.map(category => `<option value="${category.id}">${category.name}</option>`).join('')}
+                        </select>
+                    </div>
+               
+            </div>
+
+            <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
+                <button 
+                    type="button"
+                    id="closeBtn" 
+                    class="px-4 sm:px-6 py-2 border border-purple-500/30 rounded-sm text-purple-300 hover:bg-purple-500/10 transition-all"
+                >
+                    Cancel
+                </button>
+                <button 
+                    type="submit"
+                    class="px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-700 transition-all"
+                >
+                    Add Task
+                </button>
+            </div>
+        </form>
+    `;
+    
+    return modal;
+};
+
+export const handleTask = async () => {
+    const modal = await taskModal();
+    document.body.appendChild(modal);
 };
