@@ -26,7 +26,7 @@ export const header = () => {
                     <!-- Main Navigation -->
                     <div class="hidden md:flex items-center text-lg space-x-6">
                         <a href="/" data-ajax class="hover:text-white">Home</a>
-                        ${isAdmin ? `<a href="/dashboard" data-ajax class="hover:text-white">Dashboard</a>` : ''}
+                        ${isAdmin ? `<a href="/dashboard" data-ajax class="hover:text-white">Statistics</a>` : ''}
                         <a href="/projects" data-ajax class="hover:text-white">Projects</a>
                     </div>
 
