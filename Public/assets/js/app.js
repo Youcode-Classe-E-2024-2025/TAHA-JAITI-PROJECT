@@ -84,7 +84,7 @@ page('/signup', renderRegister);
 page('/projects', renderProjects);
 page('/projects/:id', (ctx) => {
     if (!isLogged()){
-        page('/');
+        page('/login');
         return;
     }
     renderProjectDetails(ctx);
