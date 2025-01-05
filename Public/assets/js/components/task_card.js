@@ -14,7 +14,7 @@ const getDueDisplay = (deadline) => {
     return `Due in ${diff}d`;
 };
 
-export const taskCard = (task) => {    
+export const taskCard = (task, isAdmin) => {    
     const element = document.createElement('div');
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
     element.dataset.id = task.id;        
@@ -46,20 +46,24 @@ export const taskCard = (task) => {
         ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${task.category_name}</span>`
         : '';
 
+    const adminMarkup = isAdmin ? `
+        <div data-admin class="flex gap-2">
+            <!-- Edit Button -->
+            <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
+                <i class="fas fa-edit mr-1"></i>Edit
+            </button>
+            <!-- Delete Button -->
+            <button id="deleteTask" title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
+                <i class="fas fa-trash mr-1"></i>Delete
+            </button>
+        </div>
+    ` : '';
+
     element.innerHTML = `
         <!-- Task CARD -->
         <div class="flex justify-between items-start mb-2">
             <span class="text-md font-medium text-purple-400">${task.title}</span>
-            <div data-admin class="flex gap-2">
-                <!-- Edit Button -->
-                <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
-                    <i class="fas fa-edit mr-1"></i>Edit
-                </button>
-                <!-- Delete Button -->
-                <button id="deleteTask" title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
-                    <i class="fas fa-trash mr-1"></i>Delete
-                </button>
-            </div>
+            ${adminMarkup}
         </div>
         <!-- Category & Tags -->
         <div class="flex flex-wrap gap-2 mb-3">
@@ -94,17 +98,19 @@ export const taskCard = (task) => {
         </div>
     `;
 
-    const editTask = element.querySelector('#editTask');
-    editTask.addEventListener('click', (e) => {
-        e.stopPropagation();
-        editTaskModal(task);
-    });
+    if (isAdmin) {
+        const editTask = element.querySelector('#editTask');
+        editTask.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editTaskModal(task);
+        });
 
-    const deleteTask = element.querySelector('#deleteTask');
-    deleteTask.addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteTaskDB(task);
-    });
+        const deleteTask = element.querySelector('#deleteTask');
+        deleteTask.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteTaskDB(task);
+        });
+    }
 
     const addTag = element.querySelector('#addTag');
     addTag.addEventListener('click', (e) => {
@@ -117,8 +123,6 @@ export const taskCard = (task) => {
         e.stopPropagation();
         addCatModal(task);
     });
-
-    
 
     return element;
 };

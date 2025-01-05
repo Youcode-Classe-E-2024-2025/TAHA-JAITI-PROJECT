@@ -5,7 +5,7 @@ import { projectCard } from "../components/project_card.js";
 import { taskCard } from "../components/task_card.js";
 import { taskStore, updateTaskStatus } from "../stores/tasks.js";
 import { handleCategory, handleTag, handleTask } from "../components/modals.js";
-import { userId } from "../utils/userUtil.js";
+import { userId, userRole } from "../utils/userUtil.js";
 
 export const projectsContainer = () => {
     const element = document.createElement('div');
@@ -51,10 +51,12 @@ export const projectsContainer = () => {
 };
 
 export const porjectDetails = () => {
+    const role = userRole.get() === 'chief' ? true : false;
+
     const main = document.createElement('div');
     main.classList = 'flex flex-col gap-4 p-4'
     main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
-                        <button id='addCat' class="btn_second">
+                        ${role? `<button id='addCat' class="btn_second">
                         + CATEGORY
                         </button>
                         <button id='addTag' class="btn_second">
@@ -62,7 +64,7 @@ export const porjectDetails = () => {
                         </button>
                         <button id='addTask' class="btn_second">
                         + TASK
-                        </button>
+                        </button>`:''}
                     </div>`;
 
     const element = document.createElement('div');
@@ -150,7 +152,7 @@ export const porjectDetails = () => {
 
         if (tasks && tasks.length) {
             tasks.forEach(task => {
-                const card = taskCard(task);
+                const card = taskCard(task, role);
                 
                 const container = containers.find(c => c.status === task.status);
                 if (container) {
