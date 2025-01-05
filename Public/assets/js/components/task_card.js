@@ -7,29 +7,29 @@ const getDueDisplay = (deadline) => {
     const now = new Date();
     const due = new Date(deadline);
     const diff = Math.floor((due - now) / (1000 * 60 * 60 * 24));
-    
+
     if (diff < 0) return 'Overdue';
     if (diff === 0) return 'Due today';
     if (diff === 1) return 'Due tomorrow';
     return `Due in ${diff}d`;
 };
 
-export const taskCard = (task, isAdmin) => {    
+export const taskCard = (task, isAdmin) => {
     const element = document.createElement('div');
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
-    element.dataset.id = task.id;        
+    element.dataset.id = task.id;
 
     const assignee = Array.isArray(task.assignee_names) ? task.assignee_names : [];
     const formattedCreatedDate = formatDate(task.created_at);
     const dueDisplay = getDueDisplay(task.deadline);
 
-    const assigneeMarkup = assignee.length > 0 
+    const assigneeMarkup = assignee.length > 0
         ? assignee.slice(0, 3).map(a => `
             <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
                 ${a[0]?.charAt(0).toUpperCase() || '?'}
             </div>
-        `).join('') + 
-        (assignee.length > 3 
+        `).join('') +
+        (assignee.length > 3
             ? `<div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
                 +${assignee.length - 3}
             </div>`
@@ -42,7 +42,7 @@ export const taskCard = (task, isAdmin) => {
         `).join('')
         : `<span class="text-xs text-gray-500 italic">No tags</span>`;
 
-    const categoryMarkup = task.category_name 
+    const categoryMarkup = task.category_name
         ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${task.category_name}</span>`
         : '';
 
@@ -87,7 +87,7 @@ export const taskCard = (task, isAdmin) => {
             <span class="text-xs text-gray-500">${dueDisplay}</span>
         </div>
 
-        <!-- Add Buttons -->
+        ${isAdmin ? `<!-- Add Buttons -->
         <div data-admin class="flex justify-between items-center mt-3 gap-2">
             <button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
                 <i class="fas fa-tag mr-1"></i>+ Tag
@@ -95,7 +95,7 @@ export const taskCard = (task, isAdmin) => {
             <button id="addCat" title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
                 <i class="fas fa-list-alt mr-1"></i>+ Category
             </button>
-        </div>
+        </div>` : ''}
     `;
 
     if (isAdmin) {
@@ -110,19 +110,21 @@ export const taskCard = (task, isAdmin) => {
             e.stopPropagation();
             deleteTaskDB(task);
         });
+
+        const addTag = element.querySelector('#addTag');
+        addTag.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addTagModal(task);
+        });
+
+        const addCat = element.querySelector('#addCat');
+        addCat.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addCatModal(task);
+        });
     }
 
-    const addTag = element.querySelector('#addTag');
-    addTag.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addTagModal(task);
-    });
 
-    const addCat = element.querySelector('#addCat');
-    addCat.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addCatModal(task);
-    });
 
     return element;
 };

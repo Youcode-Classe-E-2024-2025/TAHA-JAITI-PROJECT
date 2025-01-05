@@ -56,7 +56,7 @@ export const porjectDetails = () => {
     const main = document.createElement('div');
     main.classList = 'flex flex-col gap-4 p-4'
     main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
-                        ${role? `<button id='addCat' class="btn_second">
+                        ${role ? `<button id='addCat' class="btn_second">
                         + CATEGORY
                         </button>
                         <button id='addTag' class="btn_second">
@@ -64,7 +64,7 @@ export const porjectDetails = () => {
                         </button>
                         <button id='addTask' class="btn_second">
                         + TASK
-                        </button>`:''}
+                        </button>`: ''}
                     </div>`;
 
     const element = document.createElement('div');
@@ -153,7 +153,7 @@ export const porjectDetails = () => {
         if (tasks && tasks.length) {
             tasks.forEach(task => {
                 const card = taskCard(task, role);
-                
+
                 const container = containers.find(c => c.status === task.status);
                 if (container) {
                     container.element.appendChild(card);
@@ -182,14 +182,16 @@ export const porjectDetails = () => {
         });
     });
 
-    const addCat = main.querySelector('#addCat');
-    addCat.addEventListener('click', handleCategory);
+    if (role) {
+        const addCat = main.querySelector('#addCat');
+        addCat.addEventListener('click', handleCategory);
 
-    const addTag = main.querySelector('#addTag');
-    addTag.addEventListener('click', handleTag);
+        const addTag = main.querySelector('#addTag');
+        addTag.addEventListener('click', handleTag);
 
-    const addTask = main.querySelector('#addTask');
-    addTask.addEventListener('click', handleTask);
+        const addTask = main.querySelector('#addTask');
+        addTask.addEventListener('click', handleTask);
+    }
 
     taskStore.subscribe(renderTasks);
 
