@@ -47,7 +47,7 @@ class GenericController
             'cookie_lifetime' => 3600,
             'cookie_secure' => false,
             'cookie_httponly' => true,
-            'cookie_samesite' => 'none',
+            'cookie_samesite' => 'None',
         ]);
 
         $_SESSION['user_id'] = $user->id;

@@ -66,4 +66,20 @@ class UserController extends GenericController {
         }
     }
 
+    public function getMyProjects() {
+        if (!$this->isLoggedIn()){
+            return 'HELLNAH';
+        }
+        {
+            try {    
+                $projects = $this->userModel->getMyProjects();
+    
+                if ($projects){
+                    $this->successResponse($projects);
+                }
+            } catch (Exception $e){
+                $this->errResponse('An unexpected error occured' . $e);
+            }
+        }
+    }
 }

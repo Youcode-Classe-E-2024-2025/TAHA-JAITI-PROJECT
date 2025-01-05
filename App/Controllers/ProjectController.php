@@ -67,7 +67,7 @@ class ProjectController extends GenericController
     }
 
     public function getAllProjects(){
-        $this->isAdmin();
+        $this->isLoggedIn();
         try {
             $param = str_secure($_GET['p']);
             $sqlCondition = '';
@@ -78,7 +78,7 @@ class ProjectController extends GenericController
             } else {
                 if (!isset($_SESSION['user_id'])) {
                     $sqlCondition = 'is_public = true';
-                } else {
+                } elseif ($this->isAdmin()) {
                     $creatorId = $_SESSION['user_id'];
                     $sqlCondition = 'creator_id = :creator_id';
                     $params['creator_id'] = $creatorId;

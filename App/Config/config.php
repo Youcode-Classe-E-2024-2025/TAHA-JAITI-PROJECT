@@ -124,4 +124,31 @@ GROUP BY
     t.id, c.name
 ORDER BY 
     t.id ASC;
+    
+CREATE VIEW my_projects AS
+SELECT 
+    p.id AS project_id,
+    p.name AS project_name,
+    p.description,
+    p.is_public,
+    p.created_at,
+    p.updated_at,
+    p.deadline,
+    u.name AS creator,
+    u.id AS creator_id,
+    COUNT(DISTINCT t.id) AS task_count,
+    COUNT(DISTINCT pm.user_id) AS members_count,
+    pm.user_id AS member_id
+FROM 
+    projects p
+JOIN 
+    users u ON p.creator_id = u.id
+LEFT JOIN 
+    tasks t ON t.project_id = p.id
+LEFT JOIN 
+    project_members pm ON pm.project_id = p.id
+GROUP BY 
+    p.id, u.name, u.id, pm.user_id;
+
+
 ";

@@ -117,5 +117,11 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    
+    public function getMyProjects(): array {
+        $sql = "SELECT * FROM my_projects WHERE member_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+    }
 }
