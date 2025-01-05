@@ -1,16 +1,21 @@
 import { atom } from 'nanostores';
 import page from 'page';
 import axios from 'axios';
+import { userRole } from '../utils/userUtil';
 
 export const projectStore = atom([]);
 
 export const getTasks = async () => {
     try {
-        const response = await axios.get('http://localhost/api/project');
+        const user = userRole.get();
+        const endpoint = user !== 'guest' 
+            ? 'http://localhost/api/project?p=user'
+            : 'http://localhost/api/project?p=public';
+
+        const response = await axios.get(endpoint, {withCredentials: true});
 
         if (response.status === 200){
             const data =  response.data.data;
-
             projectStore.set(data);
         } else {
             sweetAlert('Failed to get projects' + response.data.message);

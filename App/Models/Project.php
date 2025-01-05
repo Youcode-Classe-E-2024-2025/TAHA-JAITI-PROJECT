@@ -53,13 +53,13 @@ class Project {
         return false;
     }
     
-    public function getAllProjects(): array{
-        $sql = "SELECT * FROM project_data WHERE is_public = true;";
-
+    public function getAllProjects($sqlCondition, $params): array {
+        $sql = "SELECT * FROM project_data WHERE $sqlCondition";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
+        
+        $stmt->execute($params);
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
     }
 
     public function assignMember($projectId, $memberId){

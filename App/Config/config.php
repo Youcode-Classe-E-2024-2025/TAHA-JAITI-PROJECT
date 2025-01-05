@@ -88,6 +88,7 @@ SELECT
     p.updated_at,
     p.deadline,
     u.name AS creator,
+	u.id AS creator_id,
     COUNT(DISTINCT t.id) AS task_count,
     COUNT(DISTINCT pm.user_id) AS members_count
 FROM 
@@ -99,7 +100,7 @@ LEFT JOIN
 LEFT JOIN 
     project_members pm ON pm.project_id = p.id
 GROUP BY 
-    p.id, u.name;
+    p.id, u.name, u.id;
 
 CREATE VIEW task_data AS
 SELECT 

@@ -45,9 +45,9 @@ class GenericController
     {
         session_start([
             'cookie_lifetime' => 3600,
-            'cookie_secure' => true,
+            'cookie_secure' => false,
             'cookie_httponly' => true,
-            'cookie_samesite' => 'Strict',
+            'cookie_samesite' => 'none',
         ]);
 
         $_SESSION['user_id'] = $user->id;
