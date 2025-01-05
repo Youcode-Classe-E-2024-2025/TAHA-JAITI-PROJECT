@@ -55,7 +55,6 @@ CREATE TABLE tasks (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
     category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-    assigned_to INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE project_members (

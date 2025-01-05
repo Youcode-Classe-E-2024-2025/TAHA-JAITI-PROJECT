@@ -4,7 +4,7 @@ const storedUserId = localStorage.getItem("userId");
 const storedUserRole = localStorage.getItem("userRole");
 
 export const userId = atom(storedUserId ? JSON.parse(storedUserId) : null);
-export const userRole = atom(storedUserRole ? JSON.parse(storedUserRole) : null);
+export const userRole = atom(storedUserRole ? JSON.parse(storedUserRole) : 'guest');
 
 userId.subscribe((value) => {
     localStorage.setItem("userId", JSON.stringify(value));
