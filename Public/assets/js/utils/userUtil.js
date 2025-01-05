@@ -20,7 +20,7 @@ export const setUser = (id, role) => {
 
 export const clearUser = () => {
     userId.set(null);
-    userRole.set(null);
+    userRole.set('guest');
 };
 
 

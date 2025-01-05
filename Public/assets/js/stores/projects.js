@@ -8,9 +8,11 @@ export const projectStore = atom([]);
 export const getTasks = async () => {
     try {
         const user = userRole.get();
-        const endpoint = user !== 'guest' 
-            ? 'http://localhost/api/project?p=user'
-            : 'http://localhost/api/project?p=public';
+        console.log(user);
+        
+        const endpoint = user === 'guest' 
+            ? 'http://localhost/api/project?p=public'
+            : 'http://localhost/api/project?p=user';
 
         const response = await axios.get(endpoint, {withCredentials: true});
 

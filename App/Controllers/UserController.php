@@ -38,4 +38,32 @@ class UserController extends GenericController {
         }
     }
 
+    public function getProjectStats() {
+        $this->isAdmin();
+        try {
+
+            $tasks = $this->userModel->getProjectStats();
+
+            $taskStats = [
+                'completed' => 0,
+                'in_progress' => 0,
+                'pending' => 0
+            ];
+
+            foreach ($tasks as $task) {
+                if ($task['status'] == 'completed') {
+                    $taskStats['completed'] = $task['task_count'];
+                } elseif ($task['status'] == 'in_progress') {
+                    $taskStats['in_progress'] = $task['task_count'];
+                } else {
+                    $taskStats['pending'] = $task['task_count'];
+                }
+            }
+
+            $this->successResponse($taskStats);
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
 }

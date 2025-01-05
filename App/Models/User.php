@@ -91,7 +91,6 @@ class User
 
         return [];
     }   
-
     public function getProjectUsers($id): array
     {
         $stmt = $this->db->prepare('SELECT u.id, u.name FROM users U LEFT JOIN project_members pm ON u.id = pm.user_id WHERE pm.project_id = :pid');
@@ -104,4 +103,17 @@ class User
         return [];
     }
 
+    public function getProjectStats (): array {
+        $sql = "
+            SELECT t.status, COUNT(*) AS task_count 
+            FROM tasks t
+            JOIN projects p ON t.project_id = p.id
+            WHERE p.creator_id = :creator_id
+            GROUP BY t.status
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':creator_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

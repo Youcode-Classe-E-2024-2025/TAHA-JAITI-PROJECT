@@ -4,6 +4,7 @@ import { loginForm } from "./pages/login.js";
 import { registerForm } from "./pages/register.js";
 import { homePage } from "./pages/home.js";
 import { projectsContainer, porjectDetails } from "./pages/projects.js";
+import { statPage } from "./pages/dashboard.js";
 
 import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
@@ -71,6 +72,11 @@ function renderProjectDetails(ctx) {
     getProjectTasks(id);
 }
 
+function renderStats () {
+    clearRoot();
+    root.appendChild(statPage());
+}
+
 page('/', renderHome);
 page('/login', renderLogin);
 page('/signup', renderRegister);
@@ -83,6 +89,8 @@ page('/projects/:id', (ctx) => {
     }
     renderProjectDetails(ctx);
 });
+
+page('/dashboard', renderStats);
 
 page('/404', renderBad);
 page('*', renderErr);
