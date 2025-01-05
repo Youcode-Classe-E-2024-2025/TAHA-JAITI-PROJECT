@@ -11,6 +11,8 @@ import { errPage, badRequest } from "./components/err.js";
 import { getTasks } from "./stores/projects.js";
 import { getProjectTasks } from "./stores/tasks.js";
 
+import { isLogged } from "./utils/userUtil.js";
+
 const root = document.getElementById("root");
 const head = document.getElementById('header');
 
@@ -25,10 +27,18 @@ function clearRoot() {
 }
 
 function renderLogin() {
+    if (isLogged()){
+        page('/');
+        return;
+    }
     clearRoot();
     root.appendChild(loginForm());
 }
 function renderRegister() {
+    if (isLogged()){
+        page('/');
+        return;
+    }
     clearRoot();
     root.appendChild(registerForm());
 }
@@ -66,7 +76,13 @@ page('/login', renderLogin);
 page('/signup', renderRegister);
 
 page('/projects', renderProjects);
-page('/projects/:id', renderProjectDetails);
+page('/projects/:id', (ctx) => {
+    if (!isLogged()){
+        page('/');
+        return;
+    }
+    renderProjectDetails(ctx);
+});
 
 page('/404', renderBad);
 page('*', renderErr);

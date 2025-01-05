@@ -22,3 +22,8 @@ export const clearUser = () => {
     userId.set(null);
     userRole.set(null);
 };
+
+
+export const isLogged = () => {    
+    return userId.get() && userRole.get();
+}
