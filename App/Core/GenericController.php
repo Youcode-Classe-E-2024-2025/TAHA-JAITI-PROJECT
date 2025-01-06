@@ -48,7 +48,6 @@ class GenericController
             $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
         }
         
-
         if ($authHeader) {
             $token = trim(str_replace('Bearer', '', $authHeader));
             return $token;
@@ -59,21 +58,18 @@ class GenericController
 
     protected function checkToken() {
         $token = $this->getHeader();
+        if (!$token) {
+            $this->errResponse('Unauthorized: No token provided', 401);
+        }
+
+        $user = JWToken::validateJWT($token);
+
+        if (!$user) {
+            $this->errResponse('Unauthorized: Invalid token', 401);
+        }
+        return $user;
     }
-
-    protected function startSession($user): void
-    {
-        session_start([
-            'cookie_lifetime' => 3600,
-            'cookie_secure' => false,
-            'cookie_httponly' => true,
-            'cookie_samesite' => 'None',
-        ]);
-
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['role'] = $user->role;
-    }
-
+    
     protected function isLoggedIn(): bool
     {
         if (session_status() === PHP_SESSION_NONE) {

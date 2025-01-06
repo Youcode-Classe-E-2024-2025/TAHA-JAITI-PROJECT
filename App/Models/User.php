@@ -19,6 +19,10 @@ class User
         $this->password = $password;
     }
 
+    public function setId(int $id){
+        $this->id = $id;
+    }
+
     public function setName(string $name)
     {
         $this->name = $name;
@@ -63,6 +67,18 @@ class User
         }
 
         return true;
+    }
+
+    public function getUserById(){
+        $sql = 'SELECT * FROM users WHERE id = :id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $this->id]);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        }
+
+        return null;
     }
 
     public function getUserByEmail(): ?object
