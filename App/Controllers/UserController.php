@@ -7,10 +7,11 @@ class UserController extends GenericController {
         $this->userModel = new User();
     }
 
-    public function getUsers() {
+    public function getAll() {
+        $this->checkToken();
         try {
 
-            $users = $this->userModel->getUsers();
+            $users = $this->userModel->getAllUsers();
 
             if ($users){
                 $this->successResponse($users);
@@ -23,63 +24,5 @@ class UserController extends GenericController {
         }
     }
 
-    public function getProjectUsers() {
-        try {
-
-            $id = $_GET['id'];
-
-            $users = $this->userModel->getProjectUsers(intval($id));
-
-            if ($users){
-                $this->successResponse($users);
-            }
-        } catch (Exception $e){
-            $this->errResponse('An unexpected error occured' . $e);
-        }
-    }
-
-    public function getProjectStats() {
-        $this->isAdmin();
-        try {
-
-            $tasks = $this->userModel->getProjectStats();
-
-            $taskStats = [
-                'completed' => 0,
-                'in_progress' => 0,
-                'pending' => 0
-            ];
-
-            foreach ($tasks as $task) {
-                if ($task['status'] == 'completed') {
-                    $taskStats['completed'] = $task['task_count'];
-                } elseif ($task['status'] == 'in_progress') {
-                    $taskStats['in_progress'] = $task['task_count'];
-                } else {
-                    $taskStats['pending'] = $task['task_count'];
-                }
-            }
-
-            $this->successResponse($taskStats);
-        } catch (Exception $e) {
-            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
-        }
-    }
-
-    public function getMyProjects() {
-        if (!$this->isLoggedIn()){
-            return 'HELLNAH';
-        }
-        {
-            try {    
-                $projects = $this->userModel->getMyProjects();
     
-                if ($projects){
-                    $this->successResponse($projects);
-                }
-            } catch (Exception $e){
-                $this->errResponse('An unexpected error occured' . $e);
-            }
-        }
-    }
 }

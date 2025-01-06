@@ -94,16 +94,29 @@ class User
         return null;
     }
 
-    public function getUsers():array {
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE role = :role');
-        $stmt->execute([':role' => 'member']);
+    public function getAllUsers():array {
+        $stmt = $this->db->prepare('SELECT id, name, email, role, created_at, updated_at FROM users');
+        $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return [];
-    }   
+    }
+    
+    public function getById(): ?object {
+        $sql = 'SELECT * FROM users WHERE id = :id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $this->id]);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        }
+
+        return null;
+        
+    }
     public function getProjectUsers($id): array
     {
         $stmt = $this->db->prepare('SELECT u.id, u.name FROM users U LEFT JOIN project_members pm ON u.id = pm.user_id WHERE pm.project_id = :pid');

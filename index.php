@@ -22,6 +22,8 @@ $router->addRoute('POST', '/api/auth/login', 'AuthController@login');
 $router->addRoute('POST', '/api/auth/register', 'AuthController@register');
 $router->addRoute('GET', '/api/auth/me', 'AuthController@getMe');
 
+$router->addRoute('GET', '/api/users', 'UserController@getAll');
+
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 
