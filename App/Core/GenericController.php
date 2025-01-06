@@ -2,7 +2,7 @@
 
 
 class GenericController
-{   
+{
     protected function successResponse($data, $msg = 'Success', $code = 200)
     {
         http_response_code($code);
@@ -41,6 +41,26 @@ class GenericController
         return null;
     }
 
+    protected function getHeader()
+    {
+        $authHeader = null;
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        
+
+        if ($authHeader) {
+            $token = trim(str_replace('Bearer', '', $authHeader));
+            return $token;
+        } else {
+            return null;
+        }
+    }
+
+    protected function checkToken() {
+        $token = $this->getHeader();
+    }
+
     protected function startSession($user): void
     {
         session_start([
@@ -62,7 +82,7 @@ class GenericController
         return isset($_SESSION['user_id']) && isset($_SESSION['role']);
     }
 
-    protected function getCurrentRole(): ?string 
+    protected function getCurrentRole(): ?string
     {
         if (!$this->isLoggedIn()) {
             return null;
@@ -83,6 +103,4 @@ class GenericController
 
         return true;
     }
-
-    
 }

@@ -63,6 +63,27 @@ class AuthController extends GenericController
         }
     }
 
+    public function getMe() {
+        try {
+            $token = $this->getHeader();
+    
+            if (!$token) {
+                return $this->errResponse('Unauthorized: No token provided', 401);
+            }
+    
+            $user = JWToken::validateJWT($token);
+    
+            if (!$user) {
+                return $this->errResponse('Unauthorized: Invalid token', 401);
+            }
+    
+            return $this->successResponse($user);
+        } catch (Exception $e) {
+            return $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
+        }
+    }
+    
+
     // public function login(): void {
     //     try {
 
