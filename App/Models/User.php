@@ -40,7 +40,7 @@ class User
         $this->role = $role;
     }
 
-    public function register(): bool
+    public function create(): bool
     {
         if (!empty($this->getUserByEmail())){
             return false;
@@ -54,7 +54,7 @@ class User
             ':name' => $this->name,
             ':email' => $this->email,
             ':password' => $this->password,
-            ':role' => $this->role,
+            ':role' => $this->role ?? 3,
         ]);
 
         return true;
@@ -67,18 +67,6 @@ class User
         }
 
         return true;
-    }
-
-    public function getUserById(){
-        $sql = 'SELECT * FROM users WHERE id = :id';
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $this->id]);
-
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_OBJ);
-        }
-
-        return null;
     }
 
     public function getUserByEmail(): ?object
@@ -106,7 +94,7 @@ class User
     }
     
     public function getById(): ?object {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $this->id]);
 
@@ -116,38 +104,5 @@ class User
 
         return null;
         
-    }
-    public function getProjectUsers($id): array
-    {
-        $stmt = $this->db->prepare('SELECT u.id, u.name FROM users U LEFT JOIN project_members pm ON u.id = pm.user_id WHERE pm.project_id = :pid');
-        $stmt->execute([':pid' => $id]);
-
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return [];
-    }
-
-    public function getProjectStats (): array {
-        $sql = "
-            SELECT t.status, COUNT(*) AS task_count 
-            FROM tasks t
-            JOIN projects p ON t.project_id = p.id
-            WHERE p.creator_id = :creator_id
-            GROUP BY t.status
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':creator_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getMyProjects(): array {
-        $sql = "SELECT * FROM my_projects WHERE member_id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $_SESSION['user_id'], PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
     }
 }

@@ -20,10 +20,6 @@ class Validator {
             $errors[] = 'Password must be 8 characters long';
         }
 
-        if (empty($data->role)){
-            $errors[] = 'Role is required/invalid';
-        }
-
         return $errors;
     }
 

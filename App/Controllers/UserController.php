@@ -42,4 +42,31 @@ class UserController extends GenericController {
         }
     }
     
+    public function create(){
+        $this->checkToken();
+        try {
+            $data = $this->getRequestData();
+            
+            $errors = Validator::validateUser($data);
+            if (!empty($errors)) {
+                $this->errResponse(implode(', ', $errors));
+            }
+    
+            $hashPass = password_hash($data->password, PASSWORD_BCRYPT);
+    
+            $this->userModel->setEmail($data->email);
+            $this->userModel->setPassword($hashPass);
+            $this->userModel->setName($data->name);
+            
+            $result = $this->userModel->create();
+    
+            if ($result) {
+                $this->successResponse(null, 'User registered successfully');
+            } else {
+                $this->errResponse('A user with this email already exists', 409);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
+        }
+    }
 }

@@ -20,7 +20,7 @@ class AuthController extends GenericController
             $user->setPassword($hashPass);
             $user->setRole(intval($data->role));
 
-            $result = $user->register();
+            $result = $user->create();
 
             if ($result) {
                 $this->successResponse(null, 'User registered succesfully');
@@ -69,7 +69,7 @@ class AuthController extends GenericController
 
             $user = new User();
             $user->setId(intval($data->sub));
-            $user = $user->getUserById();
+            $user = $user->getById();
 
             if ($user){
                 unset($user->password);
