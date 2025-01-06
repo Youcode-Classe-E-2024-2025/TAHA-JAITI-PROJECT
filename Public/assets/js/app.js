@@ -107,3 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+
+const a = [1,2,3];
+
+a.map(number => number * 2);

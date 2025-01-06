@@ -1,0 +1,15 @@
+{
+    "name": "taha/advanced-taskflow",
+    "autoload": {
+        "psr-4": {
+            "Taha\\AdvancedTaskflow\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Taha",
+            "email": "kyojin.rar@gmail.com"
+        }
+    ],
+    "require": {}
+}
