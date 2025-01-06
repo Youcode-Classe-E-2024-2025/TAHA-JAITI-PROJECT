@@ -16,7 +16,7 @@ class UserController extends GenericController {
             if ($users){
                 $this->successResponse($users);
             } else {
-                $this->errResponse('No users found');
+                $this->errResponse('No users found', 401);
             }
 
         } catch (Exception $e){
@@ -24,5 +24,22 @@ class UserController extends GenericController {
         }
     }
 
+    public function getById($id){
+        $this->checkToken();
+        try {
+
+            $this->userModel->setId($id);
+            $user = $this->userModel->getById();
+
+            if ($user){
+                $this->successResponse($user);
+            } else {
+                $this->errResponse('No users found', 401);
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
     
 }
