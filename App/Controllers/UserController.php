@@ -4,11 +4,12 @@ class UserController extends GenericController {
     private $userModel;
 
     public function __construct(){
+        $this->checkToken();
         $this->userModel = new User();
+
     }
 
     public function getAll() {
-        $this->checkToken();
         try {
 
             $users = $this->userModel->getAllUsers();
@@ -25,7 +26,6 @@ class UserController extends GenericController {
     }
 
     public function getById($id){
-        $this->checkToken();
         try {
 
             $this->userModel->setId($id);
@@ -43,7 +43,6 @@ class UserController extends GenericController {
     }
     
     public function create(){
-        $this->checkToken();
         try {
             $data = $this->getRequestData();
             
@@ -71,7 +70,6 @@ class UserController extends GenericController {
     }
 
     public function update($id) {
-        $this->checkToken();  
         try {
             $data = $this->getRequestData();
             
@@ -112,6 +110,27 @@ class UserController extends GenericController {
                 $this->errResponse('Failed to update user', 400);
             }
         } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function delete($id){
+        try {
+            $this->userModel->setId($id);
+        $user = $this->userModel->getById();
+
+        if (!$user) {
+            $this->errResponse('User not found', 404);
+        }
+
+        $result = $this->userModel->delete();
+
+        if ($result) {
+            $this->successResponse(null, 'User deleted successfully');
+        } else {
+            $this->errResponse('Failed to delete user', 400);
+        }
+        } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
         }
     }

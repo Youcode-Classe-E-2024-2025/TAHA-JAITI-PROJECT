@@ -26,6 +26,7 @@ $router->addRoute('GET', '/api/users', 'UserController@getAll');
 $router->addRoute('GET', '/api/users/{id}', 'UserController@getById');
 $router->addRoute('POST', '/api/users', 'UserController@create');
 $router->addRoute('PUT', '/api/users/{id}', 'UserController@update');
+$router->addRoute('DELETE', '/api/users/{id}', 'UserController@delete');
 
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

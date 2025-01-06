@@ -112,12 +112,25 @@ class User
     {
         $query = "UPDATE users SET name = :name, email = :email, password = :password, role = :role WHERE id = :id";
 
-        $stmt = Database::getConnection()->prepare($query);
+        $stmt = $this->db->prepare($query);
 
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':password', $this->password);
         $stmt->bindParam(':role', $this->role);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function delete()
+    {
+        $query = "DELETE FROM users WHERE id = :id";
+
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $this->id);
 
         if ($stmt->execute()) {
