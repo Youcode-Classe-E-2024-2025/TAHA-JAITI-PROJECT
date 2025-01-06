@@ -18,7 +18,7 @@ set_exception_handler('ErrorHandler::handleException');
 Database::initializeDatabase();
 $router = new Router();
 
-// $router->addRoute('POST', '/api/auth/login', 'AuthController@login');
+$router->addRoute('POST', '/api/auth/login', 'AuthController@login');
 $router->addRoute('POST', '/api/auth/register', 'AuthController@register');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

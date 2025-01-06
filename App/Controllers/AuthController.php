@@ -32,6 +32,37 @@ class AuthController extends GenericController
         }
     }
 
+    public function login(): void
+    {
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data) || !isset($data->email, $data->password)) {
+                $this->errResponse('Missing email or password');
+                return;
+            }
+
+            $email = $data->email;
+            $password = $data->password;
+
+            $user = new User();
+            $user->setEmail($email);
+            $user->setPassword($password);
+            $result = $user->getUserByEmail();
+
+            if (!$result || !$user->login($result)){
+                $this->errResponse('Invalid email or password');
+            }
+
+            $token = JWToken::genJWT($result);
+
+            $this->successResponse(['token' => $token], 'User logged in successfully');
+
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
     // public function login(): void {
     //     try {
 
@@ -41,7 +72,7 @@ class AuthController extends GenericController
     //             $this->errResponse('Missing email or password');
     //             return;
     //         }
-            
+
 
     //         $email = $data->email;
     //         $password = $data->password;
@@ -67,9 +98,9 @@ class AuthController extends GenericController
     //         if (session_status() === PHP_SESSION_NONE) {
     //             session_start();
     //         }
-    
+
     //         $_SESSION = [];
-    
+
     //         if (ini_get("session.use_cookies")) {
     //             $params = session_get_cookie_params();
     //             setcookie(
@@ -82,9 +113,9 @@ class AuthController extends GenericController
     //                 $params["httponly"]
     //             );
     //         }
-    
+
     //         session_destroy();
-    
+
     //         $this->successResponse(null, 'User logged out successfully');
     //     } catch (Exception $e) {
     //         $this->errResponse('An error occurred while logging out. Please try again.');

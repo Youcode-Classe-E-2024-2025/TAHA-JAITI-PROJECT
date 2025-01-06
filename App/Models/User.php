@@ -38,7 +38,7 @@ class User
 
     public function register(): bool
     {
-        if (!empty($this->getUserByEmail($this->email))){
+        if (!empty($this->getUserByEmail())){
             return false;
         }
 
@@ -56,26 +56,26 @@ class User
         return true;
     }
 
-    public function login(object $user, string $password): bool
+    public function login(object $user): bool
     {
-        if (!password_verify($password, $user->password)) {
+        if (!password_verify($this->password, $user->password)) {
             return false;
         }
 
         return true;
     }
 
-    public function getUserByEmail($email): array
+    public function getUserByEmail(): ?object
     {
         $sql = 'SELECT * FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':email' => $email]);
+        $stmt->execute([':email' => $this->email]);
 
         if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetch(PDO::FETCH_OBJ);
         }
 
-        return [];
+        return null;
     }
 
     public function getUsers():array {
