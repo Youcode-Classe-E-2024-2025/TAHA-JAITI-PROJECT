@@ -7,19 +7,42 @@ const DB_PASS = 'root';
 const DB_NAME = 'test';
 
 const SQL_DATABASE = "
-    CREATE TYPE user_role AS ENUM ('chief', 'member');
+-- ENUM Types
 CREATE TYPE task_status AS ENUM ('todo', 'in_progress', 'completed');
 
+-- Roles Table
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) UNIQUE NOT NULL
+);
+
+-- Permissions Table
+CREATE TABLE permissions (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Role-Permissions Table
+CREATE TABLE role_perms (
+    role_id INTEGER NOT NULL,
+    perm_id INTEGER NOT NULL,
+    PRIMARY KEY (role_id, perm_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    FOREIGN KEY (perm_id) REFERENCES permissions(id) ON DELETE CASCADE
+);
+
+-- Users Table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    role user_role DEFAULT 'member',    
+    role INTEGER NOT NULL DEFAULT 3 REFERENCES roles(id) ON DELETE SET DEFAULT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Projects Table
 CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -31,20 +54,22 @@ CREATE TABLE projects (
     creator_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT
 );
 
+-- Categories Table
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tags Table
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     color VARCHAR(7) DEFAULT '#000000'
 );
 
+-- Tasks Table
 CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
@@ -54,101 +79,49 @@ CREATE TABLE tasks (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL
 );
 
+-- Project Members Table
 CREATE TABLE project_members (
-    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    role user_role NOT NULL DEFAULT 'member',
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(20) NOT NULL DEFAULT 'member',
     joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (project_id, user_id)
 );
 
+-- Task-Tags Table
 CREATE TABLE task_tags (
-    task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
-    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    tag_id INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (task_id, tag_id)
 );
 
+-- User Assignments Table
 CREATE TABLE user_assignments (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
     assigned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE VIEW project_data AS
-SELECT 
-    p.id AS project_id,
-    p.name AS project_name,
-    p.description,
-    p.is_public,
-    p.created_at,
-    p.updated_at,
-    p.deadline,
-    u.name AS creator,
-	u.id AS creator_id,
-    COUNT(DISTINCT t.id) AS task_count,
-    COUNT(DISTINCT pm.user_id) AS members_count
-FROM 
-    projects p
-JOIN 
-    users u ON p.creator_id = u.id
-LEFT JOIN 
-    tasks t ON t.project_id = p.id
-LEFT JOIN 
-    project_members pm ON pm.project_id = p.id
-GROUP BY 
-    p.id, u.name, u.id;
+-- Activity Logs Table
+CREATE TABLE activity_logs (
+    id SERIAL PRIMARY KEY,
+    project_id INT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE SET NULL,
+    action VARCHAR(255) NOT NULL,
+    details JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE VIEW task_data AS
-SELECT 
-    t.*,
-    ARRAY_AGG(DISTINCT u.name) AS assignee_names,
-    ARRAY_AGG(DISTINCT tg.name) AS tag_names,
-    c.name AS category_name
-FROM 
-    tasks t
-LEFT JOIN 
-    user_assignments ua ON t.id = ua.task_id
-LEFT JOIN 
-    users u ON ua.user_id = u.id
-LEFT JOIN 
-    task_tags tt ON tt.task_id = t.id
-LEFT JOIN 
-    tags tg ON tt.tag_id = tg.id
-LEFT JOIN 
-    categories c ON t.category_id = c.id
-GROUP BY 
-    t.id, c.name
-ORDER BY 
-    t.id ASC;
-    
-CREATE VIEW my_projects AS
-SELECT 
-    p.id AS project_id,
-    p.name AS project_name,
-    p.description,
-    p.is_public,
-    p.created_at,
-    p.updated_at,
-    p.deadline,
-    u.name AS creator,
-    u.id AS creator_id,
-    COUNT(DISTINCT t.id) AS task_count,
-    COUNT(DISTINCT pm.user_id) AS members_count,
-    pm.user_id AS member_id
-FROM 
-    projects p
-JOIN 
-    users u ON p.creator_id = u.id
-LEFT JOIN 
-    tasks t ON t.project_id = p.id
-LEFT JOIN 
-    project_members pm ON pm.project_id = p.id
-GROUP BY 
-    p.id, u.name, u.id, pm.user_id;
+-- Insert Fake Data
+INSERT INTO roles (name) VALUES 
+('Admin'), 
+('Chief'),  
+('Member'),  
+('Guest');
 
 
 ";

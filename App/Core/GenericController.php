@@ -1,8 +1,8 @@
 <?php
 
-class GenericController
-{
 
+class GenericController
+{   
     protected function successResponse($data, $msg = 'Success', $code = 200)
     {
         http_response_code($code);
@@ -83,4 +83,6 @@ class GenericController
 
         return true;
     }
+
+    
 }
