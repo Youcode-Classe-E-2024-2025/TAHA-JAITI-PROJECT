@@ -69,4 +69,50 @@ class UserController extends GenericController {
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
         }
     }
+
+    public function update($id) {
+        $this->checkToken();  
+        try {
+            $data = $this->getRequestData();
+            
+            $errors = Validator::validateUser($data);
+            if (!empty($errors)) {
+                $this->errResponse(implode(', ', $errors));
+            }
+    
+            $this->userModel->setId($id); 
+            $user = $this->userModel->getById();
+    
+            if (!$user) {
+                $this->errResponse('User not found', 404);
+            }
+    
+            if (isset($data->name)) {
+                $this->userModel->setName($data->name);
+            }
+            
+            if (isset($data->email)) {
+                $this->userModel->setEmail($data->email);
+            }
+    
+            if (isset($data->password)) {
+                $hashedPassword = password_hash($data->password, PASSWORD_BCRYPT);
+                $this->userModel->setPassword($hashedPassword);
+            }
+    
+            if (isset($data->role)) {
+                $this->userModel->setRole($data->role);
+            }
+    
+            $result = $this->userModel->update();
+    
+            if ($result) {
+                $this->successResponse(null, 'User updated successfully');
+            } else {
+                $this->errResponse('Failed to update user', 400);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
+        }
+    }
 }

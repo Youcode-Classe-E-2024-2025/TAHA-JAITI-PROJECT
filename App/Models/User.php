@@ -19,7 +19,8 @@ class User
         $this->password = $password;
     }
 
-    public function setId(int $id){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
@@ -42,7 +43,7 @@ class User
 
     public function create(): bool
     {
-        if (!empty($this->getUserByEmail())){
+        if (!empty($this->getUserByEmail())) {
             return false;
         }
 
@@ -82,7 +83,8 @@ class User
         return null;
     }
 
-    public function getAllUsers():array {
+    public function getAllUsers(): array
+    {
         $stmt = $this->db->prepare('SELECT id, name, email, role, created_at, updated_at FROM users');
         $stmt->execute();
 
@@ -92,8 +94,9 @@ class User
 
         return [];
     }
-    
-    public function getById(): ?object {
+
+    public function getById(): ?object
+    {
         $sql = 'SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $this->id]);
@@ -103,6 +106,23 @@ class User
         }
 
         return null;
-        
+    }
+
+    public function update()
+    {
+        $query = "UPDATE users SET name = :name, email = :email, password = :password, role = :role WHERE id = :id";
+
+        $stmt = Database::getConnection()->prepare($query);
+
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':password', $this->password);
+        $stmt->bindParam(':role', $this->role);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
 }
