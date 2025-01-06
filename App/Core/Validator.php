@@ -16,6 +16,8 @@ class Validator {
 
         if (empty($data->password)) {
             $errors[] = 'Password is required.';
+        } elseif (strlen($data->password) < 8){
+            $errors[] = 'Password must be 8 characters long';
         }
 
         if (empty($data->role)){
