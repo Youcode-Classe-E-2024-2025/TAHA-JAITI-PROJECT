@@ -36,13 +36,9 @@ class User
         $this->role = $role;
     }
 
-    public function register()
+    public function register(): bool
     {
-        $sql = 'SELECT id FROM users WHERE email = :email';
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':email' => $this->email]);
-
-        if ($stmt->fetchColumn()) {
+        if (!empty($this->getUserByEmail($this->email))){
             return false;
         }
 
@@ -57,7 +53,7 @@ class User
             ':role' => $this->role,
         ]);
 
-        return (int) $this->db->lastInsertId();
+        return true;
     }
 
     public function login(object $user, string $password): bool
@@ -69,16 +65,17 @@ class User
         return true;
     }
 
-    public function getUserByEmail($email): object | bool
+    public function getUserByEmail($email): array
     {
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email');
-        $stmt->bindParam(':email', $email);
+        $sql = 'SELECT * FROM users WHERE email = :email';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $email]);
 
-        if ($stmt->execute()) {
-            return $stmt->fetch(PDO::FETCH_OBJ);
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        return false;
+        return [];
     }
 
     public function getUsers():array {
