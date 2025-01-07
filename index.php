@@ -35,6 +35,7 @@ $router->addRoute('GET', '/api/roles', 'RolesController@getAll');
 $router->addRoute('GET', '/api/roles/{id}', 'RolesController@getById');
 $router->addRoute('POST', '/api/roles', 'RolesController@create');
 $router->addRoute('PUT', '/api/roles/{id}', 'RolesController@update');
+$router->addRoute('DELETE', '/api/roles/{id}', 'RolesController@delete');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 

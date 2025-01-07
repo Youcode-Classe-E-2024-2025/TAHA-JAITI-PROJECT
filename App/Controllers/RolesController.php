@@ -39,7 +39,7 @@ class RolesController extends GenericController {
                 $this->errResponse('Name is missing or too short');
             }
 
-            if (!isset($id) || empty($id)){
+            if (!isset($id) || empty($id) || !is_numeric($id)){
                 $this->errResponse('Role id is missing');
             }
 
@@ -52,6 +52,27 @@ class RolesController extends GenericController {
                 $this->successResponse('Role updated successfully');
             } else {
                 $this->errResponse('There has been an error while updating the role');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
+    public function delete($id){
+        try {
+            if (!isset($id) || empty($id) || !is_numeric($id)){
+                $this->errResponse('Role id is missing');
+            }
+
+            $this->roles->setId($id);
+
+            $result = $this->roles->delete();
+
+            if ($result) {
+                $this->successResponse('Role deleted successfully');
+            } else {
+                $this->errResponse('There has been an error while deleting the role');
             }
 
         } catch (Exception $e){
