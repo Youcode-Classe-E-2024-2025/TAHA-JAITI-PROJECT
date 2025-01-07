@@ -53,6 +53,10 @@ $router->addRoute('PUT', '/api/projects/{id}', 'ProjectController@update');
 $router->addRoute('DELETE', '/api/projects/{id}', 'ProjectController@delete');
 $router->addRoute('GET', '/api/projects/{id}/users', 'ProjectController@getUsers');
 
+//tasks
+$router->addRoute('GET', '/api/tasks', 'TaskController@getAll');
+
+
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 
