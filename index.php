@@ -55,6 +55,7 @@ $router->addRoute('GET', '/api/projects/{id}/users', 'ProjectController@getUsers
 
 //tasks
 $router->addRoute('GET', '/api/tasks', 'TaskController@getAll');
+$router->addRoute('GET', '/api/tasks/project/{id}', 'TaskController@getProjectTasks');
 
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

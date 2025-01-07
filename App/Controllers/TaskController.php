@@ -24,4 +24,21 @@ class TaskController extends GenericController{
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function getProjectTasks($id){
+        try {
+
+            $this->taskModel->setProject($id);
+            $result = $this->taskModel->getProjectTasks();
+
+            if ($result){
+                $this->successResponse($result);
+            } else {
+                $this->errResponse('No tasks were found', 404);
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
