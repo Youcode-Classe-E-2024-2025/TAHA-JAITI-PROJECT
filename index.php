@@ -18,16 +18,21 @@ set_exception_handler('ErrorHandler::handleException');
 Database::initializeDatabase();
 $router = new Router();
 
+//auth
 $router->addRoute('POST', '/api/auth/login', 'AuthController@login');
 $router->addRoute('POST', '/api/auth/register', 'AuthController@register');
 $router->addRoute('GET', '/api/auth/me', 'AuthController@getMe');
 
+//users
 $router->addRoute('GET', '/api/users', 'UserController@getAll');
 $router->addRoute('GET', '/api/users/{id}', 'UserController@getById');
 $router->addRoute('POST', '/api/users', 'UserController@create');
 $router->addRoute('PUT', '/api/users/{id}', 'UserController@update');
 $router->addRoute('DELETE', '/api/users/{id}', 'UserController@delete');
 
+//roles
+$router->addRoute('GET', '/api/roles', 'RolesController@getAll');
+$router->addRoute('GET', '/api/roles/{id}', 'RolesController@getById');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
