@@ -43,16 +43,27 @@ class Category
         }
     }
 
-    public function getCategories(): array | null{
+    public function getAll(): array{
         $sql = "SELECT * FROM categories";
-
         $stmt = $this->db->prepare($sql);
-        
-        if ($stmt->execute()){
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         
-        return null;
+        return [];
+    }
+
+    public function getById(): array{
+        $sql = "SELECT * FROM categories WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        return [];
     }
 
     public function assignCat(): bool{

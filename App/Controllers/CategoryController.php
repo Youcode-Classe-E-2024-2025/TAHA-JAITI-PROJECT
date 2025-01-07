@@ -32,20 +32,35 @@ class CategoryController extends GenericController{
         }
     }
 
-    public function getAllCategories(){
+    public function getAll(){
 
         try {
-            
-            $categories = $this->catModel->getCategories();
+            $categories = $this->catModel->getAll();
 
             if ($categories){
                 $this->successResponse($categories);
             } else {
-                $this->errResponse('Failed getting projects from the database');
+                $this->errResponse('No categories were found', 404);
             }
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function getById($id){
+        try {
+
+            $this->catModel->setId($id);
+            $result = $this->catModel->getById();
+
+            if ($result) {
+                $this->successResponse($result);
+            } else {
+                $this->errResponse('No category found', 404);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
 
