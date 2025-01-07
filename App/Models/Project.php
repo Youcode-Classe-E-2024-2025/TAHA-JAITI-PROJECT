@@ -3,6 +3,7 @@
 class Project {
 
     private PDO $db;
+    private $id;
     private $name;
     private $description;
     private $is_public;
@@ -13,7 +14,8 @@ class Project {
     public function __construct(){
         $this->db = Database::getConnection();
     }
-
+    
+    public function setId($id) {$this->id = $id;}
     public function setName($name) {$this->name = $name;}
     public function setDesc($description) {$this->description = $description;}
     public function setIsPublic($is_public) {$this->is_public = $is_public;}
@@ -62,6 +64,7 @@ class Project {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
     }
 
+    //--------
     public function getPublic(){
         $sql = "SELECT * FROM projects WHERE visibility = 'public'";
         $stmt = $this->db->prepare($sql);
@@ -74,6 +77,17 @@ class Project {
         return [];
     }
 
+    public function getById(){
+        $sql = "SELECT * FROM projects WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+
+    //------
     public function assignMember($projectId, $memberId){
         $sql = "INSERT INTO project_members (project_id, user_id) VALUES (:pId, :mId);";
 

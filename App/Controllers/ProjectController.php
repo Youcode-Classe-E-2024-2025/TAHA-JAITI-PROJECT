@@ -81,6 +81,24 @@ class ProjectController extends GenericController
         }
     }
 
+    public function getById($id){
+        $this->checkToken();
+        try {
+            
+            $this->projectModel->setId($id);
+            $result = $this->projectModel->getById();
+
+            if ($result){
+                $this->successResponse($result);
+            } else {
+                $this->errResponse('No project was found', 404);
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error has occured' . $e);
+        }
+    }
+
     public function assignMember(){
         try {
             $data = $this->getRequestData();

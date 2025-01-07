@@ -29,7 +29,7 @@ class Permissions {
         return [];
     }
 
-    public function getById(){
+    public function getById(): array{
         $sql = "SELECT * FROM permissions WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $this->id);
