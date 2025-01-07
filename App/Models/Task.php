@@ -64,6 +64,25 @@ class Task
         return false;
     }
 
+    public function update(){
+        $sql = "UPDATE tasks SET title = :title, description = :desc, status = :status,
+        deadline = :dead, category_id = :cid, updated_at = CURRENT_TIMESTAMP WHERE id = :id";
+
+       $stmt = $this->db->prepare($sql);
+       $stmt->bindParam(':title', $this->title);
+       $stmt->bindParam(':desc', $this->description);
+       $stmt->bindParam(':status', $this->status);
+       $stmt->bindParam(':dead', $this->deadline);
+       $stmt->bindParam(':cid', $this->category_id);
+       $stmt->bindParam(':id', $this->id);
+
+       if ($stmt->execute()){
+           return true;
+       }
+
+       return false;
+    }
+
     public function getAll(){
         $sql = "SELECT * FROM tasks";
         $stmt = $this->db->prepare($sql);

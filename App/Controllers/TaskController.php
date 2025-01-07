@@ -39,6 +39,35 @@ class TaskController extends GenericController
         }
     }
 
+    public function update($id){
+        $this->checkToken();
+        try {
+            $data = $this->getRequestData();
+
+            $errors = Validator::validateTask($data);
+            if (!empty($errors)) {
+                $this->errResponse(implode(', ', $errors));
+            }
+
+            $this->taskModel->setId($id);
+            $this->taskModel->setTitle($data->title);
+            $this->taskModel->setDesc($data->description);
+            $this->taskModel->setDeadline($data->deadline);
+            $this->taskModel->setStatus($data->status);
+            $this->taskModel->setCategory($data->category_id);
+
+            $result = $this->taskModel->update();
+            if ($result) {
+                $this->successResponse(null, 'Task updated');
+            } else {
+                $this->errResponse('Failed to update task');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+
+    }
+
     public function getAll()
     {
         try {
