@@ -64,6 +64,23 @@ class Project
         return false;
     }
 
+    public function update(){
+        $sql = "UPDATE projects SET name = :name, description = :desc, visibility = :vis,
+         deadline = :dead, updated_at = CURRENT_TIMESTAMP WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':desc', $this->description);
+        $stmt->bindParam(':vis', $this->visibility);
+        $stmt->bindParam(':dead', $this->deadline);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 
     public function getPublic()
     {

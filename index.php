@@ -49,6 +49,7 @@ $router->addRoute('GET', '/api/projects', 'ProjectController@getPublic');
 $router->addRoute('GET', '/api/projects/my', 'ProjectController@getMe');
 $router->addRoute('GET', '/api/projects/{id}', 'ProjectController@getById');
 $router->addRoute('POST', '/api/projects', 'ProjectController@create');
+$router->addRoute('PUT', '/api/projects/{id}', 'ProjectController@update');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
