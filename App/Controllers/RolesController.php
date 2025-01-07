@@ -104,7 +104,23 @@ class RolesController extends GenericController {
             if ($roles){
                 $this->successResponse($roles);
             } else {
-                $this->errResponse('No role found', 401);
+                $this->errResponse('No role found', 404);
+            }
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
+    public function getRolePerms($id){
+        try {
+
+            $this->roles->setId($id);
+            $roles = $this->roles->getPerms();
+
+            if ($roles){
+                $this->successResponse($roles);
+            } else {
+                $this->errResponse('No permissions were found', 404);
             }
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured' . $e);

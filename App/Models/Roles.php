@@ -74,4 +74,17 @@ class Roles {
         return [];
     }
 
+    public function getPerms(){
+        $sql = "SELECT * FROM role_perms WHERE role_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
 }

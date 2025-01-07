@@ -36,10 +36,13 @@ $router->addRoute('GET', '/api/roles/{id}', 'RolesController@getById');
 $router->addRoute('POST', '/api/roles', 'RolesController@create');
 $router->addRoute('PUT', '/api/roles/{id}', 'RolesController@update');
 $router->addRoute('DELETE', '/api/roles/{id}', 'RolesController@delete');
+$router->addRoute('GET', '/api/roles/{id}/permissions', 'RolesController@getRolePerms');
+
 
 //permissions
 $router->addRoute('GET', '/api/permissions', 'PermsController@getAll');
 $router->addRoute('GET', '/api/permissions/{id}', 'PermsController@getById');
+
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
