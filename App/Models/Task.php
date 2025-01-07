@@ -59,13 +59,26 @@ class Task
         return [];
     }
     
-    public function getProjectTasks(){
+    public function getByProject(){
         $sql = "SELECT * FROM tasks WHERE project_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $this->project_id);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function getById(){
+        $sql = "SELECT * FROM tasks WHERE project_id = :id LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+        
+
+        if ($stmt->execute()){
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
