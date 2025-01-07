@@ -8,6 +8,29 @@ class RolesController extends GenericController {
         $this->roles = new Roles();
     }
 
+    public function create(){
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($data->name) || empty($data->name) || strlen($data->name) < 3){
+                $this->errResponse('Name is missing or too short');
+            }
+
+            $this->roles->setName($data->name);
+
+            $result = $this->roles->create();
+
+            if ($result) {
+                $this->successResponse('Role created successfully');
+            } else {
+                $this->errResponse('There has been an error while creating the role');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
     public function getAll() {
         try {
 

@@ -18,6 +18,16 @@ class Roles {
         $this->name = $name;
     }
 
+    public function create(){
+        $sql = "INSERT INTO roles(name) VALUES (:name)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $this->name);
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
     public function getAll(){
         $sql = "SELECT * FROM roles";
         $stmt = $this->db->prepare($sql);

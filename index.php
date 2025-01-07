@@ -33,6 +33,7 @@ $router->addRoute('DELETE', '/api/users/{id}', 'UserController@delete');
 //roles
 $router->addRoute('GET', '/api/roles', 'RolesController@getAll');
 $router->addRoute('GET', '/api/roles/{id}', 'RolesController@getById');
+$router->addRoute('POST', '/api/roles', 'RolesController@create');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
