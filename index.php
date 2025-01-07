@@ -37,6 +37,7 @@ $router->addRoute('POST', '/api/roles', 'RolesController@create');
 $router->addRoute('PUT', '/api/roles/{id}', 'RolesController@update');
 $router->addRoute('DELETE', '/api/roles/{id}', 'RolesController@delete');
 $router->addRoute('GET', '/api/roles/{id}/permissions', 'RolesController@getRolePerms');
+$router->addRoute('POST', '/api/roles/{id}/permissions', 'RolesController@assignPerms');
 
 
 //permissions

@@ -87,4 +87,16 @@ class Roles {
         return [];
     }
 
+    public function assignPerm(int $permId){
+        $sql = "INSERT INTO role_perms(role_id, perm_id) VALUES (:id, :perm_id)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':perm_id', $permId);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 }

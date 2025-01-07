@@ -126,4 +126,43 @@ class RolesController extends GenericController {
             $this->errResponse('An unexpected error occured' . $e);
         }
     }
+
+    public function assignPerms($id){
+        try {
+            $data = $this->getRequestData();
+
+
+            if (!is_array($data->perm_id) || empty($data->perm_id)){
+                $this->errResponse('Invalid / Empty permissions');
+            }
+
+            $this->roles->setId((int) $id);
+            
+
+            foreach ($data->perm_id as $permId) {
+                if (!is_numeric($permId)) {
+                    $errors[] = $permId;
+                    continue;
+                }
+    
+                if ($this->roles->assignPerm((int) $permId)) {
+                    $good[] = $permId;
+                } else {
+                    $errors[] = $permId;
+                }
+            }
+    
+            if (!empty($errors)) {
+                $this->errResponse('Some permissions failed to assign', [
+                    'success' => $good,
+                    'failed' => $errors,
+                ]);
+            } else {
+                $this->successResponse('All permissions assigned successfully', ['success' => $good]);
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
 }
