@@ -85,7 +85,19 @@ class Project {
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    public function getMe($userId){
+        $sql = "SELECT p.*
+                FROM projects p
+                JOIN project_members pm ON pm.project_id = p.id
+                WHERE pm.user_id = :user_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     //------
     public function assignMember($projectId, $memberId){
