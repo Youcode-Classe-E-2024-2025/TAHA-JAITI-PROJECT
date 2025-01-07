@@ -9,60 +9,30 @@ class ProjectController extends GenericController
         $this->projectModel = new Project();
     }
 
-    public function createProject()
-    {
+    public function create(){
+        $user = $this->checkToken();
         try {
             $data = $this->getRequestData();
-            $errors = Validator::validateProject($data);
 
+            $errors = Validator::validateProject($data);
             if (!empty($errors)) {
                 $this->errResponse(implode(', ', $errors));
             }
+            
+            $this->projectModel->setName($data->name);
+            $this->projectModel->setDesc($data->description);
+            $this->projectModel->setDeadline($data->deadline);
+            $this->projectModel->setIsPublic($data->visibility);
+            $this->projectModel->setCreator($user->sub);
 
-            $ispublic = $data->is_public === 'true' ? true : false;
-
-            $this->projectModel->setName(str_secure($data->name));
-            $this->projectModel->setDesc(str_secure($data->description));
-            $this->projectModel->setIsPublic($ispublic);
-            $this->projectModel->setDeadline(str_secure($data->deadline));
-            $this->projectModel->setCreator($data->creator);
-
-            $result = $this->projectModel->createProject();
-
-            if (!empty($data->users)){
-                foreach($data->users as $userId){
-                    $this->projectModel->assignMember( intval($result),intval($userId));
-                }
-            }
-
-            if ($result) {
-                $this->successResponse($data, 'Project created successfully');
+            $result = $this->projectModel->create();
+            if ($result){
+                $this->successResponse(null, 'Project created');
             } else {
-                $this->errResponse('Failed to create the project');
+                $this->errResponse('Failed to create project');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
-        }
-    }
-
-    public function deleteProject(){
-        try {
-            $data = $this->getRequestData();
-            
-            if (empty($data) || empty($data->project_id)){
-                $this->errResponse('Empty data');
-            }
-
-            $result = $this->projectModel->deleteProject($data->project_id);
-
-            if ($result){
-                $this->successResponse($data, 'Project deleted successfully');
-            } else {
-                $this->errResponse('Failed to delete the project');
-            }
-
-        } catch (Exception $e){
-            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
 
@@ -102,7 +72,6 @@ class ProjectController extends GenericController
     public function getMe(){
         $user = $this->checkToken();
         try {
-
             $userId = $user->sub;
             
             $result = $this->projectModel->getMe($userId);
@@ -115,27 +84,6 @@ class ProjectController extends GenericController
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured:' . $e->getMessage());
-        }
-    }
-
-    public function assignMember(){
-        try {
-            $data = $this->getRequestData();
-
-            if (!isset($data->project_id) || !isset($data->user_id)) {
-                $this->errResponse('Project ID and User ID are required');
-                return;
-            }
-
-            $result = $this->projectModel->assignMember((int) $data->project_id, (int) $data->user_id);
-
-            if ($result){
-                $this->successResponse($data, "User assigned to project");
-            } else {
-                $this->errResponse('Failed to assign the user');
-            }
-        } catch (Exception $e){
-            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 }

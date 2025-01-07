@@ -30,7 +30,7 @@ class Validator {
             $errors[] = 'Name is required';
         }
 
-        if (empty($data->is_public)){
+        if (empty($data->visibility)){
             $errors[] = 'Project privacy is required';
         }
 
