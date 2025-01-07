@@ -68,6 +68,28 @@ class TaskController extends GenericController
 
     }
 
+    public function delete($id)
+    {
+        $this->checkToken();
+        try {
+            if (!isset($id) || empty($id) || !is_numeric($id)) {
+                $this->errResponse('Task id is missing');
+            }
+
+            $this->taskModel->setId($id);
+
+            $result = $this->taskModel->delete();
+
+            if ($result) {
+                $this->successResponse(null, 'Task deleted successfully');
+            } else {
+                $this->errResponse('There has been an error while deleting the task');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
     public function getAll()
     {
         try {

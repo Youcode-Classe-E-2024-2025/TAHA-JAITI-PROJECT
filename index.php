@@ -59,6 +59,7 @@ $router->addRoute('GET', '/api/tasks', 'TaskController@getAll');
 $router->addRoute('GET', '/api/tasks/{id}', 'TaskController@getById');
 $router->addRoute('POST', '/api/tasks', 'TaskController@create');
 $router->addRoute('PUT', '/api/tasks/{id}', 'TaskController@update');
+$router->addRoute('DELETE', '/api/tasks/{id}', 'TaskController@delete');
 
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

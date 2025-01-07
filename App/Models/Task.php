@@ -83,6 +83,18 @@ class Task
        return false;
     }
 
+    public function delete(){
+        $sql = "DELETE FROM tasks WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+
     public function getAll(){
         $sql = "SELECT * FROM tasks";
         $stmt = $this->db->prepare($sql);
