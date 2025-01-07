@@ -15,11 +15,27 @@ class PermsController extends GenericController{
             if ($perms){
                 $this->successResponse($perms);
             } else {
-                $this->successResponse(null, 'No permissions were found');
+                $this->errResponse( 'No permissions were found', 404);
             }
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured');
+        }
+    }
+
+    public function getById($id) {
+        try {
+
+            $this->perms->setId($id);
+            $perms = $this->perms->getById();
+
+            if ($perms){
+                $this->successResponse($perms);
+            } else {
+                $this->errResponse('No role found', 404);
+            }
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
         }
     }
 }
