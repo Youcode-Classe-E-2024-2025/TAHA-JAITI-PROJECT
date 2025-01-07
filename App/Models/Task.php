@@ -47,6 +47,23 @@ class Task
         $this->category_id = $id;
     }
 
+    public function create(){
+        $sql = "INSERT INTO tasks(title, description, status, deadline, project_id ,category_id)
+                VALUES (:title, :desc, :status, :dead, :pid, :cid)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':title', $this->title);
+        $stmt->bindParam(':desc', $this->description);
+        $stmt->bindParam(':status', $this->status);
+        $stmt->bindParam(':dead', $this->deadline);
+        $stmt->bindParam(':pid', $this->project_id);
+        $stmt->bindParam(':cid', $this->category_id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
     public function getAll(){
         $sql = "SELECT * FROM tasks";
         $stmt = $this->db->prepare($sql);
