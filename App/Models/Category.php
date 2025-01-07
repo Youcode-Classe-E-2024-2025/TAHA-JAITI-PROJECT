@@ -55,6 +55,18 @@ class Category
         return false;
     }
 
+    public function delete(){
+        $sql = "DELETE FROM categories WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
     public function getAll(): array
     {
         $sql = "SELECT * FROM categories";

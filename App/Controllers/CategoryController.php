@@ -56,6 +56,23 @@ class CategoryController extends GenericController{
         }
     }
 
+    public function delete($id){
+        try {
+            $this->catModel->setId($id);
+
+            $result = $this->catModel->delete();
+
+            if ($result) {
+                $this->successResponse(null, 'Category deleted successfully');
+            } else {
+                $this->errResponse('Failed to delete category');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
     public function getAll(){
 
         try {
