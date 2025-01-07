@@ -82,6 +82,17 @@ class Project
         return false;
     }
 
+    public function delete(){
+        $sql = "DELETE FROM projects WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
     public function getPublic()
     {
         $sql = "SELECT * FROM projects WHERE visibility = 'public'";

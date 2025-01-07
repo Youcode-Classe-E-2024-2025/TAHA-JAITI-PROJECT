@@ -66,6 +66,28 @@ class ProjectController extends GenericController
         }
     }
 
+    public function delete($id){
+        $this->checkToken();
+        try {
+            if (!isset($id) || empty($id) || !is_numeric($id)){
+                $this->errResponse('Role id is missing');
+            }
+
+            $this->projectModel->setId($id);
+
+            $result = $this->projectModel->delete();
+
+            if ($result) {
+                $this->successResponse(null,'Project deleted successfully');
+            } else {
+                $this->errResponse('There has been an error while deleting the project');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
     public function getPublic()
     {
         try {
