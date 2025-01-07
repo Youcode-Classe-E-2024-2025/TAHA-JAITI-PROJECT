@@ -63,8 +63,10 @@ $router->addRoute('DELETE', '/api/tasks/{id}', 'TaskController@delete');
 
 
 //categories
-$router->addRoute('GET', '/api/categories', 'CategoryController@getAll');
 $router->addRoute('GET', '/api/categories/{id}', 'CategoryController@getById');
+$router->addRoute('GET', '/api/categories', 'CategoryController@getAll');
+$router->addRoute('POST', '/api/categories', 'CategoryController@create');
+$router->addRoute('PUT', '/api/categories/{id}', 'CategoryController@update');
 
 
 

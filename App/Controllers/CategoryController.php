@@ -9,7 +9,7 @@ class CategoryController extends GenericController{
         $this->catModel = new Category();
     }
 
-    public function createCat(){
+    public function create(){
         try {
             $data = $this->getRequestData();
 
@@ -19,12 +19,36 @@ class CategoryController extends GenericController{
 
             $this->catModel->setName($data->name);
 
-            $result = $this->catModel->createCategory();
+            $result = $this->catModel->create();
 
             if ($result) {
                 $this->successResponse($data, 'Category created successfully');
             } else {
                 $this->errResponse('Failed to create category');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function update($id){
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data->name)){
+                $this->errResponse('Empty project name');
+            }
+
+            $this->catModel->setId($id);
+            $this->catModel->setName($data->name);
+
+            $result = $this->catModel->update();
+
+            if ($result) {
+                $this->successResponse($data, 'Category updated successfully');
+            } else {
+                $this->errResponse('Failed to update category');
             }
 
         } catch (Exception $e){

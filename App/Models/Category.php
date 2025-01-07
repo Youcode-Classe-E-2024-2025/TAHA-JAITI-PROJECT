@@ -29,51 +29,66 @@ class Category
         $this->taskId = $id;
     }
 
-    public function createCategory(): bool | int {
+    public function create(): bool
+    {
         $sql = "INSERT INTO categories(name) VALUES (:name)";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':name', $this->name);
 
-        if ($stmt->execute()){
-            $this->setId((int) $this->db->lastInsertId());
-            return $this->id;
-        } else {
-            return false;
+        if ($stmt->execute()) {
+            return true;
         }
+        return false;
     }
 
-    public function getAll(): array{
+    public function update(){
+        $sql = "UPDATE categories SET name = :name WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getAll(): array
+    {
         $sql = "SELECT * FROM categories";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-        
+
         return [];
     }
 
-    public function getById(): array{
+    public function getById(): array
+    {
         $sql = "SELECT * FROM categories WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $this->id);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
         return [];
     }
 
-    public function assignCat(): bool{
+    public function assignCat(): bool
+    {
         $sql = 'UPDATE tasks SET category_id = :c_id WHERE id = :t_id';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':c_id', $this->id);
         $stmt->bindParam(':t_id', $this->taskId);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         } else {
             return false;
