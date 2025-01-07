@@ -69,6 +69,12 @@ $router->addRoute('POST', '/api/categories', 'CategoryController@create');
 $router->addRoute('PUT', '/api/categories/{id}', 'CategoryController@update');
 $router->addRoute('DELETE', '/api/categories/{id}', 'CategoryController@delete');
 
+//tags
+$router->addRoute('GET', '/api/tags/{id}', 'TagController@getById');
+$router->addRoute('GET', '/api/tags', 'TagController@getAll');
+$router->addRoute('POST', '/api/tags', 'TagController@create');
+$router->addRoute('PUT', '/api/tags/{id}', 'TagController@update');
+$router->addRoute('DELETE', '/api/tags/{id}', 'TagController@delete');
 
 
 

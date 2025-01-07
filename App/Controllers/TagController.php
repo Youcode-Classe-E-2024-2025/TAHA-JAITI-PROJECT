@@ -47,17 +47,31 @@ class TagController extends GenericController
         }
     }
 
-    public function getTags()
+    public function getAll()
     {
-
         try {
-
-            $tags = $this->tagModel->getTags();
+            $tags = $this->tagModel->getAll();
 
             if ($tags) {
                 $this->successResponse($tags);
             } else {
                 $this->errResponse('No tags found');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured');
+        }
+    }
+
+    public function getById($id) {
+        try {
+
+            $this->tagModel->setId($id);
+            $tags = $this->tagModel->getById();
+
+            if ($tags) {
+                $this->successResponse($tags);
+            } else {
+                $this->errResponse('No tag found');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured');

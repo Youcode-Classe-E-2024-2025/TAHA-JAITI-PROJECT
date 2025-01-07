@@ -33,6 +33,31 @@ class Tag{
         $this->taskId = $id;
     }
 
+    public function getAll(){
+        $sql = "SELECT * FROM tags";
+
+        $stmt = $this->db->prepare($sql);
+        
+        if ($stmt->execute()){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        return [];
+    }
+
+    public function getById(): array{
+        $sql = "SELECT * FROM tags WHERE id =:id ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
     public function createTag(): bool | int{
         $sql = "INSERT INTO tags(name, color) VALUES (:name, :color)";
         
@@ -46,18 +71,6 @@ class Tag{
         } else {
             return false;
         }
-    }
-
-    public function getTags(): array | null {
-        $sql = "SELECT * FROM tags";
-
-        $stmt = $this->db->prepare($sql);
-        
-        if ($stmt->execute()){
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        
-        return null;
     }
 
     public function assignTag(): bool {
