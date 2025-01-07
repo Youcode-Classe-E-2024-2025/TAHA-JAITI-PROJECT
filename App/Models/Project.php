@@ -105,7 +105,6 @@ class Project
 
         return [];
     }
-
     public function getById()
     {
         $sql = "SELECT * FROM projects WHERE id = :id";
@@ -115,7 +114,6 @@ class Project
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
     public function getMe($userId)
     {
         $sql = "SELECT p.*
@@ -128,6 +126,23 @@ class Project
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUsers(){
+        $sql = "SELECT u.id, u.name, u.email
+        FROM users u
+        JOIN project_members pu ON pu.user_id = u.id
+        WHERE pu.project_id = :pid";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':pid', $this->id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        return [];
     }
 
     //------

@@ -60,17 +60,17 @@ class ProjectController extends GenericController
             } else {
                 $this->errResponse('Failed to update project');
             }
-
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $this->checkToken();
         try {
-            if (!isset($id) || empty($id) || !is_numeric($id)){
-                $this->errResponse('Role id is missing');
+            if (!isset($id) || empty($id) || !is_numeric($id)) {
+                $this->errResponse('Project id is missing');
             }
 
             $this->projectModel->setId($id);
@@ -78,12 +78,11 @@ class ProjectController extends GenericController
             $result = $this->projectModel->delete();
 
             if ($result) {
-                $this->successResponse(null,'Project deleted successfully');
+                $this->successResponse(null, 'Project deleted successfully');
             } else {
                 $this->errResponse('There has been an error while deleting the project');
             }
-
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
@@ -137,6 +136,28 @@ class ProjectController extends GenericController
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured:' . $e->getMessage());
+        }
+    }
+
+    public function getUsers($id)
+    {
+        $this->checkToken();
+        try {
+            if (!isset($id) || empty($id) || !is_numeric($id)) {
+                $this->errResponse('Project id is missing');
+            }
+
+            $this->projectModel->setId($id);
+
+            $result = $this->projectModel->getUsers();
+
+            if ($result) {
+                $this->successResponse($result);
+            } else {
+                $this->errResponse('No users found', 404);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
 }
