@@ -58,7 +58,7 @@ class Tag{
         return [];
     }
 
-    public function createTag(): bool | int{
+    public function create(): bool{
         $sql = "INSERT INTO tags(name, color) VALUES (:name, :color)";
         
         $stmt = $this->db->prepare($sql);
@@ -66,8 +66,7 @@ class Tag{
         $stmt->bindParam(':color', $this->color);
 
         if ($stmt->execute()){
-            $this->setId((int) $this->db->lastInsertId());
-            return $this->id;
+            return true;
         } else {
             return false;
         }

@@ -10,7 +10,7 @@ class TagController extends GenericController
         $this->tagModel = new Tag();
     }
 
-    public function createTag()
+    public function create()
     {
         try {
             $data = $this->getRequestData();
@@ -26,7 +26,7 @@ class TagController extends GenericController
 
             $this->tagModel->setName($data->name);
 
-            $result = $this->tagModel->createTag();
+            $result = 1; //$this->tagModel->createTag();
 
             if (!empty($data->assign_tasks) && is_array(($data->assign_tasks))) {
                 foreach ($data->assign_tasks as $taskId) {
