@@ -62,6 +62,18 @@ class Project {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
     }
 
+    public function getPublic(){
+        $sql = "SELECT * FROM projects WHERE visibility = 'public'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
     public function assignMember($projectId, $memberId){
         $sql = "INSERT INTO project_members (project_id, user_id) VALUES (:pId, :mId);";
 

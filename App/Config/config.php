@@ -8,6 +8,7 @@ const DB_NAME = 'test';
 
 const SQL_DATABASE = "
 -- ENUM Types
+CREATE TYPE vis AS ENUM ('private', 'public');
 CREATE TYPE task_status AS ENUM ('todo', 'in_progress', 'completed');
 
 -- Roles Table
@@ -47,7 +48,7 @@ CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    is_public BOOLEAN DEFAULT false,
+    visibility vis NOT NULL DEFAULT 'private',
     deadline TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

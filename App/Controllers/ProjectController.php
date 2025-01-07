@@ -66,32 +66,18 @@ class ProjectController extends GenericController
         }
     }
 
-    public function getAllProjects(){
-        $this->isLoggedIn();
+    public function getPublic(){
         try {
-            $param = str_secure($_GET['p']);
-            $sqlCondition = '';
-            $params = [];
-    
-            if ($param === 'public') {
-                $sqlCondition = 'is_public = true';
-            } else {
-                if (!isset($_SESSION['user_id'])) {
-                    $sqlCondition = 'is_public = true';
-                } elseif ($this->isAdmin()) {
-                    $creatorId = $_SESSION['user_id'];
-                    $sqlCondition = 'creator_id = :creator_id';
-                    $params['creator_id'] = $creatorId;
-                }
-            }
-    
-            $projects = $this->projectModel->getAllProjects($sqlCondition, $params);
-    
-            if ($projects) {
+
+            $projects = $this->projectModel->getPublic();
+
+            if ($projects){
                 $this->successResponse($projects);
+            } else {
+                $this->errResponse('No public projects were found', 404);
             }
-        } catch (Exception $e) {
-            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
         }
     }
 
