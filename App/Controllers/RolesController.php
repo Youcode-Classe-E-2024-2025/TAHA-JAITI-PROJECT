@@ -31,6 +31,34 @@ class RolesController extends GenericController {
         }
     }
 
+    public function update($id){
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($data->name) || empty($data->name) || strlen($data->name) < 3){
+                $this->errResponse('Name is missing or too short');
+            }
+
+            if (!isset($id) || empty($id)){
+                $this->errResponse('Role id is missing');
+            }
+
+            $this->roles->setId($id);
+            $this->roles->setName($data->name);
+
+            $result = $this->roles->update();
+
+            if ($result) {
+                $this->successResponse('Role updated successfully');
+            } else {
+                $this->errResponse('There has been an error while updating the role');
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
     public function getAll() {
         try {
 

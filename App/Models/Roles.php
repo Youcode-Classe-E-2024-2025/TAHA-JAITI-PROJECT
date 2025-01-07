@@ -28,6 +28,17 @@ class Roles {
         return false;
     }
 
+    public function update(){
+        $sql = "UPDATE roles SET name = :name WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':id', $this->id);
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
     public function getAll(){
         $sql = "SELECT * FROM roles";
         $stmt = $this->db->prepare($sql);
