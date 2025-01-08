@@ -132,4 +132,17 @@ class Task
 
         return [];
     }
+
+    public function assignTag($tagId){
+        $sql = "INSERT INTO task_tags(task_id, tag_id) VALUES (:tid, :tagid)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':tid', $this->id);
+        $stmt->bindParam(':tagid', $tagId);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
 }

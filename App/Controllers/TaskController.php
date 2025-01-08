@@ -139,4 +139,24 @@ class TaskController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function assignTag($id){
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data->tag_id) || !is_numeric($data->tag_id)){
+                $this->errResponse('Tag id is missing');
+            }
+
+            $this->taskModel->setId($id);
+            $result = $this->taskModel->assignTag($data->tag_id);
+
+            if ($result){
+                $this->successResponse(null, "Tag assigned");
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
