@@ -56,6 +56,9 @@ class AuthController extends GenericController
 
             $token = JWToken::genJWT($result);
 
+            $auth = new Auth();
+            $auth->getUserPerms($result);
+
             $this->successResponse(['token' => $token], 'User logged in successfully');
 
         } catch (Exception $e) {

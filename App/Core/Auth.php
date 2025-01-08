@@ -16,7 +16,7 @@ class Auth
 
     public function getUserPerms($user)
     {
-        $cacheKey = "user_perms_{$user->sub}";
+        $cacheKey = "user_perms_" . ($user->sub ?? $user->id);
 
         $perms = $this->cache->get($cacheKey);
 
