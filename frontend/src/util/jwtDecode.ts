@@ -24,7 +24,12 @@ const decodeToken = () => {
     if (token) {
         try {
             const decoded = jwtDecode<JwtPayload>(token);
-            console.log(decoded);
+            if (decoded){
+                localStorage.setItem('userId', JSON.stringify(decoded.sub));
+                localStorage.setItem('roleId', JSON.stringify(decoded.role));
+
+                return decoded.role;
+            }
         } catch (err) {
             console.error('Invalid token:', err);
         }

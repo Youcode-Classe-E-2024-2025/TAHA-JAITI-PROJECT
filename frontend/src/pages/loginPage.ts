@@ -78,16 +78,17 @@ export const loginPage = () => {
 const handleLogin = async (email: string, password: string) => {
     try {
         const response = await authService.login(email, password);
-
         if (response){
-            localStorage.setItem('token', response.data);
-            console.log('Token set');
+            localStorage.setItem('token', response.data.token);
 
-            decodeToken();
+            const roleid = decodeToken();
+
+            const perms = await authService.getPerms(Number(roleid));
+
+            localStorage.setItem('perms', JSON.stringify(perms));            
         }
     } catch (err: any) {
         console.log("error:", err.message);
-
         throw err;
     }
 }

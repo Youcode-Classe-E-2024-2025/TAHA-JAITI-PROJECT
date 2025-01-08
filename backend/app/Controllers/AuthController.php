@@ -59,7 +59,7 @@ class AuthController extends GenericController
             $auth = new Auth();
             $auth->getUserPerms($result);
 
-            $this->successResponse($token, 'User logged in successfully');
+            $this->successResponse(['token' => $token], 'User logged in successfully');
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
         }
