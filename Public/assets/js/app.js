@@ -1,115 +1,72 @@
 import page from "page";
-
-import { loginForm } from "./pages/login.js";
-import { registerForm } from "./pages/register.js";
-import { homePage } from "./pages/home.js";
-import { projectsContainer, porjectDetails } from "./pages/projects.js";
-import { statPage } from "./pages/dashboard.js";
-
+import { loginForm, registerForm, homePage, projectsContainer, porjectDetails, statPage } from "./pages/index.js";
 import { header } from "./components/header.js";
 import { errPage, badRequest } from "./components/err.js";
-
-import { getTasks } from "./stores/projects.js";
-import { getProjectTasks } from "./stores/tasks.js";
-
+import { getTasks, getProjectTasks } from "./stores/index.js";
 import { isLogged } from "./utils/userUtil.js";
 
 const root = document.getElementById("root");
 const head = document.getElementById('header');
 
 if (!root || !head) {
-    throw new Error('Root not found');
+    throw new Error('Required DOM elements not found');
 }
 
 head.appendChild(header());
 
-function clearRoot() {
+const requireAuth = (ctx, next) => {
+    if (!isLogged()) {
+        page.redirect('/login');
+        return;
+    }
+    next();
+};
+
+const redirectIfLogged = (ctx, next) => {
+    if (isLogged()) {
+        page.redirect('/');
+        return;
+    }
+    next();
+};
+
+const renderPage = (component, additionalAction = null) => {
     root.innerHTML = "";
-}
+    const element = typeof component === 'function' ? component() : component;
+    root.appendChild(element);
+    if (additionalAction) additionalAction();
+};
 
-function renderLogin() {
-    if (isLogged()){
-        page('/');
-        return;
-    }
-    clearRoot();
-    root.appendChild(loginForm());
-}
-function renderRegister() {
-    if (isLogged()){
-        page('/');
-        return;
-    }
-    clearRoot();
-    root.appendChild(registerForm());
-}
+const routes = {
+    '/': () => renderPage(homePage),
+    '/login': () => renderPage(loginForm),
+    '/signup': () => renderPage(registerForm),
+    '/projects': () => renderPage(projectsContainer, getTasks),
+    '/projects/:id': (ctx) => renderPage(() => porjectDetails(ctx.params.id), () => getProjectTasks(ctx.params.id)),
+    '/dashboard': () => renderPage(statPage),
+    '/404': () => renderPage(badRequest),
+    '*': () => renderPage(errPage)
+};
 
-function renderErr() {
-    clearRoot();
-    root.innerHTML += errPage();
-}
-
-function renderBad() {
-    clearRoot();
-    root.innerHTML += badRequest();
-}
-
-function renderHome() {
-    clearRoot();
-    root.appendChild(homePage());
-}
-
-function renderProjects() {
-    clearRoot();
-    root.appendChild(projectsContainer());
-    getTasks();
-}
-
-function renderProjectDetails(ctx) {
-    const { id } = ctx.params;
-    clearRoot();
-    root.appendChild(porjectDetails(id));
-    getProjectTasks(id);
-}
-
-function renderStats () {
-    clearRoot();
-    root.appendChild(statPage());
-}
-
-page('/', renderHome);
-page('/login', renderLogin);
-page('/signup', renderRegister);
-
-page('/projects', renderProjects);
-page('/projects/:id', (ctx) => {
-    if (!isLogged()){
-        page('/login');
-        return;
-    }
-    renderProjectDetails(ctx);
-});
-
-page('/dashboard', renderStats);
-
-page('/404', renderBad);
-page('*', renderErr);
+page('/', routes['/']);
+page('/login', redirectIfLogged, routes['/login']);
+page('/signup', redirectIfLogged, routes['/signup']);
+page('/projects', requireAuth, routes['/projects']);
+page('/projects/:id', requireAuth, routes['/projects/:id']);
+page('/dashboard', requireAuth, routes['/dashboard']);
+page('/404', routes['/404']);
+page('*', routes['*']);
 
 page.start();
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-ajax]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const route = e.target.getAttribute('href');
-            page(route);
-        });
-    });
+    const handleClick = (e) => {
+        const link = e.target.closest('[data-ajax]');
+        if (!link) return;
+        
+        e.preventDefault();
+        page(link.getAttribute('href'));
+    };
 
+    document.body.addEventListener('click', handleClick);
 });
-
-
-
-const a = [1,2,3];
-
-a.map(number => number * 2);
