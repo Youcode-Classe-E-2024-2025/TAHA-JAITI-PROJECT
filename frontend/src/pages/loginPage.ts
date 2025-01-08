@@ -1,5 +1,6 @@
 import authService from "@/services/authService";
 import Loading from "@/tools/loading";
+import sweetAlert from "@/tools/sweetAlert";
 import decodeToken from "@/util/jwtDecode";
 
 
@@ -59,12 +60,12 @@ export const loginPage = () => {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
             if (!emailRegex.test(email)) {
-                alert('Enter a valid email');
+                sweetAlert('Enter a valid email');
                 return;
             }
 
             if (password.length < 8) {
-                alert('Password must be 8 characters long');
+                sweetAlert('Password must be 8 characters long');
                 return;
             }
 
@@ -90,10 +91,12 @@ const handleLogin = async (email: string, password: string) => {
 
             localStorage.setItem('perms', JSON.stringify(perms));      
             
+            sweetAlert('Logged in!');
             Loading.stop();
         }
     } catch (err: any) {
-        console.log("error:", err.message);
+        sweetAlert('Invalid Email or Password');
+        Loading.stop();
         throw err;
     }
 }
