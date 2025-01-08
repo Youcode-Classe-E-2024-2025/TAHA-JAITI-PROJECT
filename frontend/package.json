@@ -12,6 +12,7 @@
     "@types/node": "^22.10.5",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
+    "dotenv": "^16.4.7",
     "pagejs": "^1.0.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.6.2",

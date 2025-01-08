@@ -1,23 +1,28 @@
 import { defineConfig } from 'vite';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const API_BASE = process.env.VITE_API_BASE_URL;
 
 export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'http://localhost:3000',
+                target: API_BASE,
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path
+                rewrite: (path) => path,
             },
         },
     },
     build: {
         outDir: 'dist',
-      },
-      resolve: {
+    },
+    resolve: {
         alias: {
-          '@': path.resolve(__dirname, './src'),
+            '@': path.resolve(__dirname, './src'),
         },
-      },
+    },
 });
