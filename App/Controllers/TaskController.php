@@ -144,16 +144,19 @@ class TaskController extends GenericController
         try {
             $data = $this->getRequestData();
 
-            if (empty($data->tag_id) || !is_numeric($data->tag_id)){
-                $this->errResponse('Tag id is missing');
+            if (empty($data->tag_id) || !is_array($data->tag_id)){
+                $this->errResponse('Tag id is missing/invalid');
             }
 
             $this->taskModel->setId($id);
-            $result = $this->taskModel->assignTag($data->tag_id);
 
-            if ($result){
-                $this->successResponse(null, "Tag assigned");
+            foreach ($data->tag_id as $tagId) {
+                if (!$this->taskModel->assignTag($tagId)) {
+                    $this->errResponse("Failed to assign tag ID: {$tagId}");
+                }
             }
+    
+            $this->successResponse(null, "All tags assigned successfully");
 
         } catch (Exception $e){
             $this->errResponse('An unexpected error occured' . $e->getMessage());
