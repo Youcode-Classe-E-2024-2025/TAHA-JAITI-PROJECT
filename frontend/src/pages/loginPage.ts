@@ -90,8 +90,8 @@ const handleLogin = async (email: string, password: string) => {
             const perms = await authService.getPerms(Number(roleid));
 
             localStorage.setItem('perms', JSON.stringify(perms));      
-            
-            sweetAlert('Logged in!');
+
+            sweetAlert('Logged in succesfully');
             Loading.stop();
         }
     } catch (err: any) {

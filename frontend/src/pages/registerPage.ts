@@ -1,6 +1,9 @@
+import authService from "@/services/authService";
+import Loading from "@/tools/loading";
+import sweetAlert from "@/tools/sweetAlert";
+import page from "page";
 
-
-export const registerForm = () => {
+export const registerPage = () => {
     const element = document.createElement('div');
     element.className = 'h-full w-full flex items-center justify-center bg-transparent p-4';
     element.innerHTML = ` <div class="bg-gray-800/90 backdrop-blur-sm p-8 rounded-sm shadow-2xl w-full max-w-md border border-gray-700">
@@ -13,12 +16,12 @@ export const registerForm = () => {
     
             <form id="registerForm" class="space-y-6">
                 <div class="space-y-1">
-                    <label for="username" class="block text-sm font-medium text-gray-300">
-                        <i class="fa-regular fa-user mr-2 text-purple-400"></i>Username
+                    <label for="name" class="block text-sm font-medium text-gray-300">
+                        <i class="fa-regular fa-user mr-2 text-purple-400"></i>name
                     </label>
-                    <input type="text" id="username" name="username" required
+                    <input type="text" id="name" name="name" required
                         class="input" 
-                        placeholder="Choose a username"/>
+                        placeholder="Choose a name"/>
                 </div>
     
                 <div class="space-y-1">
@@ -44,8 +47,8 @@ export const registerForm = () => {
                         <i class="fa-regular fa-user mr-2 text-purple-400"></i>Role
                     </label>
                     <select class="input" name="role" id="roleselect">
-                        <option value="member">Member</option>
-                        <option value="chief">Chief</option>
+                        <option value="3">Member</option>
+                        <option value="2">Chief</option>
                     </select>
                 </div>
     
@@ -72,10 +75,34 @@ export const registerForm = () => {
             e.preventDefault();
     
             const data = new FormData(form);
-    
+            const name = data.get('name') as string;
+            const email = data.get('email') as string;
+            const passwrod = data.get('password') as string;
+            const role = data.get('role') as string;
             
+            Loading.start();
+
+            await handleRegister(name, email, passwrod, Number(role));
+
         });
     }
 
     return element;
 };
+
+const handleRegister = async (name: string, email: string, password :string, role: number) => {
+    try {
+
+        const response = await authService.register(name, email, password, role);
+
+        if (response.status = 200){
+            sweetAlert("User registered successfully");
+            page('/login');
+            Loading.stop();
+        }
+
+    } catch (err){
+        sweetAlert('An unexpected error happened');
+        console.log(err);
+    }
+}
