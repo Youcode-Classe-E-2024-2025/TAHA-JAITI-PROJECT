@@ -1,4 +1,6 @@
 import authService from "@/services/authService";
+import decodeToken from "@/util/jwtDecode";
+
 
 export const loginPage = () => {
     const element = document.createElement('div');
@@ -80,6 +82,8 @@ const handleLogin = async (email: string, password: string) => {
         if (response){
             localStorage.setItem('token', response.data);
             console.log('Token set');
+
+            decodeToken();
         }
     } catch (err: any) {
         console.log("error:", err.message);
