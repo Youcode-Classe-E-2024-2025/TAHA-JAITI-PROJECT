@@ -72,6 +72,33 @@ class Tag{
         }
     }
 
+    public function update (): bool {
+        $sql = "UPDATE tags SET name = :name WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function delete (): bool {
+        $sql = "DELETE FROM tags WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function assignTag(): bool {
         $sql = "INSERT INTO task_tags (task_id, tag_id)
                 VALUES (:task_id, :tag_id)";

@@ -26,21 +26,55 @@ class TagController extends GenericController
 
             $this->tagModel->setName($data->name);
 
-            $result = 1; //$this->tagModel->createTag();
-
-            if (!empty($data->assign_tasks) && is_array(($data->assign_tasks))) {
-                foreach ($data->assign_tasks as $taskId) {
-                    $this->tagModel->setId((int) $result);
-                    $this->tagModel->setTask((int) $taskId);
-
-                    $this->tagModel->assignTag();
-                }
-            }
+            $result = $this->tagModel->create();
 
             if ($result) {
                 $this->successResponse($data, 'Tag created successfully');
             } else {
                 $this->errResponse('Failed to create tag');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    public function update($id){
+        try {
+            $data = $this->getRequestData();
+            $errors = Validator::validateName($data);
+
+            if (!empty($errors)) {
+                $this->errResponse(implode(', ', $errors));
+            }
+
+           
+
+            $this->tagModel->setId($id);
+            $this->tagModel->setName($data->name);
+
+            $result = $this->tagModel->update();
+
+            if ($result) {
+                $this->successResponse($data, 'Tag updated successfully');
+            } else {
+                $this->errResponse('Failed to update tag');
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    public function delete($id){
+        try {
+
+            $this->tagModel->setId($id);
+
+            $result = $this->tagModel->delete();
+
+            if ($result) {
+                $this->successResponse(null, 'Tag deleted successfully');
+            } else {
+                $this->errResponse('Failed to deleted tag');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
