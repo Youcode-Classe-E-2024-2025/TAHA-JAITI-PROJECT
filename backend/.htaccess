@@ -8,12 +8,13 @@
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    RewriteRule ^ /public/index.html [QSA,L]
+    RewriteRule ^ /public/index.php [QSA,L]
 </IfModule>
 
 <IfModule mod_proxy.c>
     ProxyPass /api/ http://localhost:3000/api/
     ProxyPassReverse /api/ http://localhost:3000/api/
+
     RequestHeader set Authorization %{HTTP:Authorization}e env=HTTP_AUTHORIZATION
 </IfModule>
 

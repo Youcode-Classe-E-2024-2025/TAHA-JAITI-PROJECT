@@ -1,4 +1,5 @@
 import page, { Context } from "page";
+import login from "../api/login";
 
 export const loginPage = () => {
     const element = document.createElement('div');
@@ -43,15 +44,30 @@ export const loginPage = () => {
                     </p>
                 </div>
             </div>`;
-    
+
     const form = element.querySelector('#loginForm') as HTMLFormElement;
-    if (form){
+    if (form) {
         form.addEventListener('submit', async (e: Event) => {
             e.preventDefault();
 
             const data = new FormData(form);
-            console.log(data);
-            
+            const email = data.get('email') as string;
+            const password = data.get('password') as string;
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(email)) {
+                alert('Enter a valid email');
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('Password must be 8 characters long');
+                return;
+            }
+
+            await login(email, password);
+
         });
     }
 

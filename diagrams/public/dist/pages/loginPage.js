@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import login from "../api/login";
 export const loginPage = () => {
     const element = document.createElement('div');
     element.className = `h-full w-full flex items-center justify-center bg-transparent p-4`;
@@ -55,7 +56,18 @@ export const loginPage = () => {
         form.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
             e.preventDefault();
             const data = new FormData(form);
-            console.log(data);
+            const email = data.get('email');
+            const password = data.get('password');
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Enter a valid email');
+                return;
+            }
+            if (password.length < 8) {
+                alert('Password must be 8 characters long');
+                return;
+            }
+            yield login(email, password);
         }));
     }
     return element;
