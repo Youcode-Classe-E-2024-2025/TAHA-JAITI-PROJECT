@@ -12,7 +12,7 @@ class TaskController extends GenericController
 
     public function create()
     {
-        $this->checkToken();
+        $this->checkPermission('create_task');
         try {
             $data = $this->getRequestData();
 
@@ -40,7 +40,7 @@ class TaskController extends GenericController
     }
 
     public function update($id){
-        $this->checkToken();
+        $this->checkPermission('update_task');
         try {
             $data = $this->getRequestData();
 
@@ -70,7 +70,7 @@ class TaskController extends GenericController
 
     public function delete($id)
     {
-        $this->checkPermission('delete_tasks');
+        $this->checkPermission('delete_task');
         try {
             if (!isset($id) || empty($id) || !is_numeric($id)) {
                 $this->errResponse('Task id is missing');
