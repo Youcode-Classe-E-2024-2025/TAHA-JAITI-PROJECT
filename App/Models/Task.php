@@ -171,7 +171,16 @@ class Task
         return false;
     }
 
-    public function assignUser(){
-        
+    public function assignUser($userId){
+        $sql = "INSERT INTO user_assignments(user_id, task_id) VALUES (:uid, :tid)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':uid', $userId);
+        $stmt->bindParam(':tid', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
     }
 }
