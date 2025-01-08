@@ -159,4 +159,38 @@ class TaskController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function clearTags($id){
+        try {
+            $this->taskModel->setId($id);
+            $result = $this->taskModel->clearTag();
+
+            if ($result){
+                $this->successResponse(null, "Tags cleared");
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    public function assignCat($id){
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data->cat_id) || !is_numeric($data->cat_id)){
+                $this->errResponse('Category id is missing');
+            }
+
+            $this->taskModel->setId($id);
+            $result = $this->taskModel->assignTag($data->cat_id);
+
+            if ($result){
+                $this->successResponse(null, "Category assigned");
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }

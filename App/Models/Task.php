@@ -145,4 +145,33 @@ class Task
 
         return false;
     }
+
+    public function clearTag(){
+        $sql = "DELETE FROM task_tags WHERE task_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function assignCat($catId){
+        $sql = "UPDATE tasks SET category_id = :cid WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':cid', $catId);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function assignUser(){
+        
+    }
 }
