@@ -77,9 +77,12 @@ const handleLogin = async (email: string, password: string) => {
     try {
         const data = await authService.login(email, password);
 
-        console.log(data);
-    } catch (err){
-        console.log("error:", err);
+        if (data.status === 200){
+            console.log(data.data.data);
+            
+        }
+    } catch (err: any){
+        console.log("error:", err.message);
         
         throw err;
     }
