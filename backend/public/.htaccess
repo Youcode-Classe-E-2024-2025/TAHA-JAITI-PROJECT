@@ -3,7 +3,7 @@
     RewriteEngine On
     
     RewriteCond %{REQUEST_URI} ^/api/
-    RewriteRule ^api/(.*)$ http://127.0.0.1:3000/api/$1 [P,QSA,L]
+    RewriteRule ^api/(.*)$ http://127.0.0.1:80/api/$1 [P,QSA,L]
     
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
@@ -13,8 +13,8 @@
 
 <IfModule mod_proxy.c>
     ProxyPreserveHost On
-    ProxyPass /api/ http://127.0.0.1:3000/api/
-    ProxyPassReverse /api/ http://127.0.0.1:3000/api/
+    ProxyPass /api/ http://127.0.0.1:80/api/
+    ProxyPassReverse /api/ http://127.0.0.1:80/api/
 </IfModule>
 
 <IfModule mod_headers.c>
