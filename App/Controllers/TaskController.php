@@ -196,4 +196,27 @@ class TaskController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function assginUser($id){
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data->user_id) || !is_array($data->user_id)){
+                $this->errResponse('User id is missing/invalid');
+            }
+
+            $this->taskModel->setId($id);
+
+            foreach ($data->user_id as $userId) {
+                if (!$this->taskModel->assignUser($userId)) {
+                    $this->errResponse("Failed to assign User ID: {$userId}");
+                }
+            }
+    
+            $this->successResponse(null, "All users assigned successfully");
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
