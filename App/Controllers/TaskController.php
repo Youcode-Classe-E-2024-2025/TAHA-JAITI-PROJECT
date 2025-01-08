@@ -70,7 +70,7 @@ class TaskController extends GenericController
 
     public function delete($id)
     {
-        $this->checkToken();
+        $this->checkPermission('delete_tasks');
         try {
             if (!isset($id) || empty($id) || !is_numeric($id)) {
                 $this->errResponse('Task id is missing');

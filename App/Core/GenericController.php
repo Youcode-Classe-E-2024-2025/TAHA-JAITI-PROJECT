@@ -69,32 +69,16 @@ class GenericController
         }
         return $user;
     }
-    
-    protected function isLoggedIn(): bool
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        return isset($_SESSION['user_id']) && isset($_SESSION['role']);
-    }
 
-    protected function getCurrentRole(): ?string
+    protected function checkPermission($permission)
     {
-        if (!$this->isLoggedIn()) {
-            return null;
-        }
-        return $_SESSION['role'];
-    }
+        $user = $this->checkToken();
 
-    public function isAdmin(): bool
-    {
-        if (!$this->isLoggedIn()) {
-            $this->errResponse('Unauthorized access', 401);
-        }
+        $auth = new Auth();
+        $permissions = $auth->getUserPerms($user);
 
-        $role = $this->getCurrentRole();
-        if ($role !== 'chief') {
-            $this->errResponse('Unauthorized user', 401);
+        if (!in_array($permission, $permissions)) {
+            $this->errResponse('Forbidden: You do not have permission', 403);
         }
 
         return true;
