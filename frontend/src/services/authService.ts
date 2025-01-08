@@ -1,4 +1,4 @@
-import apiClient from "@/api";
+import apiClient from "@/api/apiClient";
 
 const authService = {
     login: (email: string, password: string) => apiClient.post('/auth/login', {email ,password}),

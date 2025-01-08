@@ -75,15 +75,15 @@ export const loginPage = () => {
 
 const handleLogin = async (email: string, password: string) => {
     try {
-        const data = await authService.login(email, password);
+        const response = await authService.login(email, password);
 
-        if (data.status === 200){
-            console.log(data.data.data);
-            
+        if (response){
+            localStorage.setItem('token', response.data);
+            console.log('Token set');
         }
-    } catch (err: any){
+    } catch (err: any) {
         console.log("error:", err.message);
-        
+
         throw err;
     }
 }
