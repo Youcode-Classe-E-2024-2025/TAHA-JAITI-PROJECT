@@ -66,15 +66,6 @@ $router->addRoute('POST', '/api/tasks/{id}/category', 'TaskController@assignCat'
 $router->addRoute('POST', '/api/tasks/{id}/assign', 'TaskController@assignUser');
 $router->addRoute('DELETE', '/api/tasks/{id}/assign', 'TaskController@clearUser');
 
-
-
-
-// /tasks/:id/tags       POST    Authenticated    Assign tags to a task
-// /tasks/:id/category   POST    Authenticated    Assign a category to a task
-// /tasks/:id/assign     POST    Authenticated    Assign a user to a task
-// /tasks/:id/assign     DELETE  Authenticated    Unassign a user from a task
-
-
 //categories
 $router->addRoute('GET', '/api/categories/{id}', 'CategoryController@getById');
 $router->addRoute('GET', '/api/categories', 'CategoryController@getAll');
