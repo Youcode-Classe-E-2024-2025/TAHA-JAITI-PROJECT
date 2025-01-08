@@ -26,8 +26,6 @@ class RolesController extends GenericController
 
             if ($result) {
                 $this->successResponse('Role created successfully');
-            } else {
-                $this->errResponse('There has been an error while creating the role');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -55,8 +53,6 @@ class RolesController extends GenericController
 
             if ($result) {
                 $this->successResponse('Role updated successfully');
-            } else {
-                $this->errResponse('There has been an error while updating the role');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -77,8 +73,6 @@ class RolesController extends GenericController
 
             if ($result) {
                 $this->successResponse('Role deleted successfully');
-            } else {
-                $this->errResponse('There has been an error while deleting the role');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -94,8 +88,6 @@ class RolesController extends GenericController
 
             if ($roles) {
                 $this->successResponse($roles);
-            } else {
-                $this->errResponse('No roles found', 401);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -112,8 +104,6 @@ class RolesController extends GenericController
 
             if ($roles) {
                 $this->successResponse($roles);
-            } else {
-                $this->errResponse('No role found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -122,7 +112,6 @@ class RolesController extends GenericController
 
     public function getRolePerms($id)
     {
-        $this->checkPermission('view_role_permissions');
         try {
 
             $this->roles->setId($id);
@@ -130,8 +119,6 @@ class RolesController extends GenericController
 
             if ($roles) {
                 $this->successResponse($roles);
-            } else {
-                $this->errResponse('No permissions were found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
@@ -166,10 +153,10 @@ class RolesController extends GenericController
             }
 
             if (!empty($errors)) {
-                $this->errResponse('Some permissions failed to assign', [
+                $this->successResponse('Some permissions failed to assign', [
                     'success' => $good,
                     'failed' => $errors,
-                ]);
+                ], 202);
             } else {
                 $this->successResponse('All permissions assigned successfully', ['success' => $good]);
             }
