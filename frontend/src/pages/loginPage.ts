@@ -1,4 +1,4 @@
-import login from "@/api/login";
+import authService from "@/services/authService";
 
 export const loginPage = () => {
     const element = document.createElement('div');
@@ -65,10 +65,22 @@ export const loginPage = () => {
                 return;
             }
 
-            await login(email, password);
+            await handleLogin(email, password);
 
         });
     }
 
     return element;
+}
+
+const handleLogin = async (email: string, password: string) => {
+    try {
+        const data = await authService.login(email, password);
+
+        console.log(data);
+    } catch (err){
+        console.log("error:", err);
+        
+        throw err;
+    }
 }
