@@ -1,33 +1,5 @@
 <IfModule mod_rewrite.c>
-    Options -Multiviews
-    RewriteEngine On
-
-    RewriteCond %{REQUEST_URI} ^/api/
-    RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,QSA,L]
-
-    RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^ - [L]
-
-    RewriteRule ^ /public/index.php [QSA,L]
-</IfModule>
-
-<IfModule mod_proxy.c>
-    ProxyPass /api/ http://localhost:3000/api/
-    ProxyPassReverse /api/ http://localhost:3000/api/
-
-    RequestHeader set Authorization %{HTTP:Authorization}e env=HTTP_AUTHORIZATION
-</IfModule>
-
-<IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "http://localhost:5173"
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, DELETE, PATCH, PUT"
-    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
-    Header set Access-Control-Allow-Credentials "true"
-
-    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
-</IfModule>
-
-<IfModule mod_rewrite.c>
-    RewriteCond %{REQUEST_METHOD} OPTIONS
-    RewriteRule ^(.*)$ $1 [R=200,L]
+  RewriteEngine on
+  RewriteRule ^$ public/ [L]
+  RewriteRule (.*) public/$1 [L]
 </IfModule>

@@ -1,8 +1,8 @@
 {
-    "name": "taha/advanced-taskflow",
+    "name": "taha/backend",
     "autoload": {
         "psr-4": {
-            "Taha\\AdvancedTaskflow\\": "app/"
+            "Taha\\Backend\\": "src/"
         }
     },
     "authors": [
