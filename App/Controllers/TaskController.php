@@ -219,4 +219,18 @@ class TaskController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function clearUser($id){
+        try {
+            $this->taskModel->setId($id);
+            $result = $this->taskModel->clearUser();
+
+            if ($result){
+                $this->successResponse(null, "Users cleared");
+            }
+
+        } catch (Exception $e){
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
