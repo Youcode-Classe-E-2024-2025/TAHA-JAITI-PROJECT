@@ -1,4 +1,5 @@
 import authService from "@/services/authService";
+import Loading from "@/tools/loading";
 import decodeToken from "@/util/jwtDecode";
 
 
@@ -67,6 +68,8 @@ export const loginPage = () => {
                 return;
             }
 
+            Loading.start();
+
             await handleLogin(email, password);
 
         });
@@ -85,7 +88,9 @@ const handleLogin = async (email: string, password: string) => {
 
             const perms = await authService.getPerms(Number(roleid));
 
-            localStorage.setItem('perms', JSON.stringify(perms));            
+            localStorage.setItem('perms', JSON.stringify(perms));      
+            
+            Loading.stop();
         }
     } catch (err: any) {
         console.log("error:", err.message);
