@@ -9,6 +9,7 @@ class PermsController extends GenericController{
     }
 
     public function getAll(){
+        $this->checkPermission('view_all_permissions'); 
         try {
             $perms = $this->perms->getAll();
 
@@ -24,6 +25,7 @@ class PermsController extends GenericController{
     }
 
     public function getById($id) {
+        $this->checkPermission('view_permission');
         try {
 
             $this->perms->setId($id);

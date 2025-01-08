@@ -11,6 +11,7 @@ class ProjectController extends GenericController
 
     public function create()
     {
+        $this->checkPermission('create_project');
         $user = $this->checkToken();
         try {
             $data = $this->getRequestData();
@@ -39,6 +40,7 @@ class ProjectController extends GenericController
 
     public function update($id)
     {
+        $this->checkPermission('update_project');
         $this->checkToken();
         try {
             $data = $this->getRequestData();
@@ -67,7 +69,7 @@ class ProjectController extends GenericController
 
     public function delete($id)
     {
-        $this->checkToken();
+        $this->checkPermission('delete_project');
         try {
             if (!isset($id) || empty($id) || !is_numeric($id)) {
                 $this->errResponse('Project id is missing');
@@ -89,6 +91,7 @@ class ProjectController extends GenericController
 
     public function getPublic()
     {
+        $this->checkPermission('view_all_project');
         try {
 
             $projects = $this->projectModel->getPublic();
@@ -105,6 +108,7 @@ class ProjectController extends GenericController
 
     public function getById($id)
     {
+        $this->checkPermission('view_project');
         $this->checkToken();
         try {
 
@@ -123,7 +127,7 @@ class ProjectController extends GenericController
 
     public function getMe()
     {
-        $user = $this->checkToken();
+        $user = $this->checkPermission('view_project');
         try {
             $userId = $user->sub;
 
@@ -141,7 +145,7 @@ class ProjectController extends GenericController
 
     public function getUsers($id)
     {
-        $this->checkToken();
+        $this->checkPermission('view_project');
         try {
             if (!isset($id) || empty($id) || !is_numeric($id)) {
                 $this->errResponse('Project id is missing');

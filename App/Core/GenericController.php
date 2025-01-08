@@ -81,6 +81,6 @@ class GenericController
             $this->errResponse('Forbidden: You do not have permission', 403);
         }
 
-        return true;
+        return $user;
     }
 }

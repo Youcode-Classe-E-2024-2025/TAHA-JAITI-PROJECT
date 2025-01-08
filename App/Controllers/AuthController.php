@@ -50,7 +50,7 @@ class AuthController extends GenericController
             $user->setPassword($password);
             $result = $user->getUserByEmail();
 
-            if (!$result || !$user->login($result)){
+            if (!$result || !$user->login($result)) {
                 $this->errResponse('Invalid email or password');
             }
 
@@ -60,13 +60,13 @@ class AuthController extends GenericController
             $auth->getUserPerms($result);
 
             $this->successResponse(['token' => $token], 'User logged in successfully');
-
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
         }
     }
 
-    public function getMe() {
+    public function getMe()
+    {
         try {
             $data = $this->checkToken();
 
@@ -74,7 +74,7 @@ class AuthController extends GenericController
             $user->setId(intval($data->sub));
             $user = $user->getById();
 
-            if ($user){
+            if ($user) {
                 unset($user->password);
                 $this->successResponse($user);
             } else {
@@ -84,5 +84,4 @@ class AuthController extends GenericController
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
         }
     }
-    
 }

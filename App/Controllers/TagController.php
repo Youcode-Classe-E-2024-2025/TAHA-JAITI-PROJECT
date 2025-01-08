@@ -12,6 +12,7 @@ class TagController extends GenericController
 
     public function create()
     {
+        $this->checkPermission('create_tag');
         try {
             $data = $this->getRequestData();
             $errors = Validator::validateName($data);
@@ -38,7 +39,9 @@ class TagController extends GenericController
         }
     }
 
-    public function update($id){
+    public function update($id)
+    {
+        $this->checkPermission('update_tag');
         try {
             $data = $this->getRequestData();
             $errors = Validator::validateName($data);
@@ -47,7 +50,7 @@ class TagController extends GenericController
                 $this->errResponse(implode(', ', $errors));
             }
 
-           
+
 
             $this->tagModel->setId($id);
             $this->tagModel->setName($data->name);
@@ -64,7 +67,9 @@ class TagController extends GenericController
         }
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
+        $this->checkPermission('delete_tag');
         try {
 
             $this->tagModel->setId($id);
@@ -83,6 +88,7 @@ class TagController extends GenericController
 
     public function getAll()
     {
+        $this->checkPermission('view_all_tags');
         try {
             $tags = $this->tagModel->getAll();
 
@@ -96,7 +102,9 @@ class TagController extends GenericController
         }
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
+        $this->checkPermission('view_tag');
         try {
 
             $this->tagModel->setId($id);
@@ -114,6 +122,7 @@ class TagController extends GenericController
 
     public function assignTag()
     {
+        $this->checkPermission('assign_tag');
         try {
             $data = $this->getRequestData();
 
