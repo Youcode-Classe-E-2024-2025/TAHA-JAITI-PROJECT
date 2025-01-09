@@ -6,6 +6,7 @@ import { registerPage } from "./pages/registerPage";
 import { badRequest, errPage } from "./pages/errorPage";
 import { homePage } from "./pages/homePage";
 import { projectsContainer } from "./pages/projectsPage";
+import tasksPage from "./pages/tasksPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -14,14 +15,15 @@ if (!root) {
 }
 
 
-const routes: Record<string, () => void> = {
+const routes: Record<string, (ctx?: any) => void> = {
     '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),
     '/projects': () => renderAsyncPage(projectsContainer),
+    '/projects/:id': (ctx) => renderAsyncPage(tasksPage, ctx),
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
-}
+};
 
 Object.entries(routes).forEach(([path, handle]) => page(path, handle));
 
