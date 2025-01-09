@@ -4,9 +4,8 @@ import { loginPage } from "./pages/loginPage";
 import { registerPage } from "./pages/registerPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
-const head = document.getElementById('head') as HTMLDivElement;
 
-if (!root || head){
+if (!root){
     throw new Error('Root doesnt exist');
 }
 

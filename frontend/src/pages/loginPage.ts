@@ -2,6 +2,7 @@ import authService from "@/services/authService";
 import Loading from "@/tools/loading";
 import sweetAlert from "@/tools/sweetAlert";
 import decodeToken from "@/util/jwtDecode";
+import page from "page";
 
 
 export const loginPage = () => {
@@ -89,10 +90,11 @@ const handleLogin = async (email: string, password: string) => {
 
             const perms = await authService.getPerms(Number(roleid));
 
-            localStorage.setItem('perms', JSON.stringify(perms));      
+            localStorage.setItem('perms', JSON.stringify(perms.data));      
 
             sweetAlert('Logged in succesfully');
             Loading.stop();
+            page('/register');
         }
     } catch (err: any) {
         sweetAlert('Invalid Email or Password');

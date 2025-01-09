@@ -1,3 +1,5 @@
+import header from "../components/header";
+
 const root = document.getElementById('root') as HTMLDivElement;
 
 if (!root) {
@@ -9,6 +11,7 @@ const renderPage = (
     additionalAction: (() => void) | null = null
 ): void => {
     root.innerHTML = "";
+    root.appendChild(header());
 
     const element = typeof component === "function" ? component() : component;
 
