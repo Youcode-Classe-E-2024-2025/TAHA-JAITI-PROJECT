@@ -22,9 +22,11 @@ export const projectsContainer = async () => {
             projects.forEach(project => {
                 const card =projectCard(project);
 
-                card.addEventListener('click', () => {
-                    page(`/projects/${project.id}`)
-                })
+                if (logged){
+                    card.addEventListener('click', () => {
+                        page(`/projects/${project.id}`)
+                    })
+                }
 
                 element.appendChild(card);
             });
