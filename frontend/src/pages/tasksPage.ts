@@ -1,4 +1,5 @@
 import taskCard from "@/components/taskCard";
+import { handleCategory } from "@/modals/categoryModal";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
 import { Context } from "page";
@@ -18,12 +19,13 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
     const permissions = getPermissions();
 
     const main = document.createElement('div');
-    main.className = `flex flex-col gap-2 p-4`
+    main.className = `flex flex-col gap-2 p-4`    
 
     const addTaskMarkup = permissions.includes('create_task') ?
         `<button id='addTask' class="btn_second">
                         + TASK
                         </button>` : ``;
+
     const addTagMarkup = permissions.includes('create_tag') ?
         `<button id='addTag' class="btn_second">
                         + TAG
@@ -37,7 +39,8 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
                         ${addTagMarkup}
                         ${addTaskMarkup}
                      </div>`
-
+    
+    
     const element = document.createElement('div');
     element.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 p-4';
     element.innerHTML = `<!--  todoColumn -->
@@ -148,9 +151,16 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
 
     }
 
+    const addCat = main.querySelector('#addCat') as HTMLButtonElement;
+    if (addCat){
+        addCat.addEventListener('click', (e) => {
+            handleCategory();
+        })
+    }
+
     await renderTasks();
 
-    return element;
+    return main;
 }
 
 export default tasksPage;

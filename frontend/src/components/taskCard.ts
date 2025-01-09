@@ -33,13 +33,13 @@ const taskCard = async (task: Task) => {
             <button id="deleteTask" title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
                 <i class="fas fa-trash mr-1"></i>Delete
             </button>` : '';
-    const editMark = permissions.includes('edit_task') ?
+    const editMark = permissions.includes('update_task') ?
         `<!-- Edit Button -->
             <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
                 <i class="fas fa-edit mr-1"></i>Edit
             </button>` : '';
 
-    const addTagCat = permissions.includes('edit_task') ?
+    const addTagCat = permissions.includes('update_task') ?
         `<button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
                 <i class="fas fa-tag mr-1"></i>+ Tag
             </button>
