@@ -2,7 +2,6 @@ import categoryService from "@/services/categorySerivce";
 import taskService from "@/services/taskService";
 import { User } from "@/types/auth";
 import { Category } from "@/types/categories";
-import { Tag } from "@/types/tags";
 import { Task } from "@/types/task";
 import { formatDate, getDueDisplay } from "@/util/formatDate";
 import getPermissions from "@/util/getPerms";
@@ -153,8 +152,8 @@ const openTaskModal = (task: Task, assignees: User[], category: Category) => {
                 <!-- Description -->
                 <div>
                     <h3 class="text-sm font-medium text-gray-400 mb-2">Description</h3>
-                    <div class="text-sm text-gray-300">
-                        ${task.description || '<em class="text-gray-500">No description provided</em>'}
+                    <div class="text-black bg-white p-2 overflow-auto">
+                        ${marked.parse(task.description) || '<em class="text-gray-500">No description provided</em>'}
                     </div>
                 </div>
 
