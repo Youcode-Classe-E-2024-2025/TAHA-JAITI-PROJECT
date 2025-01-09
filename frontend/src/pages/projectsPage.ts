@@ -1,13 +1,14 @@
 import projectCard from "@/components/projectCard";
 import projectService from "@/services/projectService";
+import getUserId from "@/util/getUserId";
 import page from "page";
 
 
 
 export const projectsContainer = async () => {
+    const logged = getUserId();
 
-
-    const response = await projectService.getProjects();
+    const response = logged ? await projectService.getMyProjects() : await projectService.getProjects();
     const projects = response.data.data;
 
     const element = document.createElement('div');
