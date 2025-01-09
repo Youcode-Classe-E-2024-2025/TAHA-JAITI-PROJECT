@@ -10,6 +10,6 @@ export interface Task {
     category_id: number
 }
 
-export type CreateTask = Omit<Task, 'id'>;
+export type CreateTask = Omit<Task, 'id' | 'created_at' | 'updated_at' >;
 
 export type UpdateTask = Omit<Task, 'created_at' | 'updated_at'>;

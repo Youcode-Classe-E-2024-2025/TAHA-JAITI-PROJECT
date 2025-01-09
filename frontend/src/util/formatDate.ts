@@ -25,3 +25,7 @@ export const formatDate = (date: string) => {
         day: 'numeric'
     });
 };
+
+export const fixDate = (data: string) => {
+    return new Date(data).toISOString().split('T')[0];
+};

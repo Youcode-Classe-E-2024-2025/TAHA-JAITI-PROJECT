@@ -1,6 +1,7 @@
 import taskCard from "@/components/taskCard";
 import { handleCategory } from "@/modals/categoryModal";
 import { handleTag } from "@/modals/tagModal";
+import { handleTask } from "@/modals/taskModal";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
 import { Context } from "page";
@@ -112,9 +113,9 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
     const doingCont = element.querySelector('#doingCont') as HTMLDivElement;
     const doneCont = element.querySelector('#doneCont') as HTMLDivElement;
 
-    const todoCount = element.querySelector('#todoCount') as HTMLDivElement;
-    const doingCount = element.querySelector('#doingCount') as HTMLDivElement;
-    const doneCount = element.querySelector('#doneCount') as HTMLDivElement;
+    const todoCount = element.querySelector('#todoCount') as HTMLSpanElement;
+    const doingCount = element.querySelector('#doingCount') as HTMLSpanElement;
+    const doneCount = element.querySelector('#doneCount') as HTMLSpanElement;
 
     const containers = [
         { element: todoCont, status: 'todo' as TaskStatus, counter: todoCount },
@@ -122,35 +123,35 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
         { element: doneCont, status: 'completed' as TaskStatus, counter: doneCount },
     ];
 
+    const counts: Record<TaskStatus, number> = { todo: 0, in_progress: 0, completed: 0 };
+
+
     const renderTasks = async () => {
         try {
             const response = await taskService.getTasksByProjectId(projectId);
             const tasks = response.data.data;
-
-            const counts: Record<TaskStatus, number> = { todo: 0, in_progress: 0, completed: 0 };
-
+    
             containers.forEach(({ element }) => (element.innerHTML = ''));
-
+    
             if (tasks && tasks.length > 0) {
-                tasks.forEach(async (task) => {
+                await Promise.all(tasks.map(async (task) => {
                     const card = await taskCard(task);
-
+    
                     const container = containers.find(c => c.status === task.status);
                     if (container) {
                         container.element.appendChild(card);
                         counts[task.status]++;
                     }
-                });
+                }));
             }
-
-            containers.forEach(({ counter, status }) => {
+    
+            containers.forEach(({ status, counter }) => {
                 counter.textContent = `(${counts[status] || 0})`;
             });
         } catch (error) {
             console.error('Error rendering tasks:', error);
         }
-
-    }
+    };
 
     const addCat = main.querySelector('#addCat') as HTMLButtonElement;
     if (addCat){
@@ -164,6 +165,11 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
         addTag.addEventListener('click', () => {
             handleTag();
         })
+    }
+
+    const addTask = main.querySelector('#addTask') as HTMLButtonElement;
+    if (addTask){
+        addTask.addEventListener('click', handleTask);
     }
 
     await renderTasks();
