@@ -1,5 +1,6 @@
 import taskCard from "@/components/taskCard";
 import { handleCategory } from "@/modals/categoryModal";
+import { handleTag } from "@/modals/tagModal";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
 import { Context } from "page";
@@ -153,8 +154,15 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
 
     const addCat = main.querySelector('#addCat') as HTMLButtonElement;
     if (addCat){
-        addCat.addEventListener('click', (e) => {
+        addCat.addEventListener('click', () => {
             handleCategory();
+        })
+    }
+
+    const addTag = main.querySelector('#addTag') as HTMLButtonElement;
+    if (addTag){
+        addTag.addEventListener('click', () => {
+            handleTag();
         })
     }
 
