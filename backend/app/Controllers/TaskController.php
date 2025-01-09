@@ -31,8 +31,6 @@ class TaskController extends GenericController
             $result = $this->taskModel->create();
             if ($result) {
                 $this->successResponse(null, 'Task created');
-            } else {
-                $this->errResponse('Failed to create task');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -60,8 +58,6 @@ class TaskController extends GenericController
             $result = $this->taskModel->update();
             if ($result) {
                 $this->successResponse(null, 'Task updated');
-            } else {
-                $this->errResponse('Failed to update task');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -82,8 +78,6 @@ class TaskController extends GenericController
 
             if ($result) {
                 $this->successResponse(null, 'Task deleted successfully');
-            } else {
-                $this->errResponse('There has been an error while deleting the task');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -99,8 +93,6 @@ class TaskController extends GenericController
 
             if ($result) {
                 $this->successResponse($result);
-            } else {
-                $this->errResponse('No tasks were found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -117,8 +109,6 @@ class TaskController extends GenericController
 
             if ($result) {
                 $this->successResponse($result);
-            } else {
-                $this->errResponse('No tasks were found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -135,8 +125,6 @@ class TaskController extends GenericController
 
             if ($result) {
                 $this->successResponse($result);
-            } else {
-                $this->errResponse('No task was found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -156,9 +144,7 @@ class TaskController extends GenericController
             $this->taskModel->setId($id);
 
             foreach ($data->tag_id as $tagId) {
-                if (!$this->taskModel->assignTag($tagId)) {
-                    $this->errResponse("Failed to assign tag ID: {$tagId}");
-                }
+                $this->taskModel->assignTag($tagId);
             }
 
             $this->successResponse(null, "All tags assigned successfully");
@@ -251,7 +237,7 @@ class TaskController extends GenericController
             $result = $this->taskModel->getUsers();
 
             if ($result) {
-                $this->successResponse($result);
+                $this->successResponse($result, 'success');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());

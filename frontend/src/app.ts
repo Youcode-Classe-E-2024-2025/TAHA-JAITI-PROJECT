@@ -1,4 +1,4 @@
-import page from "page";
+import page, { Context } from "page";
 import renderPage from "./tools/renderPage";
 import renderAsyncPage from "./tools/renderAsyncPage";
 import { loginPage } from "./pages/loginPage";
@@ -15,7 +15,7 @@ if (!root) {
 }
 
 
-const routes: Record<string, (ctx?: any) => void> = {
+const routes: Record<string, (ctx: Context) => void> = {
     '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),

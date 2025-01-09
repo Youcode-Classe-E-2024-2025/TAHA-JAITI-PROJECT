@@ -1,20 +1,20 @@
+import { Context } from "page";
 import Loading from "./loading";
 import renderPage from "./renderPage";
-import { badRequest } from "@/pages/errorPage";
 
-const renderAsyncPage = async (getPage: (ctx?: any) => Promise<HTMLElement>, ctx: any = null) => {
+const renderAsyncPage = async (getPage: (ctx?: Context) => Promise<HTMLElement>, ctx?: Context) => {
     Loading.start();
-    
+
     try {
-        const pageContent = await getPage(Number(ctx.params.id));
+        // Pass `ctx` only if it exists
+        const pageContent = await getPage(ctx);
         renderPage(() => pageContent);
     } catch (error) {
-        console.error("Error rendering page:", error);
-        renderPage(() => badRequest());
+        console.error('Error rendering the page:', error);
+        // Optionally, you can show an error page or message here
     } finally {
         Loading.stop();
     }
 };
-
 
 export default renderAsyncPage;

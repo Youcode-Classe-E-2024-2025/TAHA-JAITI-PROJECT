@@ -1,33 +1,43 @@
 import taskCard from "@/components/taskCard";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
+import { Context } from "page";
 
 type TaskStatus = 'todo' | 'in_progress' | 'completed';
 
-const tasksPage = async (projectId: number) => {
+const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
+
+    if (!ctx){
+        const placeholder = document.createElement('div');
+        placeholder.textContent = 'No valid context provided';
+        return placeholder;
+    }
+
+    const projectId = ctx.params.id;    
+
     const permissions = getPermissions();
 
     const main = document.createElement('div');
     main.className = `flex flex-col gap-2 p-4`
-    
+
     const addTaskMarkup = permissions.includes('create_task') ?
-    `<button id='addTask' class="btn_second">
+        `<button id='addTask' class="btn_second">
                         + TASK
-                        </button>` :``;
+                        </button>` : ``;
     const addTagMarkup = permissions.includes('create_tag') ?
-    `<button id='addTag' class="btn_second">
+        `<button id='addTag' class="btn_second">
                         + TAG
-                        </button>` :``;
+                        </button>` : ``;
     const addCatMarkup = permissions.includes('create_category') ?
-    `<button id='addCat' class="btn_second">
+        `<button id='addCat' class="btn_second">
                         + CATEGORY
-                        </button>` :``;
+                        </button>` : ``;
     main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
                         ${addCatMarkup}
                         ${addTagMarkup}
                         ${addTaskMarkup}
                      </div>`
-    
+
     const element = document.createElement('div');
     element.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 p-4';
     element.innerHTML = `<!--  todoColumn -->
@@ -110,17 +120,19 @@ const tasksPage = async (projectId: number) => {
 
     const renderTasks = async () => {
         try {
+            
+
             const response = await taskService.getTasksByProjectId(projectId);
             const tasks = response.data.data;
-    
+
             const counts: Record<TaskStatus, number> = { todo: 0, in_progress: 0, completed: 0 };
-    
+
             containers.forEach(({ element }) => (element.innerHTML = ''));
-    
+
             if (tasks && tasks.length > 0) {
                 tasks.forEach(async (task) => {
                     const card = await taskCard(task);
-    
+
                     const container = containers.find(c => c.status === task.status);
                     if (container) {
                         container.element.appendChild(card);
@@ -128,14 +140,14 @@ const tasksPage = async (projectId: number) => {
                     }
                 });
             }
-    
+
             containers.forEach(({ counter, status }) => {
                 counter.textContent = `(${counts[status] || 0})`;
             });
         } catch (error) {
             console.error('Error rendering tasks:', error);
         }
-        
+
     }
 
     await renderTasks();
