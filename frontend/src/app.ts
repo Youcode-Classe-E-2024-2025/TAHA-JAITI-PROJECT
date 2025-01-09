@@ -1,9 +1,11 @@
 import page from "page";
 import renderPage from "./tools/renderPage";
+import renderAsyncPage from "./tools/renderAsyncPage";
 import { loginPage } from "./pages/loginPage";
 import { registerPage } from "./pages/registerPage";
 import { badRequest, errPage } from "./pages/errorPage";
 import { homePage } from "./pages/homePage";
+import { projectsContainer } from "./pages/projectsPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -11,10 +13,12 @@ if (!root) {
     throw new Error('Root doesnt exist');
 }
 
+
 const routes: Record<string, () => void> = {
     '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),
+    '/projects': () => renderAsyncPage(projectsContainer),
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 }

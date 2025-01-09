@@ -91,7 +91,6 @@ class ProjectController extends GenericController
 
     public function getPublic()
     {
-        $this->checkPermission('view_all_project');
         try {
 
             $projects = $this->projectModel->getPublic();
