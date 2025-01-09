@@ -3,6 +3,7 @@ export interface Task {
     title: string,
     description: string,
     status: 'todo' | "in_progress" | "completed",
+    deadline: string
     created_at: string,
     updated_at: string,
     project_id: number,

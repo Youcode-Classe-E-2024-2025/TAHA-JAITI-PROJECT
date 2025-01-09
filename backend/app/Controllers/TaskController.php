@@ -252,8 +252,6 @@ class TaskController extends GenericController
 
             if ($result) {
                 $this->successResponse($result);
-            } else {
-                $this->errResponse('No assignees were found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());

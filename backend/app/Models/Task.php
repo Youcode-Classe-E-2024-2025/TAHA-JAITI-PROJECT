@@ -197,7 +197,7 @@ class Task
     }
     
     public function getUsers(){
-        $sql = "SELECT u.id, u.name, u.email
+        $sql = "SELECT u.id, u.name, u.email, u.role
                 FROM users u
                 JOIN user_assignments ua ON ua.user_id = u.id
                 WHERE ua.task_id = :id";
