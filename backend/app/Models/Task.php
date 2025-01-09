@@ -195,4 +195,20 @@ class Task
 
         return false;
     }
+    
+    public function getUsers(){
+        $sql = "SELECT u.id, u.name, u.email
+                FROM users u
+                JOIN user_assignments ua ON ua.user_id = u.id
+                WHERE ua.task_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $this->project_id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
 }

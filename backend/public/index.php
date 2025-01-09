@@ -68,6 +68,7 @@ $router->addRoute('DELETE', '/api/tasks/{id}', 'TaskController@delete');
 $router->addRoute('POST', '/api/tasks/{id}/tags', 'TaskController@assignTag');
 $router->addRoute('DELETE', '/api/tasks/{id}/tags', 'TaskController@clearTags');
 $router->addRoute('POST', '/api/tasks/{id}/category', 'TaskController@assignCat');
+$router->addRoute('GET', '/api/tasks/{id}/assign', 'TaskController@getUsers');
 $router->addRoute('POST', '/api/tasks/{id}/assign', 'TaskController@assignUser');
 $router->addRoute('DELETE', '/api/tasks/{id}/assign', 'TaskController@clearUser');
 

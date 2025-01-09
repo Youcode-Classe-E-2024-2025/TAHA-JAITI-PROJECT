@@ -241,4 +241,22 @@ class TaskController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function getUsers($id)
+    {
+        $this->checkPermission('view_task');
+        try {
+
+            $this->taskModel->setId($id);
+            $result = $this->taskModel->getUsers();
+
+            if ($result) {
+                $this->successResponse($result);
+            } else {
+                $this->errResponse('No assignees were found', 404);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
