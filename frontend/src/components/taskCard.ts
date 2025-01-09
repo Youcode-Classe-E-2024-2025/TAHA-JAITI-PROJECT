@@ -3,6 +3,7 @@ import { User } from "@/types/auth";
 import { Task } from "@/types/task";
 import { formatDate, getDueDisplay } from "@/util/formatDate";
 import getPermissions from "@/util/getPerms";
+import { marked } from "marked";
 
 
 const taskCard = async (task: Task) => {
@@ -60,8 +61,6 @@ const taskCard = async (task: Task) => {
         <div class="flex flex-wrap gap-2 mb-3">
             
         </div>
-        <!-- Description -->
-        <p class="text-gray-300 text-md mb-3">${task.description || '<span class="text-gray-500 italic">No description provided</span>'}</p>
         <!-- Task Meta -->
         <div class="grid grid-cols-2 gap-2 mb-3 text-xs text-gray-300">
             <div class="flex items-center gap-1">
@@ -83,6 +82,10 @@ const taskCard = async (task: Task) => {
         </div>
     `;
 
+    element.addEventListener('click', () => {
+        openTaskModal(task, assignee || []);
+    });
+
     return element;
 }
 
@@ -100,5 +103,90 @@ const getUsers = async (id: number) => {
 
     }
 }
+
+const openTaskModal = (task: Task, assignees: User[]) => {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-lg flex items-center justify-center p-4 z-50';
+
+    const assigneeMarkup = assignees && assignees.length > 0
+        ? assignees.slice(0, 3).map(a => `
+            <div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                ${a.name.charAt(0).toUpperCase() || '?'}
+            </div>
+        `).join('') +
+        (assignees.length > 3
+            ? `<div class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                +${assignees.length - 3}
+            </div>`
+            : '')
+        : `<span class="text-xs text-gray-400">No assignees</span>`;
+
+    modal.innerHTML = `
+        <div class="bg-gray-900 rounded-sm w-full max-w-2xl border border-purple-500/30 max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-6 border-b border-purple-500/20">
+                <h2 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-300 to-white bg-clip-text text-transparent">${task.title}</h2>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+                <!-- Description -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-purple-300">Description</label>
+                    <div id="taskDescription" class="prose prose-invert text-gray-300">
+                        ${marked.parse(task.description || '*No description provided*')}
+                    </div>
+                </div>
+
+                <!-- Task Meta -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-300">
+                    <div class="flex items-center gap-1">
+                        <i class="far fa-calendar"></i>
+                        <span>Created: ${formatDate(task.created_at)}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <i class="far fa-clock"></i>
+                        <span>Deadline: ${getDueDisplay(task.deadline)}</span>
+                    </div>
+                </div>
+
+                <!-- Assignees -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-purple-300">Assignees</label>
+                    <div class="flex items-center gap-2">
+                        ${assigneeMarkup}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
+                <button 
+                    id="closeModal" 
+                    class="px-4 sm:px-6 py-2 border border-purple-500/30 rounded-sm text-purple-300 hover:bg-purple-500/10 transition-all"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add close button functionality
+    const closeButton = modal.querySelector('#closeModal');
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            modal.remove();
+        });
+    }
+
+    // Add click outside to close functionality
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    document.body.appendChild(modal);
+};
 
 export default taskCard;
