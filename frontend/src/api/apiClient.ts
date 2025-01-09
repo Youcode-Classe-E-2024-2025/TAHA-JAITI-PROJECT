@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import ApiResponse from '@/types/api';
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -22,8 +23,12 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-    (response) => {
-        return response.data;
+    (response: AxiosResponse): AxiosResponse<ApiResponse<any>> => {
+        const customResponse: AxiosResponse<ApiResponse<any>> = {
+            ...response,
+            data: response.data as ApiResponse<any>,
+        };
+        return customResponse;
     },
     (error) => {
         console.error('API Error:', error.response?.data || error.message);
