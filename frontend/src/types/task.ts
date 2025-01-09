@@ -1,4 +1,4 @@
-export interface task {
+export interface Task {
     id: number,
     title: string,
     description: string,
@@ -8,3 +8,7 @@ export interface task {
     project_id: number,
     category_id: number
 }
+
+export type CreateTask = Omit<Task, 'id'>;
+
+export type UpdateTask = Omit<Task, 'created_at' | 'updated_at'>;
