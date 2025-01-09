@@ -103,6 +103,6 @@ const handleRegister = async (name: string, email: string, password :string, rol
 
     } catch (err){
         sweetAlert('An unexpected error happened');
-        console.log(err);
+        page('/404');
     }
 }

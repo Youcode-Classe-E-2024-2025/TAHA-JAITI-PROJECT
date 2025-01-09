@@ -41,7 +41,7 @@ export const loginPage = () => {
                 <div class="mt-8 text-center">
                     <p class="text-gray-400">
                         Don't have an account?
-                        <a href="/register" id="loginLink"
+                        <a href="/signup" id="loginLink"
                             class="text-purple-400 hover:text-purple-300 font-medium ml-1 transition-colors">
                             Create account
                         </a>
@@ -99,6 +99,6 @@ const handleLogin = async (email: string, password: string) => {
     } catch (err: any) {
         sweetAlert('Invalid Email or Password');
         Loading.stop();
-        throw err;
+        page('/404');
     }
 }
