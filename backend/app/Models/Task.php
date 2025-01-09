@@ -202,13 +202,9 @@ class Task
                 JOIN user_assignments ua ON ua.user_id = u.id
                 WHERE ua.task_id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $this->project_id);
+        $stmt->bindParam(':id', $this->id);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0){
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        return [];
+        return  $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
     }
 }

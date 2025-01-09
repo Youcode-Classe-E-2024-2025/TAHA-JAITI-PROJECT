@@ -120,8 +120,6 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
 
     const renderTasks = async () => {
         try {
-            
-
             const response = await taskService.getTasksByProjectId(projectId);
             const tasks = response.data.data;
 
