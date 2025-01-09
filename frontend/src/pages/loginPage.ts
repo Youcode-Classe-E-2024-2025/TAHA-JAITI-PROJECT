@@ -83,18 +83,21 @@ export const loginPage = () => {
 const handleLogin = async (email: string, password: string) => {
     try {
         const response = await authService.login(email, password);
-        if (response){
-            localStorage.setItem('token', response.data.token);
+
+        const data = response.data.data;
+
+        if (data){
+            localStorage.setItem('token', data.token);
 
             const roleid = decodeToken();
 
             const perms = await authService.getPerms(Number(roleid));
 
-            localStorage.setItem('perms', JSON.stringify(perms.data));      
+            localStorage.setItem('perms', JSON.stringify(perms.data.data));      
 
             sweetAlert('Logged in succesfully');
             Loading.stop();
-            page('/register');
+            page('/');
         }
     } catch (err: any) {
         sweetAlert('Invalid Email or Password');
