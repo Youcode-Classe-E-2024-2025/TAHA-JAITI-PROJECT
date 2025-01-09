@@ -4,7 +4,6 @@ import { loginPage } from "./pages/loginPage";
 import { registerPage } from "./pages/registerPage";
 import { badRequest, errPage } from "./pages/errorPage";
 import { homePage } from "./pages/homePage";
-import { path } from "animejs";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -13,11 +12,11 @@ if (!root) {
 }
 
 const routes: Record<string, () => void> = {
+    '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
-    '/': () => renderPage(homePage)
 }
 
 Object.entries(routes).forEach(([path, handle]) => page(path, handle));
