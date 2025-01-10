@@ -12,6 +12,7 @@ const taskCard = async (task: Task) => {
     const permissions = getPermissions();
     const element = document.createElement('div');
     element.className = 'tasks bg-gray-900/50 border border-purple-500/10 hover:border-purple-500/30 rounded-sm p-4 transition-all cursor-pointer';
+    element.dataset.id = String(task.id);
 
     const assignee = await getUsers(task.id);
     const formatedDate = formatDate(task.created_at);

@@ -1,10 +1,14 @@
+import Sortable from 'sortablejs';
 import taskCard from "@/components/taskCard";
 import { handleCategory } from "@/modals/categoryModal";
 import { handleTag } from "@/modals/tagModal";
 import { handleTask } from "@/modals/taskModal";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
-import { Context } from "page";
+import page, { Context } from "page";
+import { Task } from '@/types/task';
+import sweetAlert from '@/tools/sweetAlert';
+import apiClient from '@/api/apiClient';
 
 type TaskStatus = 'todo' | 'in_progress' | 'completed';
 
@@ -123,10 +127,12 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
         { element: doneCont, status: 'completed' as TaskStatus, counter: doneCount },
     ];
 
-    const counts: Record<TaskStatus, number> = { todo: 0, in_progress: 0, completed: 0 };
+    
 
 
     const renderTasks = async () => {
+        const counts: Record<TaskStatus, number> = { todo: 0, in_progress: 0, completed: 0 };
+
         try {
             const response = await taskService.getTasksByProjectId(projectId);
             const tasks = response.data.data;
@@ -144,14 +150,65 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
                     }
                 }));
             }
-    
-            containers.forEach(({ status, counter }) => {
-                counter.textContent = `(${counts[status] || 0})`;
-            });
         } catch (error) {
             console.error('Error rendering tasks:', error);
         }
     };
+
+    const updateTaskStatus = async (id: number, newStatus: 'todo' | 'in_progress' | 'completed') => {
+        try {
+            const response = await taskService.updateStatus(id, { status: newStatus });
+    
+            if (response.status !== 200) {
+                sweetAlert('Failed to update task');
+                return;
+            }
+    
+            const taskCard = document.querySelector(`[data-id="${id}"]`) as HTMLElement;
+            if (!taskCard) {
+                sweetAlert('Task not found in the DOM');
+                return;
+            }
+    
+            taskCard.remove();
+    
+            const newContainer = containers.find(c => c.status === newStatus)?.element;
+            if (!newContainer) {
+                sweetAlert('Invalid status');
+                return;
+            }
+    
+            newContainer.appendChild(taskCard);
+    
+            updateTaskCounts();
+        } catch (err) {
+            console.error(err);
+            sweetAlert('An error occurred while updating status');
+        }
+    };
+
+    const updateTaskCounts = () => {
+        containers.forEach(({ element, counter }) => {
+            const count = element.children.length;
+            counter.textContent = `(${count})`;
+        });
+    };
+
+    containers.forEach(({ element }) => {
+        new Sortable(element, {
+            group: 'tasks',
+            animation: 150,
+            sort: false,
+            onEnd(evt) {
+                const taskId = evt.item.dataset.id;
+                const target = containers.find(c => c.element === evt.to);
+                if (target) {
+                    updateTaskStatus(Number(taskId), target.status);
+                    updateTaskCounts();
+                }
+            },
+        });
+    });
 
     const addCat = main.querySelector('#addCat') as HTMLButtonElement;
     if (addCat){
@@ -173,8 +230,11 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
     }
 
     await renderTasks();
+    updateTaskCounts();
 
     return main;
 }
+
+
 
 export default tasksPage;
