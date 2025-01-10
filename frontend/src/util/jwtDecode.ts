@@ -73,10 +73,7 @@ export const checkTokenExpiration = () => {
         const currentTime = Date.now() / 1000;        
 
         if (currentTime >= expirationTime) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('expire');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('roleId');
+            localStorage.clear();
             sweetAlert('Token was expired and has been removed');
             page('/login');
         } else {

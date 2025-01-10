@@ -12,7 +12,7 @@ const logPage = async (ctx?: Context): Promise<HTMLElement> => {
     const projectId = ctx.params.id;
 
     const element = document.createElement('div');
-    element.className = `max-w-2xl mx-auto bg-gray-900 rounded-lg shadow-xl p-6 overflow-auto mt-16`;
+    element.className = `bg-gray-900 rounded-sm shadow-xl p-6 overflow-auto mt-16 w-full h-full`;
 
     const title = document.createElement('h2');
     title.className = 'text-2xl font-bold text-white mb-6';

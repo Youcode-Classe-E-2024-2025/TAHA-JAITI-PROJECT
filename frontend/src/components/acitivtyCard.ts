@@ -1,4 +1,7 @@
 import { ActivityLog } from "@/types/activityLog";
+import { fixDate } from "@/util/formatDate";
+
+
 
 export const logCard = (item: ActivityLog) => {
     const element = document.createElement('div');
@@ -18,9 +21,9 @@ export const logCard = (item: ActivityLog) => {
                     <!-- Content -->
                     <div class="flex-grow">
                         <div class="bg-gray-800 rounded-lg p-4 hover:bg-gray-800/80 transition-colors">
-                            <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center justify-between mb-2 gap-10">
                                 <span class="text-purple-400 font-semibold">${item.action}</span>
-                                <span class="text-gray-400 text-sm">${item.created_at}</span>
+                                <span class="text-gray-400 text-sm">${fixDate(item.created_at)}</span>
                             </div>
                             <p class="text-gray-300 text-sm">${item.details}</p>
                         </div>
