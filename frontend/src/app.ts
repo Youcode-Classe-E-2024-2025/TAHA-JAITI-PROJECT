@@ -7,6 +7,10 @@ import { badRequest, errPage } from "./pages/errorPage";
 import { homePage } from "./pages/homePage";
 import { projectsContainer } from "./pages/projectsPage";
 import tasksPage from "./pages/tasksPage";
+import { checkTokenExpiration } from "./util/jwtDecode";
+import logPage from "./pages/activityPage";
+import getPermissions from "./util/getPerms";
+import { statPage } from "./pages/statsPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -14,21 +18,47 @@ if (!root) {
     throw new Error('Root doesnt exist');
 }
 
+const checkAuth = (ctx: Context, next: () => void) => {
+    const token = localStorage.getItem('token');
 
-const routes: Record<string, (ctx: Context) => void> = {
+    if (!token) {
+        page('/login');
+    } else {
+        next();
+    }
+};
+
+const checkPermission = (permission: string) => (ctx: Context, next: () => void) => {
+    const permissions = getPermissions();
+
+    if (!permissions.includes(permission)) {
+        page('/404');
+    } else {
+        next();
+    }
+};
+
+const routes: Record<string, any> = {
     '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),
     '/projects': () => renderAsyncPage(projectsContainer),
-    '/projects/:id': (ctx) => renderAsyncPage(tasksPage, ctx),
+    '/projects/:id': [checkAuth, (ctx: Context) => renderAsyncPage(tasksPage, ctx)],
+    '/projects/:id/timeline': [checkAuth, checkPermission('create_task'), (ctx: Context) => renderAsyncPage(logPage, ctx)],
+    '/projects/:id/stats': [checkAuth, checkPermission('create_task'), (ctx: Context) => renderAsyncPage(statPage, ctx)],
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 };
 
-Object.entries(routes).forEach(([path, handle]) => page(path, handle));
+Object.entries(routes).forEach(([path, handle]) => {
+    if (Array.isArray(handle)) {
+        page(path, ...handle);
+    } else {
+        page(path, handle);
+    }
+});
 
 page.start();
-
 
 document.body.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -39,6 +69,7 @@ document.body.addEventListener('click', (event) => {
 
     const href = link.getAttribute('href');
     if (href) {
+        checkTokenExpiration();
         event.preventDefault();
         page(href);
     }

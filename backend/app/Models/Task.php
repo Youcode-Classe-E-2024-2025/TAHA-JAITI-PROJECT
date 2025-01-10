@@ -121,13 +121,13 @@ class Task
     }
 
     public function getById(){
-        $sql = "SELECT * FROM tasks WHERE project_id = :id LIMIT 1";
+        $sql = "SELECT * FROM tasks WHERE id = :id LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $this->id);
         
 
         if ($stmt->execute()){
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetch(PDO::FETCH_OBJ);
         }
 
         return [];
@@ -206,5 +206,17 @@ class Task
         $stmt->execute();
 
         return  $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+    }
+
+    public function updateSatus(){
+        $sql = "UPDATE tasks SET status = :status WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $this->status);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
     }
 }

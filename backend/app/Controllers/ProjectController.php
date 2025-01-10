@@ -30,8 +30,6 @@ class ProjectController extends GenericController
             $result = $this->projectModel->create();
             if ($result) {
                 $this->successResponse(null, 'Project created');
-            } else {
-                $this->errResponse('Failed to create project');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -59,8 +57,6 @@ class ProjectController extends GenericController
             $result = $this->projectModel->update();
             if ($result) {
                 $this->successResponse(null, 'Project updated');
-            } else {
-                $this->errResponse('Failed to update project');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -81,8 +77,6 @@ class ProjectController extends GenericController
 
             if ($result) {
                 $this->successResponse(null, 'Project deleted successfully');
-            } else {
-                $this->errResponse('There has been an error while deleting the project');
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
@@ -95,11 +89,7 @@ class ProjectController extends GenericController
 
             $projects = $this->projectModel->getPublic();
 
-            if ($projects) {
-                $this->successResponse($projects);
-            } else {
-                $this->errResponse('No public projects were found', 404);
-            }
+            $this->successResponse($result ?? []);
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
         }
@@ -108,7 +98,6 @@ class ProjectController extends GenericController
     public function getById($id)
     {
         $this->checkPermission('view_project');
-        $this->checkToken();
         try {
 
             $this->projectModel->setId($id);
@@ -116,8 +105,6 @@ class ProjectController extends GenericController
 
             if ($result) {
                 $this->successResponse($result);
-            } else {
-                $this->errResponse('No project was found', 404);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error has occured' . $e);
@@ -132,11 +119,7 @@ class ProjectController extends GenericController
 
             $result = $this->projectModel->getMe($userId);
 
-            if ($result) {
-                $this->successResponse($result);
-            } else {
-                $this->errResponse('No assigned projects were found', 404);
-            }
+            $this->successResponse($result ?? []);
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured:' . $e->getMessage());
         }
@@ -154,11 +137,42 @@ class ProjectController extends GenericController
 
             $result = $this->projectModel->getUsers();
 
-            if ($result) {
-                $this->successResponse($result);
-            } else {
-                $this->errResponse('No users found', 404);
+            $this->successResponse($result ?? []);
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    public function assignUser()
+    {
+        $user = $this->checkPermission('create_project');
+        try {
+            $data = $this->getRequestData();
+
+            if (empty($data->user_ids) || !is_array($data->user_ids)) {
+                $this->errResponse('User id is missing/invalid');
             }
+
+            $id = $this->projectModel->getLastId();
+
+            if (!$id){
+                $this->errResponse("Failed to get project id");
+            }
+
+            $this->projectModel->setId($id);
+
+            $this->projectModel->setUserId($user->sub);
+            $this->projectModel->assignUser($user->role === 1 ? 'chief' : 'manager');
+
+            foreach ($data->user_ids as $userId) {
+                $this->projectModel->setUserId($userId);
+                if (!$this->projectModel->assignUser()) {
+                    $this->errResponse("Failed to assign User Id {$userId}");
+                }
+            }
+
+
+            $this->successResponse(null, 'users assigned');
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }

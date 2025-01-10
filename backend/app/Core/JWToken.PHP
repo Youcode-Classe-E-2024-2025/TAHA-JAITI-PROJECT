@@ -3,6 +3,8 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+
+
 class JWToken {
     private static $jwtsecret;
     private static $jwtExp = 3600; // Expiry time in seconds (1 hour)

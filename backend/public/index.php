@@ -26,6 +26,7 @@ $router = new Router();
 //auth
 $router->addRoute('POST', '/api/auth/login', 'AuthController@login');
 $router->addRoute('POST', '/api/auth/register', 'AuthController@register');
+$router->addRoute('GET', '/api/auth/logout', 'AuthController@logout');
 $router->addRoute('GET', '/api/auth/me', 'AuthController@getMe');
 
 //users
@@ -57,6 +58,7 @@ $router->addRoute('POST', '/api/projects', 'ProjectController@create');
 $router->addRoute('PUT', '/api/projects/{id}', 'ProjectController@update');
 $router->addRoute('DELETE', '/api/projects/{id}', 'ProjectController@delete');
 $router->addRoute('GET', '/api/projects/{id}/users', 'ProjectController@getUsers');
+$router->addRoute('POST', '/api/projects/assign', 'ProjectController@assignUser');
 
 //tasks
 $router->addRoute('GET', '/api/tasks/project/{id}', 'TaskController@getByProject');
@@ -64,6 +66,7 @@ $router->addRoute('GET', '/api/tasks', 'TaskController@getAll');
 $router->addRoute('GET', '/api/tasks/{id}', 'TaskController@getById');
 $router->addRoute('POST', '/api/tasks', 'TaskController@create');
 $router->addRoute('PUT', '/api/tasks/{id}', 'TaskController@update');
+$router->addRoute('PATCH', '/api/tasks/{id}', 'TaskController@updateStatus');
 $router->addRoute('DELETE', '/api/tasks/{id}', 'TaskController@delete');
 $router->addRoute('POST', '/api/tasks/{id}/tags', 'TaskController@assignTag');
 $router->addRoute('DELETE', '/api/tasks/{id}/tags', 'TaskController@clearTags');
@@ -86,6 +89,8 @@ $router->addRoute('POST', '/api/tags', 'TagController@create');
 $router->addRoute('PUT', '/api/tags/{id}', 'TagController@update');
 $router->addRoute('DELETE', '/api/tags/{id}', 'TagController@delete');
 
+
+$router->addRoute('GET','/api/projects/{id}/timeline', 'ActivityLogController@getTimeline');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 

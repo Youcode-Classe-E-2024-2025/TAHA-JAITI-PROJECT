@@ -1,4 +1,4 @@
-interface Project {
+export interface Project {
     id: number;
     name: string;
     description: string;
@@ -9,4 +9,4 @@ interface Project {
     visibility: 'public' | 'private';
 }
 
-export default Project;
+export type CreateProject = Omit<Project, 'id' | 'created_at' | 'updated_at' >;

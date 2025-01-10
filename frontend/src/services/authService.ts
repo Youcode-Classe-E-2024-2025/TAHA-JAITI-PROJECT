@@ -14,6 +14,7 @@ const authService = {
 
     getPerms: (id: number) =>
         apiClient.get<ApiResponse<Permission>>(`/roles/${id}/permissions`),
+    logout: () => apiClient.get<ApiResponse<null>>(`/auth/logout`)
 }
 
 export default authService;
