@@ -2,12 +2,13 @@
 
 class TaskController extends GenericController
 {
-
     private $taskModel;
+    private $activityLog;
 
     public function __construct()
     {
         $this->taskModel = new Task();
+        $this->activityLog = new ActivityLog();
     }
 
     public function create()
@@ -30,10 +31,17 @@ class TaskController extends GenericController
 
             $result = $this->taskModel->create();
             if ($result) {
+                $this->activityLog->logActivity(
+                    $data->project_id,
+                    $this->checkToken()->sub,
+                    'Task Created',
+                    "Task ID: $result, Title: {$data->title}"
+                );
+
                 $this->successResponse(null, 'Task created');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -57,10 +65,17 @@ class TaskController extends GenericController
 
             $result = $this->taskModel->update();
             if ($result) {
+                $this->activityLog->logActivity(
+                    $this->taskModel->getByProject(),
+                    $this->checkToken()->sub,
+                    'Task Updated',
+                    "Task ID: $id, Title: {$data->title}, Status: {$data->status}"
+                );
+
                 $this->successResponse(null, 'Task updated');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -74,28 +89,25 @@ class TaskController extends GenericController
 
             $this->taskModel->setId($id);
 
-            $result = $this->taskModel->delete();
+            $task = $this->taskModel->getById();
+            if (!$task) {
+                $this->errResponse('Task not found');
+                return;
+            }
 
+            $result = $this->taskModel->delete();
             if ($result) {
+                $this->activityLog->logActivity(
+                    $task->project_id,
+                    $this->checkToken()->sub,
+                    'Task Deleted',
+                    "Task ID: $id, Title: {$task->title}"
+                );
+
                 $this->successResponse(null, 'Task deleted successfully');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
-        }
-    }
-
-    public function getAll()
-    {
-        $this->checkPermission('view_all_tasks');
-        try {
-
-            $result = $this->taskModel->getAll();
-
-            if ($result) {
-                $this->successResponse($result);
-            }
-        } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -131,6 +143,21 @@ class TaskController extends GenericController
         }
     }
 
+    public function getAll()
+    {
+        $this->checkPermission('view_all_tasks');
+        try {
+
+            $result = $this->taskModel->getAll();
+
+            if ($result) {
+                $this->successResponse($result);
+            }
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
+
     public function assignTag($id)
     {
         $this->checkPermission('assign_task_tag');
@@ -147,9 +174,17 @@ class TaskController extends GenericController
                 $this->taskModel->assignTag($tagId);
             }
 
+            // Log the activity
+            $this->activityLog->logActivity(
+                $this->taskModel->getByProject(),
+                $this->checkToken()->sub,
+                'Task Tags Assigned',
+                "Task ID: $id, Tags: " . implode(', ', $data->tag_id)
+            );
+
             $this->successResponse(null, "All tags assigned successfully");
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -161,10 +196,18 @@ class TaskController extends GenericController
             $result = $this->taskModel->clearTag();
 
             if ($result) {
+                // Log the activity
+                $this->activityLog->logActivity(
+                    $this->taskModel->getByProject(),
+                    $this->checkToken()->sub,
+                    'Task Tags Cleared',
+                    "Task ID: $id"
+                );
+
                 $this->successResponse(null, "Tags cleared");
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -182,14 +225,22 @@ class TaskController extends GenericController
             $result = $this->taskModel->assignTag($data->cat_id);
 
             if ($result) {
+                // Log the activity
+                $this->activityLog->logActivity(
+                    $this->taskModel->getByProject(),
+                    $this->checkToken()->sub,
+                    'Task Category Assigned',
+                    "Task ID: $id, Category ID: {$data->cat_id}"
+                );
+
                 $this->successResponse(null, "Category assigned");
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
-    public function assginUser($id)
+    public function assignUser($id)
     {
         $this->checkPermission('assign_task_user');
         try {
@@ -207,9 +258,17 @@ class TaskController extends GenericController
                 }
             }
 
+            // Log the activity
+            $this->activityLog->logActivity(
+                $this->taskModel->getByProject(),
+                $this->checkToken()->sub,
+                'Task Users Assigned',
+                "Task ID: $id, Users: " . implode(', ', $data->user_id)
+            );
+
             $this->successResponse(null, "All users assigned successfully");
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -221,10 +280,18 @@ class TaskController extends GenericController
             $result = $this->taskModel->clearUser();
 
             if ($result) {
+                // Log the activity
+                $this->activityLog->logActivity(
+                    $this->taskModel->getByProject(),
+                    $this->checkToken()->sub,
+                    'Task Users Cleared',
+                    "Task ID: $id"
+                );
+
                 $this->successResponse(null, "Users cleared");
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error occured' . $e->getMessage());
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 
@@ -244,23 +311,37 @@ class TaskController extends GenericController
         }
     }
 
-    public function updateSatus($id)
+    public function updateStatus($id)
     {
         try {
             $data = $this->getRequestData();
 
-            if (empty($data->status)){
+            if (empty($data->status)) {
                 $this->errResponse('Status is invalid');
             }
 
             $this->taskModel->setId($id);
             $this->taskModel->setStatus($data->status);
 
-            if ($this->taskModel->updateSatus()){
+
+            $task = $this->taskModel->getById();
+            if (!$task) {
+                $this->errResponse('Task not found');
+                return;
+            }
+
+            if ($this->taskModel->updateSatus()) {
+                $this->activityLog->logActivity(
+                    $task->project_id,
+                    $this->checkToken()->sub,
+                    'Task Status Updated',
+                    "Task ID: $id, New Status: {$data->status}"
+                );
+
                 $this->successResponse(null, 'Status updated');
             }
         } catch (Exception $e) {
-            $this->errResponse('An unexpected error has occcured' . $e);
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 }

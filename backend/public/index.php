@@ -66,7 +66,7 @@ $router->addRoute('GET', '/api/tasks', 'TaskController@getAll');
 $router->addRoute('GET', '/api/tasks/{id}', 'TaskController@getById');
 $router->addRoute('POST', '/api/tasks', 'TaskController@create');
 $router->addRoute('PUT', '/api/tasks/{id}', 'TaskController@update');
-$router->addRoute('PATCH', '/api/tasks/{id}', 'TaskController@updateSatus');
+$router->addRoute('PATCH', '/api/tasks/{id}', 'TaskController@updateStatus');
 $router->addRoute('DELETE', '/api/tasks/{id}', 'TaskController@delete');
 $router->addRoute('POST', '/api/tasks/{id}/tags', 'TaskController@assignTag');
 $router->addRoute('DELETE', '/api/tasks/{id}/tags', 'TaskController@clearTags');
@@ -89,6 +89,8 @@ $router->addRoute('POST', '/api/tags', 'TagController@create');
 $router->addRoute('PUT', '/api/tags/{id}', 'TagController@update');
 $router->addRoute('DELETE', '/api/tags/{id}', 'TagController@delete');
 
+
+$router->addRoute('GET','/api/projects/{id}/timeline', 'ActivityLogController@getTimeline');
 
 $router->run($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
