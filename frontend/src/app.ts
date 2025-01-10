@@ -9,6 +9,7 @@ import { projectsContainer } from "./pages/projectsPage";
 import tasksPage from "./pages/tasksPage";
 import { checkTokenExpiration } from "./util/jwtDecode";
 import logPage from "./pages/activityPage";
+import getPermissions from "./util/getPerms";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -27,7 +28,7 @@ const checkAuth = (ctx: Context, next: () => void) => {
 };
 
 const checkPermission = (permission: string) => (ctx: Context, next: () => void) => {
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+    const permissions = getPermissions();
 
     if (!permissions.includes(permission)) {
         page('/404');
@@ -42,7 +43,7 @@ const routes: Record<string, any> = {
     '/signup': () => renderPage(registerPage),
     '/projects': () => renderAsyncPage(projectsContainer),
     '/projects/:id': [checkAuth, (ctx: Context) => renderAsyncPage(tasksPage, ctx)],
-    '/projects/:id/timeline': [checkAuth, checkPermission('create_projects'), (ctx: Context) => renderAsyncPage(logPage, ctx)],
+    '/projects/:id/timeline': [checkAuth, checkPermission('create_task'), (ctx: Context) => renderAsyncPage(logPage, ctx)],
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 };
