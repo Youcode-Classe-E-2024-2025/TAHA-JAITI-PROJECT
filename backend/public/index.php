@@ -26,6 +26,7 @@ $router = new Router();
 //auth
 $router->addRoute('POST', '/api/auth/login', 'AuthController@login');
 $router->addRoute('POST', '/api/auth/register', 'AuthController@register');
+$router->addRoute('GET', '/api/auth/logout', 'AuthController@logout');
 $router->addRoute('GET', '/api/auth/me', 'AuthController@getMe');
 
 //users

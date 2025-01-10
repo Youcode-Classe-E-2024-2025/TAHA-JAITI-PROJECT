@@ -6,9 +6,7 @@ import { handleTask } from "@/modals/taskModal";
 import taskService from "@/services/taskService";
 import getPermissions from "@/util/getPerms"
 import page, { Context } from "page";
-import { Task } from '@/types/task';
 import sweetAlert from '@/tools/sweetAlert';
-import apiClient from '@/api/apiClient';
 
 type TaskStatus = 'todo' | 'in_progress' | 'completed';
 

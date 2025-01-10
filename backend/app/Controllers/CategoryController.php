@@ -77,7 +77,7 @@ class CategoryController extends GenericController{
     }
 
     public function getAll(){
-        $this->checkPermission('delete_category');
+        $this->checkPermission('view_category');
         try {
             $categories = $this->catModel->getAll();
 
@@ -93,7 +93,7 @@ class CategoryController extends GenericController{
     }
 
     public function getById($id){
-        $this->checkPermission('delete_category');
+        $this->checkPermission('view_category');
         try {
 
             $this->catModel->setId($id);
@@ -110,7 +110,7 @@ class CategoryController extends GenericController{
     }
 
     public function assignCat(){
-        $this->checkPermission('delete_category');
+        $this->checkPermission('create_category');
         try {
             $data = $this->getRequestData();
 

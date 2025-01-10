@@ -1,12 +1,14 @@
 import { handleProject } from "@/modals/projectModal";
+import authService from "@/services/authService";
 import Loading from "@/tools/loading";
+import sweetAlert from "@/tools/sweetAlert";
 import getPermissions from "@/util/getPerms";
 import page from "page";
 
 const header = () => {
     const permissions = getPermissions();
     const isLoggedIn = !!localStorage.getItem('token');
-    
+
     const element = document.createElement('header');
     element.className = 'bg-gradient-to-r from-gray-800 to-black';
     element.innerHTML = `
@@ -30,7 +32,7 @@ const header = () => {
                         ${permissions.includes('create_project') ? `<button id="newProject" class="btn_second bg-transparent">
                             + PROJECT
                         </button>` : ''}
-                        ${!isLoggedIn? `<a href="/login" data-ajax class=" btn_primary bg-transparent">
+                        ${!isLoggedIn ? `<a href="/login" data-ajax class=" btn_primary bg-transparent">
                             Login
                         </a>` : ''}
                         ${!isLoggedIn ? `<a href="/signup" data-ajax class="btn_primary">
@@ -48,33 +50,44 @@ const header = () => {
         `;
 
 
-        const logoutBtn = element.querySelector('#logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+    const logoutBtn = element.querySelector('#logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
 
-                Loading.start();
-                
-                handleLogout();
+            Loading.start();
 
-                Loading.stop();
+            await handleLogout();
 
-            });
-        }
+            Loading.stop();
 
-        const addProject = element.querySelector('#newProject') as HTMLButtonElement;
-        if (addProject){
-            addProject.addEventListener('click', async () => {
-                await handleProject()
-            })
-        }
-    
+        });
+    }
+
+    const addProject = element.querySelector('#newProject') as HTMLButtonElement;
+    if (addProject) {
+        addProject.addEventListener('click', async () => {
+            await handleProject()
+        })
+    }
+
     return element;
 }
 
-const handleLogout = () => {
+const handleLogout = async () => {
     localStorage.clear();
-    page('/login');
+
+    try {
+        const response = await authService.logout();
+        if (response.status === 200) {
+            sweetAlert('Logged out');
+        }
+
+        page('/login');
+    } catch (err) {
+        console.error(err);
+        page('/login');
+    }
 }
 
 

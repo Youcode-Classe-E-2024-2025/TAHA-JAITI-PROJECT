@@ -2,6 +2,12 @@
 
 class AuthController extends GenericController
 {
+    private $cache;
+
+    public function __construct(){
+        $this->cache = new RedisCache();
+    }
+
     public function register(): void
     {
         try {
@@ -62,6 +68,17 @@ class AuthController extends GenericController
             $this->successResponse(['token' => $token], 'User logged in successfully');
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e);
+        }
+    }
+
+    public function logout(): void{
+        try {
+        
+            $this->cache->clear();
+    
+            $this->successResponse(null, 'User logged out successfully');
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occurred: ' . $e->getMessage(), 500);
         }
     }
 

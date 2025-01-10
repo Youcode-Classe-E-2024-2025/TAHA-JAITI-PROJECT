@@ -167,4 +167,23 @@ INSERT INTO permissions (name) VALUES
 ('update_tag'),
 ('delete_tag');
 
+INSERT INTO role_perms (role_id, perm_id)
+SELECT 1, id FROM permissions;
+
+INSERT INTO role_perms (role_id, perm_id)
+SELECT 2, id FROM permissions
+WHERE name IN (
+    'view_all_projects', 'view_project', 'create_project', 'update_project', 'delete_project',
+    'view_project_users', 'view_all_tasks', 'view_task', 'create_task', 'update_task', 'delete_task',
+    'assign_task_tag', 'clear_task_tags', 'assign_task_category', 'assign_task_user', 'clear_task_user',
+    'view_category', 'view_all_categories', 'create_category', 'update_category', 'delete_category',
+    'view_tag', 'view_all_tags', 'create_tag', 'update_tag', 'delete_tag'
+);
+
+INSERT INTO role_perms (role_id, perm_id)
+SELECT 3, id FROM permissions
+WHERE name IN (
+    'view_all_projects', 'view_project', 'view_all_tasks', 'view_task', 'update_task'
+);
+
 ";
