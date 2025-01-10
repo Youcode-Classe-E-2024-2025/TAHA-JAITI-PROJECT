@@ -127,12 +127,13 @@ export const handleProject = async () => {
             const visibility = data.get('visibility') as 'public' | 'private';
             const deadline = data.get('deadline') as string;
             const creator_id = getUserId() ?? 1;
-            const users = data.getAll('users');
+            const user_id = data.getAll('users').map(user => Number(user)) as number[];            
 
             try {
                 const reponse = await projectService.createProject({name, description, deadline, visibility, creator_id})
 
                 if (reponse.status === 200){
+                    await projectService.assignUser({ user_ids: user_id, creator_id });
                     sweetAlert('Project Created');
                     page('/projects');
                 } else {

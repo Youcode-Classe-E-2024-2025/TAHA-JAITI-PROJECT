@@ -57,7 +57,7 @@ $router->addRoute('POST', '/api/projects', 'ProjectController@create');
 $router->addRoute('PUT', '/api/projects/{id}', 'ProjectController@update');
 $router->addRoute('DELETE', '/api/projects/{id}', 'ProjectController@delete');
 $router->addRoute('GET', '/api/projects/{id}/users', 'ProjectController@getUsers');
-$router->addRoute('POST', '/api/projects/{id}/assign', 'ProjectController@assignUser');
+$router->addRoute('POST', '/api/projects/assign', 'ProjectController@assignUser');
 
 //tasks
 $router->addRoute('GET', '/api/tasks/project/{id}', 'TaskController@getByProject');

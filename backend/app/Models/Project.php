@@ -122,7 +122,7 @@ class Project
     }
     public function getMe($userId)
     {
-        $sql = "SELECT p.*
+        $sql = "SELECT DISTINCT p.*
                 FROM projects p
                 JOIN project_members pm ON pm.project_id = p.id
                 WHERE pm.user_id = :user_id";
@@ -165,6 +165,12 @@ class Project
         }
 
         return false;
+    }
+
+    public function getLastId()
+    {
+        $query = "SELECT nextval('projects_id_seq')";
+        return intval($this->db->query($query)->fetchColumn()) -1;
     }
 }
 

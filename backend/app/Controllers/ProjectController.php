@@ -164,23 +164,28 @@ class ProjectController extends GenericController
         }
     }
 
-    public function assignUser($id)
+    public function assignUser()
     {
-        $this->checkPermission('create_project');
+        $user = $this->checkPermission('create_project');
         try {
             $data = $this->getRequestData();
 
-            if (!isset($id) || empty($id) || !is_numeric($id)) {
-                $this->errResponse('Project id is missing');
+            if (empty($data->user_ids) || !is_array($data->user_ids)) {
+                $this->errResponse('User id is missing/invalid');
             }
 
-            if (empty($data->user_id) || !is_array($data->user_id)) {
-                $this->errResponse('User id is missing/invalid');
+            $id = $this->projectModel->getLastId();
+
+            if (!$id){
+                $this->errResponse("Failed to get project id");
             }
 
             $this->projectModel->setId($id);
 
-            foreach ($data->user_id as $userId) {
+            $this->projectModel->setUserId($user->sub);
+            $this->projectModel->assignUser();
+
+            foreach ($data->user_ids as $userId) {
                 $this->projectModel->setUserId($userId);
                 if (!$this->projectModel->assignUser()) {
                     $this->errResponse("Failed to assign User Id {$userId}");

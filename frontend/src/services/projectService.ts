@@ -17,6 +17,10 @@ const deleteProject = (id: number) => apiClient.delete<ApiResponse<null>>(`/proj
 
 const getUsersAssignedToProject = (projectId: number) => apiClient.get<ApiResponse<User[]>>(`/projects/${projectId}/users`);
 
+const assignUser = (payload: { user_ids: number[]; creator_id: number }) => 
+    apiClient.post<ApiResponse<null>>(`/projects/assign`, payload);
+
+
 const projectService = {
     getProjects,
     getMyProjects,
@@ -24,7 +28,8 @@ const projectService = {
     createProject,
     updateProject,
     deleteProject,
-    getUsersAssignedToProject
+    getUsersAssignedToProject,
+    assignUser
 };
 
 export default projectService;
