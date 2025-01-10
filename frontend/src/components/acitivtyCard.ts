@@ -25,7 +25,10 @@ export const logCard = (item: ActivityLog) => {
                                 <span class="text-purple-400 font-semibold">${item.action}</span>
                                 <span class="text-gray-400 text-sm">${fixDate(item.created_at)}</span>
                             </div>
-                            <p class="text-gray-300 text-sm">${item.details}</p>
+                            <div class="flex items-center justify-start mb-2 gap-10">
+                                <span class="text-gray-500 font-semibold">By: ${item.name}</span>
+                                <span class="text-gray-400 text-sm">${item.details}</span>
+                            </div>
                         </div>
                     </div>`;
 

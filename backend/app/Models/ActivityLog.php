@@ -24,7 +24,19 @@ class ActivityLog{
 
     public function getActivitiesByProjectId(int $projectId): array
     {
-        $query = "SELECT * FROM activity_logs WHERE project_id = :project_id ORDER BY created_at DESC";
+        $query = "SELECT 
+                    activity_logs.*, 
+                    users.name AS name 
+                FROM 
+                    activity_logs 
+                JOIN 
+                    users 
+                ON 
+                    activity_logs.user_id = users.id 
+                WHERE 
+                    activity_logs.project_id = :project_id
+                ORDER BY 
+                    activity_logs.created_at DESC";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':project_id', $projectId);
         $stmt->execute();

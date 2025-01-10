@@ -5,4 +5,5 @@ export interface ActivityLog {
     action: string;
     details: string;
     created_at: string;
+    name: string;
 }

@@ -16,22 +16,46 @@ if (!root) {
     throw new Error('Root doesnt exist');
 }
 
+const checkAuth = (next: () => void) => {
+    const token = localStorage.getItem('token');
 
-const routes: Record<string, (ctx: Context) => void> = {
+    if (!token) {
+        page('/login');
+    } else {
+        next();
+    }
+};
+
+const checkPermission = (permission: string) => (next: () => void) => {
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+
+    if (!permissions.includes(permission)) {
+        page('/404');
+    } else {
+        next();
+    }
+};
+
+const routes: Record<string, any> = {
     '/': () => renderPage(homePage),
     '/login': () => renderPage(loginPage),
     '/signup': () => renderPage(registerPage),
     '/projects': () => renderAsyncPage(projectsContainer),
-    '/projects/:id': (ctx) => renderAsyncPage(tasksPage, ctx),
-    '/projects/:id/timeline': (ctx) => renderAsyncPage(logPage, ctx),
+    '/projects/:id': [checkAuth, (ctx: Context) => renderAsyncPage(tasksPage, ctx)],
+    '/projects/:id/timeline': [checkAuth, checkPermission('create_projects'), (ctx: Context) => renderAsyncPage(logPage, ctx)],
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 };
 
-Object.entries(routes).forEach(([path, handle]) => page(path, handle));
+Object.entries(routes).forEach(([path, handle]) => {
+    if (Array.isArray(handle)) {
+        page(path, ...handle);
+    } else {
+        page(path, handle);
+    }
+});
 
 page.start();
-
 
 document.body.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
