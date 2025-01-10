@@ -8,6 +8,7 @@ import { homePage } from "./pages/homePage";
 import { projectsContainer } from "./pages/projectsPage";
 import tasksPage from "./pages/tasksPage";
 import { checkTokenExpiration } from "./util/jwtDecode";
+import logPage from "./pages/activityPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -22,6 +23,7 @@ const routes: Record<string, (ctx: Context) => void> = {
     '/signup': () => renderPage(registerPage),
     '/projects': () => renderAsyncPage(projectsContainer),
     '/projects/:id': (ctx) => renderAsyncPage(tasksPage, ctx),
+    '/projects/:id/timeline': (ctx) => renderAsyncPage(logPage, ctx),
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 };

@@ -8,10 +8,10 @@ class ActivityLogController extends GenericController
     {
         $this->activityLog = new ActivityLog();
     }
-    public function getTimeline(int $projectId): void
+    public function getTimeline(int $id): void
     {
         try {
-            $activities = $this->activityLog->getActivitiesByProjectId($projectId);
+            $activities = $this->activityLog->getActivitiesByProjectId($id);
 
             if (empty($activities)) {
                 $this->successResponse([], 'No activities found for this project');
