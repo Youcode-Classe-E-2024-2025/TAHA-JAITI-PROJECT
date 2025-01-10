@@ -1,3 +1,4 @@
+import { handleProject } from "@/modals/projectModal";
 import Loading from "@/tools/loading";
 import getPermissions from "@/util/getPerms";
 import page from "page";
@@ -59,6 +60,13 @@ const header = () => {
                 Loading.stop();
 
             });
+        }
+
+        const addProject = element.querySelector('#newProject') as HTMLButtonElement;
+        if (addProject){
+            addProject.addEventListener('click', async () => {
+                await handleProject()
+            })
         }
     
     return element;

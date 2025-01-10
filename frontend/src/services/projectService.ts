@@ -1,5 +1,5 @@
 import apiClient from "@/api/apiClient";
-import Project from "@/types/projects";
+import {CreateProject, Project} from "@/types/projects";
 import ApiResponse from "@/types/api";
 import { User } from "@/types/auth";
 
@@ -9,7 +9,7 @@ const getMyProjects = () => apiClient.get<ApiResponse<Project[]>>(`/projects/my`
 
 const getProjectById = (id: number) => apiClient.get<ApiResponse<Project>>(`/projects/${id}`);
 
-const createProject = (project: Omit<Project, 'id'>) => apiClient.post<ApiResponse<Project>>(`/projects`, project);
+const createProject = (project: CreateProject) => apiClient.post<ApiResponse<Project>>(`/projects`, project);
 
 const updateProject = (id: number, project: Project) => apiClient.put<ApiResponse<Project>>(`/projects/${id}`, project);
 

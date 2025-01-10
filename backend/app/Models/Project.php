@@ -10,6 +10,7 @@ class Project
     private $visibility;
     private $deadline;
     private $creator;
+    private $userId;
 
 
     public function __construct()
@@ -42,7 +43,10 @@ class Project
         $this->creator = $id;
     }
 
-
+    public function setUserId(int $id)
+    {
+        $this->userId = $id;
+    }
 
     //--------
     public function create()
@@ -64,7 +68,8 @@ class Project
         return false;
     }
 
-    public function update(){
+    public function update()
+    {
         $sql = "UPDATE projects SET name = :name, description = :desc, visibility = :vis,
          deadline = :dead, updated_at = CURRENT_TIMESTAMP WHERE id = :id";
 
@@ -75,19 +80,20 @@ class Project
         $stmt->bindParam(':dead', $this->deadline);
         $stmt->bindParam(':id', $this->id);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         }
 
         return false;
     }
 
-    public function delete(){
+    public function delete()
+    {
         $sql = "DELETE FROM projects WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $this->id);
 
-        if ($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         }
         return false;
@@ -128,7 +134,8 @@ class Project
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getUsers(){
+    public function getUsers()
+    {
         $sql = "SELECT u.id, u.name, u.email
         FROM users u
         JOIN project_members pu ON pu.user_id = u.id
@@ -138,13 +145,27 @@ class Project
         $stmt->bindParam(':pid', $this->id);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-        
+
         return [];
     }
 
-    //------
+    public function assignUser()
+    {
+        $sql = "INSERT INTO project_members(project_id, user_id)
+                VALUES (:pid, :uid)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':pid', $this->id);
+        $stmt->bindParam(':uid', $this->userId);
 
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
 }
+
+    //------

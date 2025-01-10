@@ -163,4 +163,34 @@ class ProjectController extends GenericController
             $this->errResponse('An unexpected error occured' . $e->getMessage());
         }
     }
+
+    public function assignUser($id)
+    {
+        $this->checkPermission('create_project');
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($id) || empty($id) || !is_numeric($id)) {
+                $this->errResponse('Project id is missing');
+            }
+
+            if (empty($data->user_id) || !is_array($data->user_id)) {
+                $this->errResponse('User id is missing/invalid');
+            }
+
+            $this->projectModel->setId($id);
+
+            foreach ($data->user_id as $userId) {
+                $this->projectModel->setUserId($userId);
+                if (!$this->projectModel->assignUser()) {
+                    $this->errResponse("Failed to assign User Id {$userId}");
+                }
+            }
+
+
+            $this->successResponse(null, 'users assigned');
+        } catch (Exception $e) {
+            $this->errResponse('An unexpected error occured' . $e->getMessage());
+        }
+    }
 }
