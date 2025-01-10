@@ -120,7 +120,7 @@ class TaskController extends GenericController
             $result = $this->taskModel->getByProject();
 
             if ($result) {
-                $this->successResponse($result);
+                $this->successResponse($result ?? []);
             }
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occured' . $e->getMessage());

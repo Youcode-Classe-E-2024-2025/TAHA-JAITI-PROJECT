@@ -25,6 +25,11 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
     const main = document.createElement('div');
     main.className = `flex flex-col gap-2 p-4`
 
+    const statMarkup = permissions.includes('create_task') ?
+        `<a href='${projectId}/stats' class="btn_second">
+                        STATS
+                        </a>` : ``;
+
     const timelineMarkup = permissions.includes('create_task') ?
         `<a href='${projectId}/timeline' class="btn_second">
                         TIMELINE
@@ -47,6 +52,7 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
                         ${addCatMarkup}
                         ${addTagMarkup}
                         ${addTaskMarkup}
+                        ${statMarkup}
                      </div>`
 
 

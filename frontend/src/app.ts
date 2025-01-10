@@ -10,6 +10,7 @@ import tasksPage from "./pages/tasksPage";
 import { checkTokenExpiration } from "./util/jwtDecode";
 import logPage from "./pages/activityPage";
 import getPermissions from "./util/getPerms";
+import { statPage } from "./pages/statsPage";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -44,6 +45,7 @@ const routes: Record<string, any> = {
     '/projects': () => renderAsyncPage(projectsContainer),
     '/projects/:id': [checkAuth, (ctx: Context) => renderAsyncPage(tasksPage, ctx)],
     '/projects/:id/timeline': [checkAuth, checkPermission('create_task'), (ctx: Context) => renderAsyncPage(logPage, ctx)],
+    '/projects/:id/stats': [checkAuth, checkPermission('create_task'), (ctx: Context) => renderAsyncPage(statPage, ctx)],
     '/404': () => renderPage(badRequest),
     '*': () => renderPage(errPage),
 };
