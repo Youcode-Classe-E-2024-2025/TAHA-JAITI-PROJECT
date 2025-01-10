@@ -47,12 +47,16 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
         `<button id='addCat' class="btn_second">
                         + CATEGORY
                         </button>` : ``;
-    main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
-                        ${timelineMarkup}
-                        ${addCatMarkup}
-                        ${addTagMarkup}
-                        ${addTaskMarkup}
-                        ${statMarkup}
+    main.innerHTML = `<div class="w-full flex justify-between items-center gap-4 px-4">
+                        <div class="flex gap-4">
+                            ${timelineMarkup}
+                            ${statMarkup}
+                        </div>
+                        <div class="flex gap-4">
+                            ${addCatMarkup}
+                            ${addTagMarkup}
+                            ${addTaskMarkup}
+                        </div>
                      </div>`
 
 

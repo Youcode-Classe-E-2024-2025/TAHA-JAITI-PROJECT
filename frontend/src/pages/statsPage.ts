@@ -1,10 +1,10 @@
 import { Context } from 'page';
 import taskService from '@/services/taskService';
-import { Task } from '@/types/task';
 import { Chart, DoughnutController, ArcElement, Legend, Title, Tooltip } from 'chart.js';
+import * as XLSX from 'xlsx'; // Import SheetJS
+import { Task } from '@/types/task';
 
 Chart.register(DoughnutController, ArcElement, Legend, Title, Tooltip);
-
 
 
 interface StatsData {
@@ -30,23 +30,26 @@ export const statPage = async (ctx?: Context): Promise<HTMLElement> => {
         const res = await taskService.getTasksByProjectId(projectId);
         const tasks = res.data.data ?? [];
 
-        console.log(tasks);
-        
-
         if (tasks.length === 0) {
             const noTasksMessage = document.createElement('div');
             noTasksMessage.className = 'text-center text-gray-600 text-lg';
-            noTasksMessage.textContent = 'No statistics found for this project.';
+            noTasksMessage.textContent = 'No tasks found for this project.';
             container.appendChild(noTasksMessage);
             return container;
         }
 
         const element = document.createElement('canvas');
         element.id = 'taskStats';
-        element.style.maxWidth = '800px';
-        element.style.height = '400px';
+        element.style.maxWidth = '800px'; 
+        element.style.height = '400px'; 
+
+        const exportButton = document.createElement('button');
+        exportButton.textContent = 'Export to Excel';
+        exportButton.className = 'btn_second';
+        exportButton.addEventListener('click', () => exportToExcel(tasks));
 
         container.appendChild(element);
+        container.appendChild(exportButton);
         await renderStats(tasks, element);
 
     } catch (error) {
@@ -91,12 +94,12 @@ const renderStats = async (tasks: Task[], element: HTMLCanvasElement): Promise<v
             datasets: [{
                 data: [stats.completed, stats.in_progress, stats.todo],
                 backgroundColor: [
-                    '#4CAF50',
-                    '#2196F3', 
+                    '#4CAF50', 
+                    '#2196F3',
                     '#FFC107'  
                 ],
                 borderWidth: 1,
-                hoverOffset: 10, 
+                hoverOffset: 10,
             }]
         },
         options: {
@@ -152,4 +155,34 @@ const renderStats = async (tasks: Task[], element: HTMLCanvasElement): Promise<v
             },
         },
     });
+};
+
+const exportToExcel = (tasks: Task[]): void => {
+    const stats: StatsData = {
+        completed: 0,
+        in_progress: 0,
+        todo: 0,
+    };
+
+    tasks.forEach(task => {
+        if (task.status === 'completed') {
+            stats.completed++;
+        } else if (task.status === 'in_progress') {
+            stats.in_progress++;
+        } else if (task.status === 'todo') {
+            stats.todo++;
+        }
+    });
+
+    const data = tasks.map(task => ({
+        Status: task.status,
+        Count: stats[task.status]
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Task Statistics');
+
+    XLSX.writeFile(workbook, 'task_statistics.xlsx');
 };
