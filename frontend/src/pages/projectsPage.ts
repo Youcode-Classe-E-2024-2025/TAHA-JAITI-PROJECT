@@ -24,7 +24,7 @@ export const projectsContainer = async () => {
 
                 if (logged){
                     card.addEventListener('click', () => {
-                        page(`/projects/${project.id}/timeline`)
+                        page(`/projects/${project.id}`)
                     });
                 }
                 element.appendChild(card);

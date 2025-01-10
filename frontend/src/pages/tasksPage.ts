@@ -25,6 +25,10 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
     const main = document.createElement('div');
     main.className = `flex flex-col gap-2 p-4`
 
+    const timelineMarkup = permissions.includes('create_task') ?
+        `<a href='${projectId}/timeline' class="btn_second">
+                        TIMELINE
+                        </a>` : ``;
     const addTaskMarkup = permissions.includes('create_task') ?
         `<button id='addTask' class="btn_second">
                         + TASK
@@ -39,6 +43,7 @@ const tasksPage = async (ctx?: Context): Promise<HTMLElement> => {
                         + CATEGORY
                         </button>` : ``;
     main.innerHTML = `<div class="w-full flex justify-end items-center gap-4 px-4">
+                        ${timelineMarkup}
                         ${addCatMarkup}
                         ${addTagMarkup}
                         ${addTaskMarkup}
