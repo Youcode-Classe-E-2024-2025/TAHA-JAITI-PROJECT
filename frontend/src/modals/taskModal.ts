@@ -1,6 +1,5 @@
 import page from "page";
 import categoryService from "@/services/categorySerivce";
-import projectService from "@/services/projectService";
 import taskService from "@/services/taskService";
 import userService from "@/services/userService";
 import sweetAlert from "@/tools/sweetAlert";
@@ -9,10 +8,6 @@ import { fixDate } from "@/util/formatDate";
 import { marked } from "marked";
 
 const taskModal = async () => {
-    const projectId = window.location.pathname.split('/')[2];
-    const reponse = await projectService.getUsersAssignedToProject(Number(projectId));
-    const users = reponse.data.data;
-
     const catResponse = await categoryService.getCategories();
     const cats = catResponse.data.data;
 
@@ -50,7 +45,7 @@ const taskModal = async () => {
 
                 <!-- Markdown Preview -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-purple-300">Preview</label>
+                    <label class="block text-sm font-medium text-purple-300 list-disc">Preview</label>
                     <div id="markdownPreview" class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300"></div>
                 </div>
 
@@ -83,7 +78,7 @@ const taskModal = async () => {
 
                     
                     <div class="space-y-2">
-                        <label for="category" class="block text-sm font-medium text-purple-300">Assignees</label>
+                        <label for="category" class="block text-sm font-medium text-purple-300">Category</label>
                         <select 
                             id="category" 
                             name="category"  
@@ -92,26 +87,13 @@ const taskModal = async () => {
                             ${cats ? cats.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('') : ''}
                         </select>
                     </div>
-
-                    <div class="space-y-2">
-                        <label for="assignees" class="block text-sm font-medium text-purple-300">Assignees</label>
-                        <select 
-                            id="assignees" 
-                            name="assignees" 
-                            multiple 
-                            class="w-full px-4 py-2 bg-black/40 border border-purple-500/30 rounded-sm text-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        >
-                            ${users ? users.map(user => `<option value="${user.id}">${user.name}</option>`).join('') : ''}
-                        </select>
-                        <p class="text-xs text-purple-300/70">Hold Ctrl/Cmd to select multiple assignees</p>
-                    </div>
                
             </div>
 
             <div class="p-4 sm:p-6 border-t border-purple-500/20 flex justify-end space-x-4 bg-black/40 mt-auto">
                 <button 
                     type="button"
-                    id="closeBtn" 
+                    id="cancelBtn" 
                     class="px-4 sm:px-6 py-2 border border-purple-500/30 rounded-sm text-purple-300 hover:bg-purple-500/10 transition-all"
                 >
                     Cancel
@@ -146,13 +128,11 @@ export const handleTask = async () => {
 
     const form = modal.querySelector('#formModal') as HTMLFormElement;
 
-    const closebtn = modal.querySelector('#closeBtn') as HTMLButtonElement;
+    const closebtn = modal.querySelector('#cancelBtn') as HTMLButtonElement;
 
     const closeModal = () => modal.remove();
 
-    if (closebtn) {
-        closebtn.addEventListener('cick', closeModal)
-    }
+    closebtn.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e: Event) => {
         if (e.target === modal) closeModal();
@@ -168,7 +148,6 @@ export const handleTask = async () => {
             const status = data.get('status') as 'todo' | 'in_progress' | 'completed';
             const deadline = data.get('deadline') as string;
             const cat_id = data.get('category') as string;
-            const assignees = data.getAll('assignees') as string[];
 
             const project_id = Number(window.location.pathname.split('/')[2]);
             const category_id = Number(cat_id);
@@ -176,7 +155,7 @@ export const handleTask = async () => {
             try {
                 const response = await taskService.createTask(
                     {title, description, status, deadline, project_id, category_id});
-                
+
                 if (response.status === 200){
                     closeModal();
                     sweetAlert(response.data.message);
