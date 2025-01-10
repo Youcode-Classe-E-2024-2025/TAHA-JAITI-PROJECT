@@ -16,7 +16,7 @@ if (!root) {
     throw new Error('Root doesnt exist');
 }
 
-const checkAuth = (next: () => void) => {
+const checkAuth = (ctx: Context, next: () => void) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -26,7 +26,7 @@ const checkAuth = (next: () => void) => {
     }
 };
 
-const checkPermission = (permission: string) => (next: () => void) => {
+const checkPermission = (permission: string) => (ctx: Context, next: () => void) => {
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
 
     if (!permissions.includes(permission)) {

@@ -1,5 +1,6 @@
 import categoryService from "@/services/categorySerivce";
 import taskService from "@/services/taskService";
+import sweetAlert from "@/tools/sweetAlert";
 import { User } from "@/types/auth";
 import { Category } from "@/types/categories";
 import { Task } from "@/types/task";
@@ -37,12 +38,12 @@ const taskCard = async (task: Task) => {
     const categoryMarkup = cats.name ? `<span class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm">${cats.name}</span>`
     : '';
 
-
     const deleteMark = permissions.includes('delete_task') ? `
             <!-- Delete Button -->
             <button id="deleteTask" title="Delete task" class="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded-sm hover:bg-red-500/20 flex items-center">
                 <i class="fas fa-trash mr-1"></i>Delete
             </button>` : '';
+
     const editMark = permissions.includes('update_task') ?
         `<!-- Edit Button -->
             <button id='editTask' title="Edit task" class="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-sm hover:bg-blue-500/20 flex items-center">
@@ -91,13 +92,38 @@ const taskCard = async (task: Task) => {
         </div>
     `;
 
-    element.addEventListener('click', (e:Event) => {
+    element.addEventListener('click', (e: Event) => {
         e.stopPropagation();
         openTaskModal(task, assignee || [], cats);
     });
 
+    const deleteButton = element.querySelector('#deleteTask') as HTMLButtonElement | null;
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async (e: Event) => {
+            e.stopPropagation();
+            await handleDeleteTask(task.id, element);
+        });
+    }
+
     return element;
-}
+};
+
+export const handleDeleteTask = async (taskId: number, taskElement: HTMLElement): Promise<void> => {
+    try {
+        const response = await taskService.deleteTask(taskId);
+
+        if (response.status === 200) {
+            taskElement.remove();
+
+            sweetAlert('Task deleted successfully');
+        } else {
+            sweetAlert('Failed to delete task');
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        sweetAlert('An error occurred while deleting the task');
+    }
+};
 
 const getUsers = async (id: number) => {
     try {
