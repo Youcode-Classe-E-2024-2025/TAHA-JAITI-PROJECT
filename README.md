@@ -6,51 +6,46 @@ The CTO requested an intuitive interface for team members and a dashboard for pr
 
 ---
 
-## User Stories
-
-### As a Project Manager:
-- **Manage Projects**: Create, edit, and delete projects to structure the team's work.
-- **Manage Tasks**: Assign tasks to team members, categorize tasks, and tag tasks.
-- **Track Progress**: Monitor task statuses to ensure project progress.
-
-### As a Team Member:
-- **Sign Up & Login**: Register with name, email, and password, and log in securely to view and update tasks.
-- **Participate in Projects**: Access assigned projects, view tasks, and update task statuses.
-
-### As a Guest User:
-- **View Public Projects**: View public projects to discover team activities and potentially join teams or create projects.
-
----
-
 ## Technologies Used
 
-- **PHP:** PHP 8 (OOP) For the back-end API (no frameworks, using native PHP).
-- **JavaScript:** For dynamic front-end development, creating a single-page application (SPA).
-- **PostgreSQL:** For data persistence.
-- **Laragon:** A local development environment for PHP.
-- **Vite** For front-end development
+- **Backend**: Native PHP 8 (OOP) for the API.
+- **Frontend**: 
+  - **TypeScript** for type-safe JavaScript.
+  - **Native HTML** for structure.
+  - **TailwindCSS** for styling.
+- **Database**: PostgreSQL for data persistence.
+- **Development Environment**: Laragon for local PHP development.
+- **Frontend Tooling**: Vite for fast frontend development.
+
+---
 
 ## Structure
 
 ### Backend (PHP)
 
-- **Controllers:** Responsible for handling user input and routing actions.
-- **Services:** Contains business logic (e.g., task creation, user assignments).
-- **Models:** Represents the data and interactions with the database (e.g., Task, User, Role).
-- **Database:** A PostgreSQL database for storing tasks, users, and roles.
+- **Controllers**: Handle user input and route actions.
+- **Services**: Contain business logic (e.g., task creation, user assignments).
+- **Models**: Represent data and interact with the database (e.g., Task, User, Role).
+- **Database**: PostgreSQL database for storing tasks, users, and roles.
 
-### Frontend (JavaScript)
+### Frontend (TypeScript + TailwindCSS)
 
-- **Components:** Each component handles a specific part of the UI (e.g., task list, task form, login form).
-- **Single-page application (SPA):** Dynamic content loading without page reloads.
+- **Components**: Each component handles a specific part of the UI (e.g., task list, task form, login form).
+- **Single-page application (SPA)**: Dynamic content loading without page reloads.
+- **TailwindCSS**: Utility-first CSS framework for styling.
+
+---
 
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
-- You have installed [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/).
-- You have a running instance of [PostgreSQL](https://www.postgresql.org/).
-- You have a running instance of Apache.
+- **Node.js** and **npm**: Installed for frontend development.
+- **PostgreSQL**: Running instance for the database.
+- **Laragon**: Installed and running for local PHP development.
+- **Composer**: Installed for PHP dependency management.
+
+---
 
 ## Installation
 
@@ -62,28 +57,75 @@ Before you begin, ensure you have met the following requirements:
     ```sh
     cd TAHA-JAITI-PROJECT
     ```
-3. Install the dependencies:
+3. Install frontend dependencies in the frontend folder:
     ```sh
     npm install
     ```
+4. Install backend dependencies in the backend folder:
+    ```sh
+    composer install
+    ```
+
+---
 
 ## Configuration
 
-1. Go to `config.php` file located inside `app/config/`:
-    ```env
+### Backend Configuration
+
+1. Open the `config.php` file located in `app/config/` and update the database credentials:
+    ```php
     DB_HOST=localhost
-    DB_PORT=PORT
-    DB_USER=root
-    DB_PASS=yourpassword
+    DB_PORT=5432 // 
+    DB_USER=your_db_user
+    DB_PASS=your_db_password
     DB_NAME=taskflow
     ```
-2. Configure the .htaccess file to use the ports for your servers.
+
+2. Ensure your Laragon server is running on port `80` (default for Laragon).
+
+### Frontend Configuration
+
+1. Open the `vite.config.ts` file in the root of your project and update it to proxy API requests to the backend:
+    ```typescript
+    import { defineConfig } from 'vite';
+    import tailwindcss from 'tailwindcss';
+    import autoprefixer from 'autoprefixer';
+
+    export default defineConfig({
+      css: {
+        postcss: {
+          plugins: [
+            tailwindcss,
+            autoprefixer,
+          ],
+        },
+      },
+      server: {
+        proxy: {
+          '/api': {
+            target: 'http://localhost:80', // Backend server (Laragon)
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, ''),
+          },
+        },
+      },
+    });
+    ```
+
+2. Ensure your frontend is running on port `5173` (default for Vite).
+
+---
 
 ## Running the Project
 
-1. Start the development server for the backend using Laravel.
-2. Start the development server for the front end using Vite `npx vite public/`
-3. Open your browser and navigate to `http://localhost:VITEPORT/`.
+1. Start the backend server using Laragon (ensure it's running on port `80`).
+2. Start the frontend development server using Vite:
+    ```sh
+    npm run dev
+    ```
+3. Open your browser and navigate to `http://localhost:5173/`.
+
+---
 
 ## Contributing
 
@@ -95,6 +137,8 @@ To contribute to TaskFlow, follow these steps:
 4. Push to the original branch: `git push origin feature-branch`.
 5. Create a pull request.
 
+---
+
 ## License
 
-This project is open source do WHAT YOU WANT!
+This project is open source. Do WHAT YOU WANT!
