@@ -7,6 +7,7 @@ import { badRequest, errPage } from "./pages/errorPage";
 import { homePage } from "./pages/homePage";
 import { projectsContainer } from "./pages/projectsPage";
 import tasksPage from "./pages/tasksPage";
+import { checkTokenExpiration } from "./util/jwtDecode";
 
 const root = document.getElementById('root') as HTMLDivElement;
 
@@ -39,6 +40,7 @@ document.body.addEventListener('click', (event) => {
 
     const href = link.getAttribute('href');
     if (href) {
+        checkTokenExpiration();
         event.preventDefault();
         page(href);
     }

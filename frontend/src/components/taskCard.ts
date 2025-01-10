@@ -90,7 +90,8 @@ const taskCard = async (task: Task) => {
         </div>
     `;
 
-    element.addEventListener('click', () => {
+    element.addEventListener('click', (e:Event) => {
+        e.stopPropagation();
         openTaskModal(task, assignee || [], cats);
     });
 
