@@ -183,7 +183,7 @@ class ProjectController extends GenericController
             $this->projectModel->setId($id);
 
             $this->projectModel->setUserId($user->sub);
-            $this->projectModel->assignUser();
+            $this->projectModel->assignUser($user->role === 1 ? 'chief' : 'manager');
 
             foreach ($data->user_ids as $userId) {
                 $this->projectModel->setUserId($userId);

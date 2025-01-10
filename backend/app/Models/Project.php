@@ -152,13 +152,14 @@ class Project
         return [];
     }
 
-    public function assignUser()
+    public function assignUser($role = "member")
     {
-        $sql = "INSERT INTO project_members(project_id, user_id)
-                VALUES (:pid, :uid)";
+        $sql = "INSERT INTO project_members(project_id, user_id, role)
+                VALUES (:pid, :uid, :role)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':pid', $this->id);
         $stmt->bindParam(':uid', $this->userId);
+        $stmt->bindParam(':role', $role);
 
         if ($stmt->execute()) {
             return true;
