@@ -14,10 +14,10 @@ class ActivityLog{
         $stmt = $this->db->prepare("INSERT INTO activity_logs (project_id, user_id, action, details, created_at) 
                                     VALUES (:project_id, :user_id, :action, :details, CURRENT_TIMESTAMP)");
         
-        $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
-        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-        $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+        $stmt->bindParam(':project_id', $projectId);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':action', $action);
+        $stmt->bindParam(':details', $details);
 
         $stmt->execute();
     }

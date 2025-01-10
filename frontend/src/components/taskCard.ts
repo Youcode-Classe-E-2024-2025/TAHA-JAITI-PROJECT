@@ -1,3 +1,4 @@
+import { openAssignUserModal } from "@/modals/userModal";
 import categoryService from "@/services/categorySerivce";
 import taskService from "@/services/taskService";
 import sweetAlert from "@/tools/sweetAlert";
@@ -54,6 +55,9 @@ const taskCard = async (task: Task) => {
         `<button id="addTag" title="Add Tag" class="text-xs px-2 py-1 bg-purple-500/10 text-purple-400 rounded-sm hover:bg-purple-500/20 flex items-center">
                 <i class="fas fa-tag mr-1"></i>+ Tag
             </button>
+            <button id="addAssignee" title="Add Assignee" class="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded-sm hover:bg-green-500/20 flex items-center">
+                <i class="fas fa-user-plus mr-1"></i>+ Assignee
+            </button>
             <button id="addCat" title="Add Category" class="text-xs px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-sm hover:bg-yellow-500/20 flex items-center">
                 <i class="fas fa-list-alt mr-1"></i>+ Category
             </button>`: '';
@@ -102,6 +106,14 @@ const taskCard = async (task: Task) => {
         deleteButton.addEventListener('click', async (e: Event) => {
             e.stopPropagation();
             await handleDeleteTask(task.id, element);
+        });
+    }
+
+    const addAssigneeButton = element.querySelector('#addAssignee') as HTMLButtonElement | null;
+    if (addAssigneeButton) {
+        addAssigneeButton.addEventListener('click', async (e: Event) => {
+            e.stopPropagation();
+            await openAssignUserModal(task.id);
         });
     }
 

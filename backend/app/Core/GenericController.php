@@ -29,13 +29,16 @@ class GenericController
         $data = json_decode(file_get_contents('php://input'));
 
         if (!empty($data)) {
-            $secureData = new stdClass();
+            if (!is_int($data)) {
+                $secureData = new stdClass();
 
-            foreach ($data as $key => $value) {
-                $secureData->$key = is_string($value) ? str_secure($value) : $value;
+                foreach ($data as $key => $value) {
+                    $secureData->$key = is_string($value) ? str_secure($value) : $value;
+                }
+                return $secureData;
             }
 
-            return $secureData;
+            return $data;
         }
 
         return null;
@@ -47,7 +50,7 @@ class GenericController
         if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
             $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
         }
-        
+
         if ($authHeader) {
             $token = trim(str_replace('Bearer', '', $authHeader));
             return $token;
@@ -56,7 +59,8 @@ class GenericController
         }
     }
 
-    protected function checkToken() {
+    protected function checkToken()
+    {
         $token = $this->getHeader();
         if (!$token) {
             $this->errResponse('Unauthorized: No token provided', 401);

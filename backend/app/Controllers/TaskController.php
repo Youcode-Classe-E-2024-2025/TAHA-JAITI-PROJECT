@@ -174,7 +174,6 @@ class TaskController extends GenericController
                 $this->taskModel->assignTag($tagId);
             }
 
-            // Log the activity
             $this->activityLog->logActivity(
                 $this->taskModel->getByProject(),
                 $this->checkToken()->sub,
@@ -196,7 +195,6 @@ class TaskController extends GenericController
             $result = $this->taskModel->clearTag();
 
             if ($result) {
-                // Log the activity
                 $this->activityLog->logActivity(
                     $this->taskModel->getByProject(),
                     $this->checkToken()->sub,
@@ -225,7 +223,6 @@ class TaskController extends GenericController
             $result = $this->taskModel->assignTag($data->cat_id);
 
             if ($result) {
-                // Log the activity
                 $this->activityLog->logActivity(
                     $this->taskModel->getByProject(),
                     $this->checkToken()->sub,
@@ -246,27 +243,26 @@ class TaskController extends GenericController
         try {
             $data = $this->getRequestData();
 
-            if (empty($data->user_id) || !is_array($data->user_id)) {
-                $this->errResponse('User id is missing/invalid');
+            if (empty($data) || !is_numeric($data)) {
+                $this->errResponse('User id is missing or invalid');
             }
+
 
             $this->taskModel->setId($id);
 
-            foreach ($data->user_id as $userId) {
-                if (!$this->taskModel->assignUser($userId)) {
-                    $this->errResponse("Failed to assign User ID: {$userId}");
-                }
+
+            if (!$this->taskModel->assignUser($data)) {
+                $this->errResponse("Failed to assign User ID: {$data}");
             }
 
-            // Log the activity
             $this->activityLog->logActivity(
-                $this->taskModel->getByProject(),
+                $id,
                 $this->checkToken()->sub,
-                'Task Users Assigned',
-                "Task ID: $id, Users: " . implode(', ', $data->user_id)
+                'Task User Assigned',
+                "Task ID: $id, User: {($data)}"
             );
 
-            $this->successResponse(null, "All users assigned successfully");
+            $this->successResponse(null, "User assigned successfully");
         } catch (Exception $e) {
             $this->errResponse('An unexpected error occurred: ' . $e->getMessage());
         }
@@ -280,7 +276,6 @@ class TaskController extends GenericController
             $result = $this->taskModel->clearUser();
 
             if ($result) {
-                // Log the activity
                 $this->activityLog->logActivity(
                     $this->taskModel->getByProject(),
                     $this->checkToken()->sub,
